@@ -1,0 +1,12 @@
+div.container-fluid {
+    margin: 0;
+    padding: 0;
+}
+
+#register {
+    right: 115px;
+}
+
+#login {
+    right: 15px;
+}
