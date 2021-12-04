@@ -18,10 +18,13 @@ class User
     public function __construct()
     {
         $this->repository = new UserRepository();
+        return $this->fill();
+    }
 
-        if ($user_id = Session::get('user:id')) {
-            $data = $this->repository->get((int) $user_id);
-
+    public function fill()
+    {
+        $user_id = Session::get('user:id');
+        if ($data = $this->repository->get((int) $user_id)) {
             $this->id = $data['id'];
             $this->username = $data['username'];
             $this->email = $data['email'];

@@ -39,6 +39,7 @@ abstract class AbstractController
 
         $this->request = $request;
         $this->user = new User();
+        if ($this->user->id ?? $this->user = null);
         $this->view = new View();
     }
 

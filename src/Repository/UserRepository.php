@@ -14,6 +14,8 @@ class UserRepository extends AbstractRepository
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id=:id");
         $stmt->execute(['id' => $id]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {$user = null;}
         return $user;
     }
 }
