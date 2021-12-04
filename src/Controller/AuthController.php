@@ -1,27 +1,56 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Controller;
 
-use App\Repository\AuthRepository;
 use App\Helper\Request;
+use App\Helper\Session;
+use App\Model\Auth;
 
 class AuthController extends AbstractController
 {
+    private $auth;
+
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->repository = new AuthRepository(self::$configuration['db']);
+        $this->auth = new Auth();
     }
 
     public function registerAction(): void
     {
-        $this->view->render('auth/register');
+        $names = ['username', 'email', 'password', 'repeat_password'];
+
+        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+            $data = $this->request->postParams($names);
+            if ($this->auth->register($data)) {
+                Session::set('success', 'Konto zostało utworzone');
+                $this->redirect('login', ['email' => $data['email']]);
+            } else {
+                $this->view->render('auth/register', ['data' => $data]);
+            }
+        } else {
+            $this->view->render('auth/register');
+        }
     }
 
     public function loginAction(): void
     {
-        $this->view->render('auth/login');
+        $names = ['email', 'password'];
+
+        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+            $data = $this->request->postParams($names);
+
+            if ($user = $this->auth->login($data['email'], $data['password'])) {
+                Session::set('user:id', $user['id']);
+                //! Przekierowanie na stronę główną
+                $this->redirect('register');
+            } else {
+                $this->view->render('auth/login', ['email' => $data['email']]);
+            }
+        } else {
+            $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
+        }
     }
 }

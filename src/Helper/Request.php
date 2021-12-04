@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Helper;
 
 class Request
 {
-    private array $get = [];
-    private array $post = [];
-    private array $server = [];
+    private $get = [];
+    private $post = [];
+    private $server = [];
 
     public function __construct(array $get, array $post, array $server)
     {
@@ -40,5 +40,28 @@ class Request
     public function postParam(string $name, $default = null)
     {
         return $this->post[$name] ?? $default;
+    }
+
+    // ARRAY
+
+    public function hasPostNames(array $names)
+    {
+        foreach ($names as $name) {
+            if (!isset($this->post[$name])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function postParams(array $names)
+    {
+        $output = [];
+
+        foreach ($names as $name) {
+            $output[$name] = $this->post[$name];
+        }
+
+        return $output;
     }
 }

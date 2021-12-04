@@ -10,3 +10,7 @@ div.container-fluid {
 #login {
     right: 15px;
 }
+
+.fs-mini {
+    font-size: 13px;
+}

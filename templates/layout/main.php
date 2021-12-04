@@ -41,7 +41,8 @@
         </nav>
 
         <div class="content">
-            <?php require_once "templates/$page.php"; ?>
+            <?php require_once "templates/messages.php";?>
+            <?php require_once "templates/$page.php";?>
         </div>
     </div>
 

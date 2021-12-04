@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Controller;
 
@@ -8,9 +8,9 @@ use App\Exception\ConfigurationException;
 use App\Exception\NotFoundException;
 use App\Exception\StorageException;
 use App\Helper\Request;
-use App\View;
-
+use App\Model\User;
 use App\Repository\AbstractRepository;
+use App\View;
 
 abstract class AbstractController
 {
@@ -22,6 +22,7 @@ abstract class AbstractController
     protected $repository;
     protected $request;
     protected $view;
+    protected $user;
 
     public static function initConfiguration(array $configuration): void
     {
@@ -34,9 +35,10 @@ abstract class AbstractController
             throw new ConfigurationException('Configuration error');
         }
 
-        // AbstractRepository::initConfiguration(self::$configuration);
+        AbstractRepository::initConfiguration(self::$configuration['db']);
 
         $this->request = $request;
+        $this->user = new User();
         $this->view = new View();
     }
 
@@ -55,20 +57,20 @@ abstract class AbstractController
         }
     }
 
-    final protected function redirect(string $to, array $params): void
+    final protected function redirect(string $to, array $params = []): void
     {
-        $location = $to;
+        $location = "?action=" . $to;
 
         if (count($params)) {
             $queryParams = [];
             foreach ($params as $key => $value) {
                 $queryParams[] = urlencode($key) . '=' . urlencode($value);
             }
-            $queryParams = implode('&', $queryParams);
-            $location .= '?' . $queryParams;
+
+            $location .= ($queryParams = "&" . implode('&', $queryParams));
         }
 
-        header("Location: $location");
+        header("Location: " . $location);
         exit();
     }
 
