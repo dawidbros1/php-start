@@ -14,3 +14,12 @@ div.container-fluid {
 .fs-mini {
     font-size: 13px;
 }
+
+.link {
+    color: #0d6efd !important;
+    text-decoration: none;
+}
+
+#username {
+    right: 5px;
+}

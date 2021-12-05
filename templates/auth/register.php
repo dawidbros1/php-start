@@ -14,7 +14,7 @@ use App\Helper\Session;
                 <h3 class="text-primary">Rejestracja</h3>
             </div>
             <div class="p-4">
-                <form action="?action=register" method="post">
+                <form action="?type=auth&action=register" method="post">
                     <div class="input-group">
                         <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
                         <input type="text" name="email" class="form-control" placeholder="Adres email"
@@ -51,7 +51,7 @@ use App\Helper\Session;
                         <button class="btn btn-primary" type="submit"><span></span> Utwórz konto </button>
                     </div>
                     <p class="text-center mt-3">Masz już konto?
-                        <span class="text-primary">Zaloguj się</span>
+                        <a href="?type=auth&action=login" class="link">Zaloguj się</a>
                     </p>
                 </form>
             </div>

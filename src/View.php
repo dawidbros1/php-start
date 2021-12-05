@@ -6,9 +6,20 @@ namespace App;
 
 class View
 {
+    private $user;
+
+    public function __construct($user, $routing)
+    {
+        $this->user = $user;
+        $this->routing = $routing;
+    }
+
     public function render(string $page, array $params = []): void
     {
+        $user = $this->user;
         $params = $this->escape($params);
+        $routing = $this->routing;
+
         require_once 'templates/layout/main.php';
     }
 

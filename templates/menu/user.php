@@ -1,0 +1,25 @@
+<li class="nav-item">
+    <a class="nav-link" href="">Dodaj kategorie</a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="#">Moje kategorie</a>
+</li>
+
+<?php if ($user): ?>
+
+<div class="collapse navbar-collapse position-absolute" id="username">
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <?=$user->username?>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">Profil</a></li>
+                <li><a class="dropdown-item" href="<?=$routing['user.logout']?>">Wyloguj</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<?php endif;?>

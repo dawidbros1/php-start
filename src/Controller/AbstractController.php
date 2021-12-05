@@ -14,19 +14,18 @@ use App\View;
 
 abstract class AbstractController
 {
-    //! Później ustawić inną akcję domyślną
-    protected const DEFAULT_ACTION = 'register';
-
     protected static $configuration = [];
+    protected static $routing = [];
 
     protected $repository;
     protected $request;
     protected $view;
     protected $user;
 
-    public static function initConfiguration(array $configuration): void
+    public static function initConfiguration(array $configuration, array $routing): void
     {
         self::$configuration = $configuration;
+        self::$routing = $routing;
     }
 
     public function __construct(Request $request)
@@ -39,8 +38,10 @@ abstract class AbstractController
 
         $this->request = $request;
         $this->user = new User();
+
         if ($this->user->id ?? $this->user = null);
-        $this->view = new View();
+
+        $this->view = new View($this->user, self::$routing);
     }
 
     final public function run(): void
@@ -48,7 +49,7 @@ abstract class AbstractController
         try {
             $action = $this->action() . 'Action';
             if (!method_exists($this, $action)) {
-                $action = self::DEFAULT_ACTION . 'Action';
+                $action = $this->default_action . 'Action';
             }
             $this->$action();
         } catch (StorageException $e) {
@@ -75,8 +76,14 @@ abstract class AbstractController
         exit();
     }
 
+    final protected function redirectToMainPage(): void
+    {
+        header("Location: ?type=general");
+        exit();
+    }
+
     final private function action(): string
     {
-        return $this->request->getParam('action', self::DEFAULT_ACTION);
+        return $this->request->getParam('action', $this->default_action);
     }
 }

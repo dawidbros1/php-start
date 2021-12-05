@@ -32,4 +32,9 @@ class User
             $this->created = $data['created'];
         }
     }
+
+    public function logout()
+    {
+        Session::clear('user:id');
+    }
 }

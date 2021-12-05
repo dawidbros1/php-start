@@ -16,29 +16,15 @@
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <ul class="navbar-nav">
                 <li class="nav-item ps-4">
-                    <a class="nav-link" href="#">Strona główna</a>
+                    <a class="nav-link" href="<?=$routing['home']?>">Strona główna</a>
                 </li>
 
-                <!-- Dla zalogowanych -->
-
-                <li class="nav-item">
-                    <a class="nav-link" href="">Dodaj kategorie</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Moje kategorie</a>
-                </li>
-
-                <!-- Dla niezalogowanych -->
-
-                <li class="text-end position-absolute" id="register">
-                    <a class="nav-link" href="?action=register">Zarejestruj się</a>
-                </li>
-
-                <li class="text-end position-absolute" id="login">
-                    <a class="nav-link" href="?action=login">Zaloguj się</a>
-                </li>
+                <?php if ($user) {require_once "templates/menu/user.php";}?>
+                <?php if (!$user) {require_once "templates/menu/guest.php";}?>
             </ul>
         </nav>
+
+
 
         <div class="content">
             <?php require_once "templates/messages.php";?>

@@ -10,6 +10,7 @@ use App\Model\Auth;
 
 class AuthController extends AbstractController
 {
+    public $default_action = 'register';
     private $auth;
 
     public function __construct(Request $request)
