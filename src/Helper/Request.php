@@ -42,6 +42,12 @@ class Request
         return $this->post[$name] ?? $default;
     }
 
+    public function hasPostName(string $name)
+    {
+        if (!isset($this->post[$name])) {return false;}
+        return true;
+    }
+
     // ARRAY
 
     public function hasPostNames(array $names)

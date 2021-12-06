@@ -27,7 +27,7 @@ class AuthController extends AbstractController
             $data = $this->request->postParams($names);
             if ($this->auth->register($data)) {
                 Session::set('success', 'Konto zostało utworzone');
-                $this->redirect('login', ['email' => $data['email']]);
+                $this->redirect(self::$route['auth.login'], ['email' => $data['email']]);
             } else {
                 $this->view->render('auth/register', ['data' => $data]);
             }

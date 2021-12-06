@@ -1,9 +1,9 @@
 <li class="nav-item">
-    <a class="nav-link" href="">Dodaj kategorie</a>
+    <a class="nav-link" href="#">Item 1</a>
 </li>
 
 <li class="nav-item">
-    <a class="nav-link" href="#">Moje kategorie</a>
+    <a class="nav-link" href="#">Item 2</a>
 </li>
 
 <?php if ($user): ?>
@@ -15,8 +15,8 @@
                 <?=$user->username?>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li><a class="dropdown-item" href="#">Profil</a></li>
-                <li><a class="dropdown-item" href="<?=$routing['user.logout']?>">Wyloguj</a></li>
+                <li><a class="dropdown-item" href="<?=$route['user.profile']?>">Profil</a></li>
+                <li><a class="dropdown-item" href="<?=$route['user.logout']?>">Wyloguj</a></li>
             </ul>
         </li>
     </ul>

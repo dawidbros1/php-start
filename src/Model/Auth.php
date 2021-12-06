@@ -26,7 +26,7 @@ class Auth extends AuthValidator
         $this->password = $data['password'];
         $this->repeat_password = $data['repeat_password'];
 
-        if (!$this->validateUsername()) {$ok = false;}
+        if (!$this->validateUsername($this->username)) {$ok = false;}
         if (!$this->validateEmail()) {$ok = false;}
         if (!$this->validatePassword()) {$ok = false;}
 

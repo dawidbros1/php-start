@@ -18,4 +18,20 @@ class UserRepository extends AbstractRepository
         if (!$user) {$user = null;}
         return $user;
     }
+
+    public function updateUsername($username)
+    {
+        $data = ['username' => $username];
+        $sql = "UPDATE users SET username=:username";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($data);
+    }
+
+    public function updatePassword($password)
+    {
+        $data = ['password' => $password];
+        $sql = "UPDATE users SET password=:password";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($data);
+    }
 }

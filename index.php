@@ -7,7 +7,8 @@ session_start();
 require_once 'src/Utils/debug.php';
 require_once 'vendor/autoload.php';
 $configuration = require_once 'config/config.php';
-$routing = require_once 'routing/routing.php';
+$routing = require_once 'routes/routes.php';
+$rules = require_once 'rules/rules.php';
 
 use App\Controller\AbstractController;
 use App\Controller\AuthController;
@@ -16,11 +17,13 @@ use App\Controller\UserController;
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
 use App\Helper\Request;
+use App\Validator\AbstractValidator;
 
 $request = new Request($_GET, $_POST, $_SERVER);
 
 try {
     AbstractController::initConfiguration($configuration, $routing);
+    AbstractValidator::initConfiguration($rules);
 
     $type = $request->getParam('type', 'general');
 

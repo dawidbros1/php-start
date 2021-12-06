@@ -15,17 +15,17 @@ use App\View;
 abstract class AbstractController
 {
     protected static $configuration = [];
-    protected static $routing = [];
+    protected static $route = [];
 
     protected $repository;
     protected $request;
     protected $view;
     protected $user;
 
-    public static function initConfiguration(array $configuration, array $routing): void
+    public static function initConfiguration(array $configuration, array $route): void
     {
         self::$configuration = $configuration;
-        self::$routing = $routing;
+        self::$route = $route;
     }
 
     public function __construct(Request $request)
@@ -41,7 +41,7 @@ abstract class AbstractController
 
         if ($this->user->id ?? $this->user = null);
 
-        $this->view = new View($this->user, self::$routing);
+        $this->view = new View($this->user, self::$route);
     }
 
     final public function run(): void
@@ -61,7 +61,7 @@ abstract class AbstractController
 
     final protected function redirect(string $to, array $params = []): void
     {
-        $location = "?action=" . $to;
+        $location = $to;
 
         if (count($params)) {
             $queryParams = [];
@@ -73,12 +73,6 @@ abstract class AbstractController
         }
 
         header("Location: " . $location);
-        exit();
-    }
-
-    final protected function redirectToMainPage(): void
-    {
-        header("Location: ?type=general");
         exit();
     }
 

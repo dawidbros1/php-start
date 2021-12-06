@@ -9,7 +9,7 @@ use App\Helper\Session;
 
 class UserController extends AbstractController
 {
-    public $default_action = 'none';
+    public $default_action = 'profile';
 
     public function __construct(Request $request)
     {
@@ -23,9 +23,34 @@ class UserController extends AbstractController
         $this->redirect('login', ['email' => $this->user ? $this->user->email : '']);
     }
 
-    public function noneAction()
+    public function profileAction()
     {
-        $this->redirectToMainPage();
+        $this->view->render('user/profile', [], ['profile']);
     }
 
+    public function updateUsernameAction()
+    {
+        if ($this->request->isPost() && $this->request->hasPostName('username')) {
+            $username = $this->request->postParam('username');
+            if ($this->user->updateUsername($username)) {
+                Session::set('success', 'Nazwa użytkownika została zaktualizowana');
+            }
+        }
+
+        $this->redirect(self::$route['user.profile']);
+    }
+
+    public function updatePasswordAction()
+    {
+        $names = ['current_password', 'password', 'repeat_password'];
+
+        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+            $data = $this->request->postParams($names);
+            if ($this->user->updatePassword($data)) {
+                Session::set('success', 'Hasło zostało zaktualizowane');
+            }
+        }
+
+        $this->redirect(self::$route['user.profile']);
+    }
 }

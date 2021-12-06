@@ -8,15 +8,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link href="public/style.css" rel="stylesheet">
+    <link href="public/css/style.css" rel="stylesheet">
+
+    <?php foreach ($styles as $style): ?>
+    <link href="public/css/<?=$style?>.css" rel="stylesheet">
+    <?php endforeach;?>
+
 </head>
 
 <body>
     <div class="container-fluid">
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <ul class="navbar-nav">
-                <li class="nav-item ps-4">
-                    <a class="nav-link" href="<?=$routing['home']?>">Strona główna</a>
+                <li class="nav-item ps-sm-2">
+                    <!-- <a class="nav-link" href="<?=$route['home']?>">Strona główna</a> -->
+                    <a class="nav-link" href="./">Strona główna</a>
                 </li>
 
                 <?php if ($user) {require_once "templates/menu/user.php";}?>

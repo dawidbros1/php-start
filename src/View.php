@@ -8,17 +8,18 @@ class View
 {
     private $user;
 
-    public function __construct($user, $routing)
+    public function __construct($user, $route)
     {
         $this->user = $user;
-        $this->routing = $routing;
+        $this->route = $route;
     }
 
-    public function render(string $page, array $params = []): void
+    public function render(string $page, array $params = [], ?array $styles = []): void
     {
         $user = $this->user;
         $params = $this->escape($params);
-        $routing = $this->routing;
+        $route = $this->route;
+        $styles = $styles;
 
         require_once 'templates/layout/main.php';
     }
