@@ -20,7 +20,7 @@ class UserController extends AbstractController
     {
         $this->user->logout();
         Session::set('success', "Nastąpiło wylogowanie z systemu");
-        $this->redirect('login', ['email' => $this->user ? $this->user->email : '']);
+        $this->redirect(self::$route['auth.login'], ['email' => $this->user ? $this->user->email : '']);
     }
 
     public function profileAction()

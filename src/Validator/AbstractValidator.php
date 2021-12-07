@@ -8,13 +8,6 @@ use App\Helper\Session;
 
 class AbstractValidator
 {
-    protected static $rules;
-
-    public static function initConfiguration($rules)
-    {
-        self::$rules = $rules;
-    }
-
     // Metody walidacyjne wielokrotnego użytku
     protected function strlenBetween(string $variable, int $min, int $max)
     {
@@ -28,14 +21,35 @@ class AbstractValidator
     // Walidacja wielokrotnego użytku
     protected function validateUsername($username)
     {
-        $min = self::$rules['username']['min'];
-        $max = self::$rules['username']['max'];
+        $rule = $this->rules['username'];
+        $min = $rule['min.value'];
+        $max = $rule['max.value'];
 
         if ($this->strlenBetween($username, $min - 1, $max + 1) == false) {
-            Session::set('error:username:strlen', "Nazwa użytkownika powinno zawierać od " . $min . " do " . $max . " znaków");
+            Session::set('error:username:strlen', $rule['strlen.message']);
             return false;
         }
 
         return true;
+    }
+
+    protected function validatePassword(string $password, string $repeat_password)
+    {
+
+        $rule = $this->rules['password'];
+        $min = $rule['min.value'];
+        $max = $rule['max.value'];
+
+        if ($password != $repeat_password) {
+            Session::set('error:password:same', $rule['same.message']);
+            $ok = false;
+        }
+
+        if ($this->strlenBetween($password, $min - 1, $max + 1) == false) {
+            Session::set('error:password:strlen', $rule['strlen.message']);
+            $ok = false;
+        }
+
+        return $ok ?? true;
     }
 }

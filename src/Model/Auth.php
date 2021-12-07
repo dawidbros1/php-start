@@ -5,30 +5,25 @@ declare (strict_types = 1);
 namespace App\Model;
 
 use App\Repository\AuthRepository;
+use App\Rules\AuthRules;
 use App\Validator\AuthValidator;
 
 class Auth extends AuthValidator
 {
-    public $username;
-    public $email;
-    public $password;
-    public $repeat_password;
+    public $rules;
 
     public function __construct()
     {
         $this->repository = new AuthRepository();
+        $this->rules = (new AuthRules)->get();
     }
 
     public function register(array $data)
     {
-        $this->username = $data['username'];
-        $this->email = $data['email'];
-        $this->password = $data['password'];
-        $this->repeat_password = $data['repeat_password'];
 
-        if (!$this->validateUsername($this->username)) {$ok = false;}
-        if (!$this->validateEmail()) {$ok = false;}
-        if (!$this->validatePassword()) {$ok = false;}
+        if (!$this->validateUsername($data['username'])) {$ok = false;}
+        if (!$this->validateEmail($data['email'])) {$ok = false;}
+        if (!$this->validatePassword($data['password'], $data['repeat_password'])) {$ok = false;}
 
         if ($ok ?? true) {
             $this->repository->createAccount($data);

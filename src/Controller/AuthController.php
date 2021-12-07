@@ -45,8 +45,7 @@ class AuthController extends AbstractController
 
             if ($user = $this->auth->login($data['email'], $data['password'])) {
                 Session::set('user:id', $user['id']);
-                //! Przekierowanie na stronę główną
-                $this->redirect('register');
+                $this->redirect(self::$route['home']);
             } else {
                 $this->view->render('auth/login', ['email' => $data['email']]);
             }

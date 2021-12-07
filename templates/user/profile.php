@@ -7,23 +7,23 @@ use App\Helper\Session;
 
 ?>
 
-
-
-<!-- soruce: https://bbbootstrap.com/snippets/bootstrap-5-myprofile-90806631 -->
+<!-- soruce: https://bbbootstrap.com/snippets/bootstrap-5-myprofile-90806631 + moje poprawki -->
 
 <div class="container rounded bg-white mt-5 mb-5">
     <div class="row">
         <!-- Lewa kolumna - Zjęcie użytkownika -->
-        <div class="col-md-3 border-right">
+        <div class="col-md-12 col-lg-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
                     width="150px"
                     src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
-                    class="font-weight-bold">Edogaru</span><span class="text-black-50"><?=$user->email?></span><span>
+                    class="font-weight-bold">
+                    <?=$user->username?>
+                </span><span class="text-black-50"><?=$user->email?></span><span>
                 </span></div>
         </div>
 
         <!-- Środkowa kolumna - Ustawienia profilu -->
-        <div class="col-md-5 border-right">
+        <div class="col-md-7 col-lg-5 border-right">
             <div class="p-3 pt-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Ustawienia profilu</h4>
@@ -31,7 +31,7 @@ use App\Helper\Session;
 
                 <!-- Adres email użytkownika -->
                 <div class="row mt-3 mb-3">
-                    <div class="col-md-12"><label class="labels">Adres email</label><input type="text" disabled
+                    <div class="col-lg-12"><label class="labels">Adres email</label><input type="text" disabled
                             class="form-control" value="<?=$user->email?>"></div>
                 </div>
 
@@ -77,11 +77,15 @@ use App\Helper\Session;
                             </div>
                         </div>
 
+                        <?php Error::render('input', Session::getNextClear('error:password:strlen'))?>
+
                         <div class="row mt-3">
                             <div class="col-md-12"><label class="labels">Powtórz nowe hasło</label><input
                                     type="password" class="form-control" placeholder="Powtórz now hasło"
                                     name="repeat_password"></div>
                         </div>
+
+                        <?php Error::render('input', Session::getNextClear('error:password:same'))?>
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
                                 type="submit">Aktualizuj hasło</button></div>

@@ -4,15 +4,33 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
-class Rules
+abstract class Rules
 {
-    private $rules;
+    protected $rules;
 
-    public function create(string $name, array $data)
+    public function __construct()
     {
-        foreach ($data as $key => $item) {
-            $this->rules[$name] = $data;
+        $this->rules();
+        $this->messages();
+    }
+
+    public function createRules(string $name, array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->rules[$name][$key . '.' . 'value'] = $value;
         }
+    }
+
+    public function createMessages(string $name, array $data)
+    {
+        foreach ($data as $key => $message) {
+            $this->rules[$name][$key . '.' . 'message'] = $message;
+        }
+    }
+
+    public function getValue($rule, $name)
+    {
+        return $this->rules[$rule][$name . ".value"];
     }
 
     public function get()
