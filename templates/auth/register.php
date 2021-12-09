@@ -23,6 +23,7 @@ use App\Helper\Session;
 
                     <?php Error::render('input', Session::getNextClear('error:email:sanitize'))?>
                     <?php Error::render('input', Session::getNextClear('error:email:validate'))?>
+                    <?php Error::render('input', Session::getNextClear('error:email:unique'))?>
 
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i
@@ -31,14 +32,14 @@ use App\Helper\Session;
                             value="<?=$params['data']['username'] ?? ''?>">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:username:strlen'))?>
+                    <?php Error::render('input', Session::getNextClear('error:username:between'))?>
 
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>
                         <input type="password" name="password" class="form-control" placeholder="Hasło">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:password:strlen'))?>
+                    <?php Error::render('input', Session::getNextClear('error:password:between'))?>
 
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>

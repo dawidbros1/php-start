@@ -6,7 +6,6 @@ namespace App\Model;
 
 use App\Helper\Session;
 use App\Repository\UserRepository;
-use App\Rules\UserRules;
 use App\Validator\UserValidator;
 
 class User extends UserValidator
@@ -21,7 +20,7 @@ class User extends UserValidator
     public function __construct()
     {
         $this->repository = new UserRepository();
-        $this->rules = (new UserRules())->get();
+        // $this->rules = (new UserRules())->get();
         return $this->fill();
     }
 
@@ -39,22 +38,22 @@ class User extends UserValidator
 
     public function updateUsername($username)
     {
-        if (!$this->validateUsername($username)) {$ok = false;}
+        // if (!$this->validateUsername($username)) {$ok = false;}
 
-        if ($ok ?? true) {
-            $this->repository->updateUsername($username);
-        }
+        // if ($ok ?? true) {
+        //     $this->repository->updateUsername($username);
+        // }
 
         return $ok ?? true;
     }
 
     public function updatePassword($data)
     {
-        if (!$this->validatePasswords($data)) {$ok = false;}
+        // if (!$this->validatePasswords($data)) {$ok = false;}
 
-        if ($ok ?? true) {
-            $this->repository->updatePassword($data['password']);
-        }
+        // if ($ok ?? true) {
+        //     $this->repository->updatePassword($data['password']);
+        // }
 
         return $ok ?? true;
     }

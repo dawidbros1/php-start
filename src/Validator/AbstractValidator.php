@@ -6,8 +6,10 @@ namespace App\Validator;
 
 use App\Helper\Session;
 
-class AbstractValidator
+abstract class AbstractValidator
 {
+    protected static $betweenStatus = false;
+
     // Metody walidacyjne wielokrotnego użytku
     protected function strlenBetween(string $variable, int $min, int $max)
     {
@@ -18,36 +20,101 @@ class AbstractValidator
         return false;
     }
 
-    // Walidacja wielokrotnego użytku
-    protected function validateUsername($username)
+    protected function strlenMax(string $variable, int $max)
     {
-        $rule = $this->rules['username'];
-        $min = $rule['min.value'];
-        $max = $rule['max.value'];
-
-        if ($this->strlenBetween($username, $min - 1, $max + 1) == false) {
-            Session::set('error:username:strlen', $rule['strlen.message']);
+        if (strlen($variable) > $max) {
             return false;
         }
 
         return true;
     }
 
-    protected function validatePassword(string $password, string $repeat_password)
+    protected function strlenMin(string $variable, int $min)
     {
-
-        $rule = $this->rules['password'];
-        $min = $rule['min.value'];
-        $max = $rule['max.value'];
-
-        if ($password != $repeat_password) {
-            Session::set('error:password:same', $rule['same.message']);
-            $ok = false;
+        if (strlen($variable) < $min) {
+            return false;
         }
 
-        if ($this->strlenBetween($password, $min - 1, $max + 1) == false) {
-            Session::set('error:password:strlen', $rule['strlen.message']);
+        return true;
+    }
+
+    protected function comparePasswords($password, $repeat_password)
+    {
+        if ($password != $repeat_password) {
+            Session::set("error:password:same", "Hasła nie są jednakowe");
             $ok = false;
+        }
+        return $ok ?? true;
+    }
+
+    // Ogólna klasa VALIDATORA
+
+    protected function validate(array $data)
+    {
+        $types = array_keys($data);
+
+        if (array_key_exists('password', $data) && array_key_exists('repeat_password', $data)) {
+            if ($this->comparePasswords($data['password'], $data['repeat_password']) == false) {
+                $ok = false;
+            }
+        }
+
+        foreach ($types as $type) {
+            if (!array_key_exists($type, $this->rules)) {continue;}
+
+            self::$betweenStatus = false;
+
+            $rules = $this->rules[$type];
+            $between = (bool) (array_key_exists('min', $rules) && array_key_exists('max', $rules));
+            $input = $data[$type];
+
+            foreach (array_keys($rules) as $rule) {
+                // Tutaj zwrócic wyjątek, że brakuje message do rules
+                $message = $rules[$rule]['message'] ?? "Wyjątek";
+                $value = $rules[$rule]['value'];
+
+                // ================================================
+                if (($rule == "min" || $rule == "max") && $between == true && self::$betweenStatus == false) {
+                    $min = $rules['min']['value'];
+                    $max = $rules['max']['value'];
+
+                    if ($this->strlenBetween($input, $min - 1, $max + 1) == false) {
+                        Session::set("error:$type:between", $rules['min']['message']);
+                        $ok = false;
+                    }
+
+                    self::$betweenStatus = true;
+                }
+                // ================================================
+                else if ($rule == "max" && $between == false) {
+                    if ($this->strlenMax($input, $value) == false) {
+                        Session::set("error:$type:$rule", $message);
+                        $ok = false;
+                    }
+                }
+                // ================================================
+                else if ($rule == "min" && $between == false) {
+                    if ($this->strlenMin($input, $value) == false) {
+                        Session::set("error:$type:$rule", $message);
+                        $ok = false;
+                    }
+                }
+                // ================================================
+                else if ($rule == "validate" && $value == true) {
+                    if (!filter_var($input, FILTER_VALIDATE_EMAIL)) {
+                        Session::set("error:$type:$rule", $message);
+                        $ok = false;
+                    }
+                }
+                // ================================================
+                else if ($rule == "sanitize" && $value == true) {
+                    if ($input != filter_var($input, FILTER_SANITIZE_EMAIL)) {
+                        Session::set("error:$type:$rule", $message);
+                        $ok = false;
+                    }
+                }
+                // ================================================
+            }
         }
 
         return $ok ?? true;

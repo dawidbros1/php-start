@@ -10,19 +10,20 @@ class AuthRules extends Rules
 {
     public function rules()
     {
-        $this->createRules('username', ['min' => 6, "max" => 16]);
-        $this->createRules('password', ['min' => 6, "max" => 16]);
+        $this->createRules('username', ['min' => 3, "max" => 16]);
+        $this->createRules('password', ['min' => 6, 'max' => 36]);
+        $this->createRules('email', ['sanitize' => true, "validate" => true]);
     }
 
     public function messages()
     {
+        // Exactly the same order as in the rules
         $this->createMessages('username', [
-            'strlen' => "Nazwa użytkownika powinna zawierać od " . $this->getValue('username', 'min') . " do " . $this->getValue('username', 'max') . " znaków",
+            'between' => "Nazwa użytkownika powinna zawierać od " . $this->getValue('min') . " do " . $this->getValue('max') . " znaków",
         ]);
 
         $this->createMessages('password', [
-            'strlen' => "Hasło powinno zawierać od " . $this->getValue('username', 'min') . " do " . $this->getValue('username', 'max') . " znaków",
-            'same' => "Podane hasła nie są identyczne",
+            'between' => "Hasło powinno zawierać od " . $this->getValue('min') . " do " . $this->getValue('max') . " znaków",
         ]);
 
         $this->createMessages('email', [

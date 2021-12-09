@@ -46,4 +46,12 @@ class AuthRepository extends AbstractRepository
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         return $user;
     }
+
+    public function getEmails()
+    {
+        $stmt = $this->pdo->prepare("SELECT email FROM users");
+        $stmt->execute();
+        $emails = $stmt->fetchAll(PDO::FETCH_COLUMN, 'email');
+        return $emails;
+    }
 }

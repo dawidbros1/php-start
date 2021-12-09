@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
+use App\Controller\AbstractController;
 use App\Helper\Request;
 use App\Helper\Session;
 

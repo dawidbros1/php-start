@@ -4,11 +4,12 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Helper\Session;
 use App\Repository\AuthRepository;
 use App\Rules\AuthRules;
-use App\Validator\AuthValidator;
+use App\Validator\AbstractValidator;
 
-class Auth extends AuthValidator
+class Auth extends AbstractValidator
 {
     public $rules;
 
@@ -20,16 +21,17 @@ class Auth extends AuthValidator
 
     public function register(array $data)
     {
+        $emails = $this->repository->getEmails();
 
-        if (!$this->validateUsername($data['username'])) {$ok = false;}
-        if (!$this->validateEmail($data['email'])) {$ok = false;}
-        if (!$this->validatePassword($data['password'], $data['repeat_password'])) {$ok = false;}
+        if (!$unique = !in_array($data['email'], $emails)) {
+            Session::set("error:email:unique", "Podany adres email jest zajęty");
+        }
 
-        if ($ok ?? true) {
+        if ($ok = $this->validate($data) && $unique) {
             $this->repository->createAccount($data);
         }
 
-        return $ok ?? true;
+        return $ok;
     }
 
     public function login(string $email, string $password)
