@@ -12,7 +12,7 @@ if ($message = Session::getNextClear('success')) {
 }
 
 if ($message = Session::getNextClear('error')) {
-    echo '<div class="alert alert-error py-2 text-center">
+    echo '<div class="alert alert-danger py-2 text-center">
         ' . $message . '
     </div>
   ';

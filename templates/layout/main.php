@@ -8,12 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link href="public/css/style.css" rel="stylesheet">
 
     <?php foreach ($styles as $style): ?>
-    <link href="public/css/<?=$style?>.css" rel="stylesheet">
+        <link href="public/css/<?=$style?>.css" rel="stylesheet">
     <?php endforeach;?>
 
+    <link href="public/css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -29,8 +29,6 @@
                 <?php if (!$user) {require_once "templates/menu/guest.php";}?>
             </ul>
         </nav>
-
-
 
         <div class="content">
             <?php require_once "templates/messages.php";?>

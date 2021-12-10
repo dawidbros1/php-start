@@ -10,6 +10,6 @@ return [
         'password' => '',
     ],
     'mail' => [
-        'to' => 'wsparcie@mojeprojekty.tk',
+        'to' => 'Our domain email',
     ],
 ];

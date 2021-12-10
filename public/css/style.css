@@ -1,5 +1,5 @@
-body{
-    background-color: gray;
+body {
+    background-color: lightgray;
 }
 
 div.container-fluid {
@@ -26,4 +26,8 @@ div.container-fluid {
 
 #username {
     right: 10px;
+}
+
+.alert {
+    margin-bottom: 0 !important;
 }
