@@ -36,7 +36,7 @@ class AuthRepository extends AbstractRepository
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $user;
+        if (!$user) {return null;} else {return $user;}
     }
 
     public function get(int $id): ?array

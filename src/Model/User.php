@@ -20,7 +20,6 @@ class User extends UserValidator
     public function __construct()
     {
         $this->repository = new UserRepository();
-        // $this->rules = (new UserRules())->get();
         return $this->fill();
     }
 
@@ -38,6 +37,7 @@ class User extends UserValidator
 
     public function updateUsername($username)
     {
+         // $this->rules = (new UserRules())->get();
         // if (!$this->validateUsername($username)) {$ok = false;}
 
         // if ($ok ?? true) {
@@ -49,6 +49,7 @@ class User extends UserValidator
 
     public function updatePassword($data)
     {
+         // $this->rules = (new UserRules())->get();
         // if (!$this->validatePasswords($data)) {$ok = false;}
 
         // if ($ok ?? true) {

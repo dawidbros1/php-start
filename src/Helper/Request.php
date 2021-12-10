@@ -57,6 +57,8 @@ class Request
                 return false;
             }
         }
+
+        if (count($this->post) != count($names)) {return false;}
         return true;
     }
 
