@@ -6,6 +6,7 @@ namespace App\Model;
 
 use App\Helper\Session;
 use App\Repository\UserRepository;
+use App\Rules\UserRules;
 use App\Validator\UserValidator;
 
 class User extends UserValidator
@@ -37,26 +38,28 @@ class User extends UserValidator
 
     public function updateUsername($username)
     {
-         // $this->rules = (new UserRules())->get();
-        // if (!$this->validateUsername($username)) {$ok = false;}
+        $this->rules = (new UserRules())->get();
 
-        // if ($ok ?? true) {
-        //     $this->repository->updateUsername($username);
-        // }
+        if ($ok = $this->validate(['username' => $username])) {
+            $this->repository->updateUsername($username);
+        }
 
-        return $ok ?? true;
+        return $ok;
     }
 
     public function updatePassword($data)
     {
-         // $this->rules = (new UserRules())->get();
-        // if (!$this->validatePasswords($data)) {$ok = false;}
+        $this->rules = (new UserRules())->get();
 
-        // if ($ok ?? true) {
-        //     $this->repository->updatePassword($data['password']);
-        // }
+        if (!$same = ($this->password == $data['current_password'])) {
+            Session::set("error:password:current", "Podane hasło jest nieprawidłowe");
+        }
 
-        return $ok ?? true;
+        if ($ok = $this->validate($data) && $same) {
+            $this->repository->updatePassword($data['password']);
+        }
+
+        return $ok;
     }
 
     public function logout()

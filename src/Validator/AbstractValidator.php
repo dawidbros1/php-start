@@ -38,15 +38,6 @@ abstract class AbstractValidator
         return true;
     }
 
-    protected function comparePasswords($password, $repeat_password)
-    {
-        if ($password != $repeat_password) {
-            Session::set("error:password:same", "Hasła nie są jednakowe");
-            $ok = false;
-        }
-        return $ok ?? true;
-    }
-
     // Ogólna klasa VALIDATORA
 
     protected function validate(array $data)
@@ -54,7 +45,8 @@ abstract class AbstractValidator
         $types = array_keys($data);
 
         if (array_key_exists('password', $data) && array_key_exists('repeat_password', $data)) {
-            if ($this->comparePasswords($data['password'], $data['repeat_password']) == false) {
+            if ($data['password'] != $data['repeat_password']) {
+                Session::set("error:password:same", "Hasła nie są jednakowe");
                 $ok = false;
             }
         }

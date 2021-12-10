@@ -49,7 +49,7 @@ use App\Helper\Session;
                             </div>
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:username:strlen'))?>
+                        <?php Error::render('input', Session::getNextClear('error:username:between'))?>
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
                                 type="submit">Aktualizuj </button></div>
@@ -69,7 +69,7 @@ use App\Helper\Session;
                                     class="form-control" placeholder="Aktualne hasło" name="current_password"></div>
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:current_password:same'))?>
+                        <?php Error::render('input', Session::getNextClear('error:password:current'))?>
 
                         <div class="row mt-3">
                             <div class="col-md-12"><label class="labels">Nowe hasło</label><input type="password"
@@ -77,7 +77,7 @@ use App\Helper\Session;
                             </div>
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:password:strlen'))?>
+                        <?php Error::render('input', Session::getNextClear('error:password:between'))?>
 
                         <div class="row mt-3">
                             <div class="col-md-12"><label class="labels">Powtórz nowe hasło</label><input
