@@ -12,4 +12,7 @@ return [
     'mail' => [
         'to' => 'wsparcie@mojeprojekty.tk',
     ],
+    'upload' => [
+        'avatar' => 'public/images/uploads/avatar/',
+    ],
 ];

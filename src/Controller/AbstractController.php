@@ -35,12 +35,12 @@ abstract class AbstractController
         }
 
         AbstractRepository::initConfiguration(self::$configuration['db']);
+        User::initConfiguration(self::$configuration['upload']);
 
         $this->request = $request;
         $this->user = new User();
 
         if ($this->user->id ?? $this->user = null);
-
         $this->view = new View($this->user, self::$route);
     }
 

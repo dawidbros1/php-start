@@ -18,10 +18,17 @@ class User extends UserValidator
     public $password;
     public $rules;
 
+    private static $config;
+
     public function __construct()
     {
         $this->repository = new UserRepository();
         return $this->fill();
+    }
+
+    public static function initConfiguration($config)
+    {
+        self::$config = $config;
     }
 
     public function fill()
@@ -32,6 +39,7 @@ class User extends UserValidator
             $this->username = $data['username'];
             $this->email = $data['email'];
             $this->password = $data['password'];
+            $this->avatar = $data['avatar'];
             $this->created = $data['created'];
         }
     }
@@ -62,8 +70,46 @@ class User extends UserValidator
         return $ok;
     }
 
+    public function updateAvatar($FILE)
+    {
+        if ($this->validateAvatarFile($FILE)) {
+            $target_dir = self::$config['avatar'];
+            $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
+            $FILE['name'] = $this->hashAvatarName($FILE['name']);
+            $target_file = $target_dir . basename($FILE["name"]);
+
+            if ($ok = move_uploaded_file($FILE["tmp_name"], $target_file)) {
+                $this->deleteOldAvatar();
+                $this->repository->updateAvatar($target_dir . $FILE['name']);
+            } else {
+                Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
+            }
+        }
+
+        return $ok ?? false;
+    }
+
     public function logout()
     {
         Session::clear('user:id');
+    }
+
+    private function hashAvatarName(string $name)
+    {
+        $type = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        $name = hash('md5', date('Y-m-d H:i:s') . "_" . $name);
+        $fileName = $name . '.' . $type;
+        return $fileName;
+    }
+
+    private function deleteOldAvatar()
+    {
+        $oldAvatar = $this->avatar;
+
+        if ($oldAvatar != "" || $oldAvatar != null) {
+            if (file_exists($oldAvatar)) {
+                unlink($oldAvatar);
+            }
+        }
     }
 }

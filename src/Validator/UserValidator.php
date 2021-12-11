@@ -9,20 +9,29 @@ use App\Validator\AbstractValidator;
 
 abstract class UserValidator extends AbstractValidator
 {
-    protected function validatePasswords($data)
+    protected function validateAvatarFile($FILE)
     {
-        $rule = $this->rules['password'];
-        $password = $data['password'];
-        $repeat_password = $data['repeat_password'];
-        $current_password = $data['current_password'];
+        $check = getimagesize($FILE["tmp_name"]);
 
-        $ok = parent::validatePassword($password, $repeat_password);
-
-        if ($current_password != $this->password) {
-            Session::set('error:current_password:same', $rule['current.message']);
-            $ok = false;
+        if ($check === false) {
+            Session::set('error', 'Przesłany plik nie jest obrazem');
+            $uploadOk = 0;
         }
 
-        return $ok;
+        // Check file size
+        if (($FILE["size"] > 500000) && $uploadOk) {
+            Session::set('error', 'Przesłany plik jest zbyt duży');
+            $uploadOk = 0;
+        }
+
+        $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
+
+        // Allow certain file formats
+        if ($type != "jpg" && $type != "png" && $type != "jpeg" && $type != "gif" && $uploadOk) {
+            Session::set('error', 'Przesyłany plik posiada niedozwolone rozszerzenie. Dozwolone rozszeszenia to: JPG, JPEG, PNG oraz GIF');
+            $uploadOk = 0;
+        }
+
+        return $uploadOk ?? true;
     }
 }

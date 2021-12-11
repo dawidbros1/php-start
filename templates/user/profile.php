@@ -13,13 +13,27 @@ use App\Helper\Session;
     <div class="row">
         <!-- Lewa kolumna - Zjęcie użytkownika -->
         <div class="col-md-12 col-lg-3 border-right">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
-                    width="150px"
-                    src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
-                    class="font-weight-bold">
-                    <?=$user->username?>
-                </span><span class="text-black-50"><?=$user->email?></span><span>
-                </span></div>
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+
+                <img id = "avatar" class="rounded-circle mt-5" src="<?=$user->avatar != "" ? $user->avatar : 'public/images/avatar.png'?>">
+                <span class="fw-bold"> <?=$user->username?></span>
+                <span class="text-black-50"><?=$user->email?></span>
+                <div class = "border-top w-100 mb-4"></div>
+
+            <!-- START -->
+                <div class = "w-100 fw-bold px-2 pt-1 border">
+                    <div class = "mb-2 border-bottom"> Zmień awatar </div>
+
+                    <form action = "<?=$route['user.updateAvatar']?>" method = "post" enctype="multipart/form-data">
+                        <input type = "file" name = "avatar" class = "w-100 mx-auto">
+
+                        <div class="mt-2 text-center">
+                            <button class="btn btn-primary profile-button w-100" type="submit">Aktualizuj</button>
+                        </div>
+                    </form>
+                </div>
+             <!-- END -->
+            </div>
         </div>
 
         <!-- Środkowa kolumna - Ustawienia profilu -->

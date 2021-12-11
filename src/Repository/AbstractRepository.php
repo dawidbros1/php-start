@@ -13,12 +13,12 @@ abstract class AbstractRepository
 {
     protected $pdo;
     protected static $config;
+    protected static $user_id;
 
     public static function initConfiguration($config)
     {
         self::$config = $config;
     }
-
     public function __construct()
     {
         try {

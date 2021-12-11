@@ -9,12 +9,14 @@ class Request
     private $get = [];
     private $post = [];
     private $server = [];
+    private $files = [];
 
-    public function __construct(array $get, array $post, array $server)
+    public function __construct(array $get, array $post, array $server, array $files)
     {
         $this->get = $get;
         $this->post = $post;
         $this->server = $server;
+        $this->files = $files;
     }
 
     public function isPost(): bool
@@ -42,6 +44,11 @@ class Request
         return $this->post[$name] ?? $default;
     }
 
+    public function files(string $name, $default = null)
+    {
+        return $this->files[$name] ?? $default;
+    }
+
     public function hasPostName(string $name)
     {
         if (!isset($this->post[$name])) {return false;}
@@ -49,7 +56,6 @@ class Request
     }
 
     // ARRAY
-
     public function hasPostNames(array $names)
     {
         foreach ($names as $name) {

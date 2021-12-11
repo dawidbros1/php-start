@@ -12,4 +12,7 @@ return [
     'mail' => [
         'to' => 'Our domain email',
     ],
+    'upload' => [
+        'avatar' => 'Path/to/files/with/avatars',
+    ],
 ];

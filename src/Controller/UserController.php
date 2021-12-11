@@ -54,4 +54,13 @@ class UserController extends AbstractController
 
         $this->redirect(self::$route['user.profile']);
     }
+
+    public function updateAvatarAction()
+    {
+        if ($this->user->updateAvatar($this->request->files('avatar'))) {
+            Session::set('success', 'Awatar został zaktualizowany');
+        }
+
+        $this->redirect(self::$route['user.profile']);
+    }
 }
