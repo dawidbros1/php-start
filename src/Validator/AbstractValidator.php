@@ -52,11 +52,13 @@ abstract class AbstractValidator
         }
 
         foreach ($types as $type) {
-            if (!array_key_exists($type, $this->rules)) {continue;}
+            if (!$this->rules->checkType($type)) {continue;}
 
             self::$betweenStatus = false;
 
-            $rules = $this->rules[$type];
+            $rules = $this->rules->get($type);
+            $this->rules->selectType($type);
+
             $between = (bool) (array_key_exists('min', $rules) && array_key_exists('max', $rules));
             $input = $data[$type];
 

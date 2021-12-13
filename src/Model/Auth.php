@@ -20,7 +20,7 @@ class Auth extends AbstractValidator
 
     public function register(array $data, $method)
     {
-        $this->rules = (new AuthRules)->get();
+        $this->rules = new AuthRules();
         $emails = $this->repository->getEmails();
 
         if (!$unique = !in_array($data['email'], $emails)) {

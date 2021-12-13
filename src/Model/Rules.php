@@ -78,9 +78,9 @@ abstract class Rules
         return $output;
     }
 
-    public function get()
+    public function get($type)
     {
-        return $this->rules;
+        return $this->rules[$type];
     }
 
     public function selectType($type)
@@ -88,8 +88,8 @@ abstract class Rules
         $this->selectedType = $type;
     }
 
-    public function getByType($type)
+    public function checkType($type)
     {
-        return $this->rules[$type];
+        if (array_key_exists($type, $this->rules)) {return true;} else {return false;}
     }
 }

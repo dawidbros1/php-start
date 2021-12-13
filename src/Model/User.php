@@ -42,7 +42,7 @@ class User extends UserValidator
 
     public function updateUsername($username)
     {
-        $this->rules = (new UserRules())->get();
+        $this->rules = new UserRules();
 
         if ($ok = $this->validate(['username' => $username])) {
             $this->repository->updateUsername($username);
@@ -53,7 +53,7 @@ class User extends UserValidator
 
     public function updatePassword($data, $method)
     {
-        $this->rules = (new UserRules())->get();
+        $this->rules = new UserRules();
 
         if (!$same = ($this->password == hash('sha256', $data['current_password']))) {
             Session::set("error:password:current", "Podane hasło jest nieprawidłowe");
