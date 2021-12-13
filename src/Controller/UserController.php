@@ -48,7 +48,7 @@ class UserController extends AbstractController
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
-            if ($this->user->updatePassword($data)) {
+            if ($this->user->updatePassword($data, self::$configuration['hash']['method'])) {
                 Session::set('success', 'Hasło zostało zaktualizowane');
             }
         }

@@ -22,4 +22,7 @@ return [
             'avatar' => 'public/images/avatar.png',
         ],
     ],
+    'hash' => [
+        'method' => "sha256", // sha256 / md5 / ...
+    ],
 ];

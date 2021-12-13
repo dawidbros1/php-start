@@ -18,7 +18,7 @@ class Auth extends AbstractValidator
         $this->repository = new AuthRepository();
     }
 
-    public function register(array $data)
+    public function register(array $data, $method)
     {
         $this->rules = (new AuthRules)->get();
         $emails = $this->repository->getEmails();
@@ -28,15 +28,16 @@ class Auth extends AbstractValidator
         }
 
         if ($ok = $this->validate($data) && $unique) {
+            $data['password'] = hash($method, $data['password']);
             $this->repository->createAccount($data);
         }
 
         return $ok;
     }
 
-    public function login(string $email, string $password)
+    public function login(string $email, string $password, $method)
     {
-        $user = $this->repository->login($email, $password);
+        $user = $this->repository->login($email, hash($method, $password));
 
         if ($user == null) {
             $emails = $this->repository->getEmails();

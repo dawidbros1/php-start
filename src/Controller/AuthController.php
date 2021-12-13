@@ -26,7 +26,7 @@ class AuthController extends AbstractController
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
             $data['defaultPathAvatar'] = self::$configuration['default']['path']['avatar'];
-            if ($this->auth->register($data)) {
+            if ($this->auth->register($data, self::$configuration['hash']['method'])) {
                 Session::set('success', 'Konto zostało utworzone');
                 $this->redirect(self::$route['auth.login'], ['email' => $data['email']]);
             } else {
@@ -44,7 +44,7 @@ class AuthController extends AbstractController
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
 
-            if ($user = $this->auth->login($data['email'], $data['password'])) {
+            if ($user = $this->auth->login($data['email'], $data['password'], self::$configuration['hash']['method'])) {
                 Session::set('user:id', $user['id']);
                 $lastPage = Session::getNextClear('lastPage');
                 $this->redirect($lastPage ? "?" . $lastPage : self::$route['home']);

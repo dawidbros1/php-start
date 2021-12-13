@@ -26,7 +26,7 @@ class User extends UserValidator
         $this->repository = new UserRepository();
         return $this->fill();
     }
-    
+
     public function fill()
     {
         $user_id = Session::get('user:id');
@@ -51,16 +51,16 @@ class User extends UserValidator
         return $ok;
     }
 
-    public function updatePassword($data)
+    public function updatePassword($data, $method)
     {
         $this->rules = (new UserRules())->get();
 
-        if (!$same = ($this->password == $data['current_password'])) {
+        if (!$same = ($this->password == hash('sha256', $data['current_password']))) {
             Session::set("error:password:current", "Podane hasło jest nieprawidłowe");
         }
 
         if ($ok = $this->validate($data) && $same) {
-            $this->repository->updatePassword($data['password']);
+            $this->repository->updatePassword(hash($method, $data['password']));
         }
 
         return $ok;
