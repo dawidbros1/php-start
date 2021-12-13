@@ -26,6 +26,7 @@ class User extends UserValidator
         $this->repository = new UserRepository();
         return $this->fill();
     }
+    
     public function fill()
     {
         $user_id = Session::get('user:id');

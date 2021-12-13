@@ -8,6 +8,7 @@ use App\Exception\ConfigurationException;
 use App\Exception\NotFoundException;
 use App\Exception\StorageException;
 use App\Helper\Request;
+use App\Helper\Session;
 use App\Model\User;
 use App\Repository\AbstractRepository;
 use App\View;
@@ -35,7 +36,7 @@ abstract class AbstractController
         }
 
         AbstractRepository::initConfiguration(self::$configuration['db']);
-     
+
         $this->request = $request;
         $this->user = new User();
 
@@ -78,5 +79,13 @@ abstract class AbstractController
     final private function action(): string
     {
         return $this->request->getParam('action', $this->default_action);
+    }
+
+    final protected function requireLogin()
+    {
+        if ($this->user == null) {
+            Session::set("error", "Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
+            $this->redirect(self::$route['auth.login']);
+        }
     }
 }
