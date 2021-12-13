@@ -9,26 +9,31 @@ use App\Helper\Session;
 
 <!-- soruce: https://bbbootstrap.com/snippets/bootstrap-5-myprofile-90806631 + moje poprawki -->
 
-<div class="container rounded bg-white mt-5 mb-5">
+<!-- <div class="container rounded bg-white mt-5 mb-5"> -->
+<div class="container rounded bg-white my-sm-5">
     <div class="row">
         <!-- Lewa kolumna - Zjęcie użytkownika -->
+        <div class="col-md-0 col-lg-1"></div>
         <div class="col-md-12 col-lg-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
 
-                <img id = "avatar" class="rounded-circle mt-5" src="<?=$user->avatar != "" ? $user->avatar : 'public/images/avatar.png'?>">
-                <span class="fw-bold"> <?=$user->username?></span>
-                <span class="text-black-50"><?=$user->email?></span>
-                <div class = "border-top w-100 mb-4"></div>
-
             <!-- START -->
-                <div class = "w-100 fw-bold px-2 pt-1 border">
-                    <div class = "mb-2 border-bottom"> Zmień awatar </div>
-
+                <div class = "w-100 fw-bold px-2 pt-1">
                     <form action = "<?=$route['user.updateAvatar']?>" method = "post" enctype="multipart/form-data">
-                        <input type = "file" name = "avatar" class = "w-100 mx-auto">
 
-                        <div class="mt-2 text-center">
-                            <button class="btn btn-primary profile-button w-100" type="submit">Aktualizuj</button>
+                        <div class = "position-relative mx-auto mt-5" id = "avatarBox">
+                            <img id = "avatar" class="rounded-circle" src="<?=$user->avatar != "" ? $user->avatar : 'public/images/avatar.png'?>">
+                            <input type = "file" name = "avatar" class = "rounded-circle" id = "file">
+                        </div>
+
+                        <div>
+                            <div class="fw-bold"> <?=$user->username?></div>
+                            <div class="text-black-50"><?=$user->email?></div>
+                            <div class = "border-top w-100 mb-2"></div>
+                        </div>
+
+                        <div class="text-center">
+                            <button class="btn btn-primary profile-button w-100" type="submit">Zmień awatar</button>
                         </div>
                     </form>
                 </div>
@@ -37,7 +42,7 @@ use App\Helper\Session;
         </div>
 
         <!-- Środkowa kolumna - Ustawienia profilu -->
-        <div class="col-md-7 col-lg-5 border-right">
+        <div class="col-md-12 col-lg-7 border-right">
             <div class="p-3 pt-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Ustawienia profilu</h4>
@@ -66,7 +71,7 @@ use App\Helper\Session;
                         <?php Error::render('input', Session::getNextClear('error:username:between'))?>
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
-                                type="submit">Aktualizuj </button></div>
+                                type="submit">Aktualizuj nazwę </button></div>
                     </form>
                 </div>
 
@@ -108,17 +113,6 @@ use App\Helper\Session;
             </div>
         </div>
 
-        <!-- Prawo koluman - Informacje o koncie -->
-        <div class="col-md-4">
-            <div class="px-3 col-12 pt-md-5">
-                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom">
-                    <h6 class="text-center w-100">Informacje o koncie</h6>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span>Data utworzenia: <?=$user->created?></span>
-                </div>
-            </div>
-        </div>
+        <div class="col-md-0 col-lg-1"></div>
     </div>
 </div>
