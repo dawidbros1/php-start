@@ -76,6 +76,10 @@ class Request
         return $this->server['REQUEST_METHOD'] === 'GET';
     }
 
+    public function queryString(): string
+    {
+        return $this->server['QUERY_STRING'];
+    }
     // === FILES ===
     public function file(string $name, $default = null)
     {

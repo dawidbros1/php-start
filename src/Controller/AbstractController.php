@@ -84,6 +84,7 @@ abstract class AbstractController
     final protected function requireLogin()
     {
         if ($this->user == null) {
+            Session::set('lastPage', $this->request->queryString());
             Session::set("error", "Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
             $this->redirect(self::$route['auth.login']);
         }
