@@ -22,7 +22,7 @@ use App\Helper\Session;
                     <form action = "<?=$route['user.updateAvatar']?>" method = "post" enctype="multipart/form-data">
 
                         <div class = "position-relative mx-auto mt-5" id = "avatarBox">
-                            <img id = "avatar" class="rounded-circle" src="<?=$user->avatar != "" ? $user->avatar : 'public/images/avatar.png'?>">
+                            <img id = "avatar" class="rounded-circle" src="<?=$user->avatar?>">
                             <input type = "file" name = "avatar" class = "rounded-circle" id = "file">
                         </div>
 

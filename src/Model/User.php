@@ -16,6 +16,7 @@ class User extends UserValidator
     public $email;
     public $created;
     public $password;
+    public $avatar;
     public $rules;
 
     private static $config;
@@ -25,12 +26,6 @@ class User extends UserValidator
         $this->repository = new UserRepository();
         return $this->fill();
     }
-
-    public static function initConfiguration($config)
-    {
-        self::$config = $config;
-    }
-
     public function fill()
     {
         $user_id = Session::get('user:id');
@@ -70,10 +65,10 @@ class User extends UserValidator
         return $ok;
     }
 
-    public function updateAvatar($FILE)
+    public function updateAvatar($FILE, $path)
     {
         if ($this->validateAvatarFile($FILE)) {
-            $target_dir = self::$config['avatar'];
+            $target_dir = $path;
             $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
             $FILE['name'] = $this->hashAvatarName($FILE['name']);
             $target_file = $target_dir . basename($FILE["name"]);

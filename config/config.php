@@ -13,6 +13,13 @@ return [
         'to' => 'wsparcie@mojeprojekty.tk',
     ],
     'upload' => [
-        'avatar' => 'public/images/uploads/avatar/',
+        'path' => [
+            'avatar' => 'public/images/uploads/avatar/',
+        ],
+    ],
+    'default' => [
+        'path' => [
+            'avatar' => 'public/images/avatar.png',
+        ],
     ],
 ];

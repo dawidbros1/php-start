@@ -5,14 +5,21 @@ declare (strict_types = 1);
 return [
     'db' => [
         'host' => 'localhost',
-        'database' => 'project',
-        'user' => 'root',
+        'database' => '',
+        'user' => '',
         'password' => '',
     ],
     'mail' => [
-        'to' => 'Our domain email',
+        'to' => 'email',
     ],
     'upload' => [
-        'avatar' => 'Path/to/files/with/avatars',
+        'path' => [
+            'avatar' => 'public/images/uploads/avatar/',
+        ],
+    ],
+    'default' => [
+        'path' => [
+            'avatar' => 'public/images/avatar.png',
+        ],
     ],
 ];

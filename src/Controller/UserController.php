@@ -57,8 +57,12 @@ class UserController extends AbstractController
 
     public function updateAvatarAction()
     {
-        if ($this->user->updateAvatar($this->request->files('avatar'))) {
-            Session::set('success', 'Awatar został zaktualizowany');
+        $path = self::$configuration['upload']['path'['avatar']];
+
+        if ($file = $this->request->file('avatar')) {
+            if ($this->user->updateAvatar($file, $path)) {
+                Session::set('success', 'Awatar został zaktualizowany');
+            }
         }
 
         $this->redirect(self::$route['user.profile']);

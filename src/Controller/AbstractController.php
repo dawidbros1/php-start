@@ -35,8 +35,7 @@ abstract class AbstractController
         }
 
         AbstractRepository::initConfiguration(self::$configuration['db']);
-        User::initConfiguration(self::$configuration['upload']);
-
+     
         $this->request = $request;
         $this->user = new User();
 
