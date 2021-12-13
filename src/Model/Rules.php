@@ -7,15 +7,15 @@ namespace App\Model;
 abstract class Rules
 {
     protected $rules;
-    protected $types;
+    protected $selectedType = null;
 
     public function __construct()
     {
         $this->rules();
-        $this->types = array_keys($this->rules);
         $this->messages();
     }
 
+    // Metoda, która dodaje reguły
     public function createRules(string $name, array $data)
     {
         foreach ($data as $key => $value) {
@@ -23,6 +23,7 @@ abstract class Rules
         }
     }
 
+    // Metody, która dodaje wiadomości do reguł
     public function createMessages(string $name, array $data)
     {
         foreach ($data as $key => $message) {
@@ -34,18 +35,61 @@ abstract class Rules
                 $this->rules[$name][$key]['message'] = $message;
             }
         }
-
-        array_shift($this->types);
     }
 
-    public function getValue($name)
+    public function value(string $name)
     {
-        $type = $this->types[0];
-        return $this->rules[$type][$name]['value'];
+        if (!$this->selectedType) {
+            $type = strtok($name, '.');
+            $param = substr($name, strpos($name, ".") + 1);
+            return $this->rules[$type][$param]['value'];
+        } else {
+            return $this->rules[$this->selectedType][$name]['value'];
+        }
+    }
+
+    public function message(string $name)
+    {
+        if (!$this->selectedType) {
+            $type = strtok($name, '.');
+            $param = substr($name, strpos($name, ".") + 1);
+            return $this->rules[$type][$param]['message'];
+        } else {
+            return $this->rules[$this->selectedType][$name]['message'];
+        }
+    }
+
+    public function arrayValue(string $name, bool $uppercase = false)
+    {
+        $type = strtok($name, '.');
+        $param = substr($name, strpos($name, ".") + 1);
+        $output = "";
+
+        foreach ($this->rules[$type][$param]['value'] as $value) {
+            $output .= ($value . ", ");
+        }
+
+        if ($uppercase) {
+            $output = strtoupper($output);
+        }
+
+        $output = substr($output, 0, -2);
+
+        return $output;
     }
 
     public function get()
     {
         return $this->rules;
+    }
+
+    public function selectType($type)
+    {
+        $this->selectedType = $type;
+    }
+
+    public function getByType($type)
+    {
+        return $this->rules[$type];
     }
 }

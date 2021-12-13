@@ -61,7 +61,7 @@ abstract class AbstractValidator
             $input = $data[$type];
 
             foreach (array_keys($rules) as $rule) {
-                // Tutaj zwrócic wyjątek, że brakuje message do rules
+                //! Tutaj zwrócic wyjątek, że brakuje message do rules
                 $message = $rules[$rule]['message'] ?? "Wyjątek";
                 $value = $rules[$rule]['value'];
 

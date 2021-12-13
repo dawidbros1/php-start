@@ -17,13 +17,12 @@ class AuthRules extends Rules
 
     public function messages()
     {
-        // Exactly the same order as in the rules
         $this->createMessages('username', [
-            'between' => "Nazwa użytkownika powinna zawierać od " . $this->getValue('min') . " do " . $this->getValue('max') . " znaków",
+            'between' => "Nazwa użytkownika powinna zawierać od " . $this->value('username.min') . " do " . $this->value('username.max') . " znaków",
         ]);
 
         $this->createMessages('password', [
-            'between' => "Hasło powinno zawierać od " . $this->getValue('min') . " do " . $this->getValue('max') . " znaków",
+            'between' => "Hasło powinno zawierać od " . $this->value('password.min') . " do " . $this->value('password.max') . " znaków",
         ]);
 
         $this->createMessages('email', [

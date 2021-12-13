@@ -5,7 +5,6 @@ declare (strict_types = 1);
 namespace App\Controller;
 
 use App\Exception\ConfigurationException;
-use App\Exception\NotFoundException;
 use App\Exception\StorageException;
 use App\Helper\Request;
 use App\Helper\Session;
@@ -54,8 +53,6 @@ abstract class AbstractController
             $this->$action();
         } catch (StorageException $e) {
             $this->view->render('error', ['message' => $e->getMessage()]);
-        } catch (NotFoundException $e) {
-            $this->redirect('/', ['error' => 'noteNotFound']);
         }
     }
 
