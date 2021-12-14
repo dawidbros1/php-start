@@ -86,4 +86,15 @@ abstract class AbstractController
             $this->redirect(self::$route['auth.login']);
         }
     }
+
+    final protected function requireAdmin()
+    {
+        $this->requireLogin();
+        Session::clear('lastPage');
+
+        if (!$this->user->isAdmin()) {
+            Session::set("error", "Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
+            $this->redirect(self::$route['home']);
+        }
+    }
 }

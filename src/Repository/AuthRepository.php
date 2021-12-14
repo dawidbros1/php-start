@@ -16,10 +16,11 @@ class AuthRepository extends AbstractRepository
                 'email' => $data['email'],
                 'password' => $data['password'],
                 'avatar' => $data['defaultPathAvatar'] ?? null,
+                'avatar' => $data['role'],
                 'created' => date('Y-m-d H:i:s'),
             ];
 
-            $sql = "INSERT INTO users (username, email, password, avatar, created) VALUES (:username, :email, :password, :avatar, :created)";
+            $sql = "INSERT INTO users (username, email, password, avatar, role, created) VALUES (:username, :email, :password, :avatar, :role, :created)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($data);
         } catch (Throwable $e) {

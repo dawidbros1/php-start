@@ -29,6 +29,7 @@ class Auth extends AbstractValidator
 
         if ($ok = $this->validate($data) && $unique) {
             $data['password'] = hash($method, $data['password']);
+            $data['role'] = "user";
             $this->repository->createAccount($data);
         }
 

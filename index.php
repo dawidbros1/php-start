@@ -12,6 +12,7 @@ $routing = require_once 'routes/routes.php';
 use App\Controller\AbstractController;
 use App\Controller\AuthController;
 use App\Controller\GeneralController;
+use App\Controller\SocialMediaController;
 use App\Controller\UserController;
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
@@ -27,6 +28,7 @@ try {
     if ($type == "auth") {(new AuthController($request))->run();} //
     else if ($type == "user") {(new UserController($request))->run();} //
     else if ($type == "general") {(new GeneralController($request))->run();} //
+    else if ($type == "social") {(new SocialMediaController($request))->run();} //
     else {(new GeneralController($request))->run();} //
 
 } catch (ConfigurationException $e) {

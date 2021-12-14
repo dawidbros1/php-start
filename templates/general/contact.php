@@ -7,13 +7,17 @@
                 <h2>Informacje o nas</h2>
                 <h3>Adres email</h3>
                 <div class = "email"> example@gmail.com </div>
-                <h3>Media społecznościowe</h3>
 
-                <div id="icons">
-                    <?php foreach ($social = $params['social'] as $item): ?>
-                        <a target="_blank" href = "<?=$item['link']?>"><img src = "<?=$item['icon']?>"></a>
-                    <?php endforeach;?>
-                </div>
+                <?php if ($params['social'] != []): ?>
+                    <h3>Media społecznościowe</h3>
+
+                    <div id="icons">
+                        <?php foreach ($social = $params['social'] as $item): ?>
+                            <a target="_blank" href = "<?=$item['link']?>"><img src = "<?=$item['icon']?>"></a>
+                        <?php endforeach;?>
+                    </div>
+
+                <?php endif;?>
             </div>
         </div>
         <div class="form">

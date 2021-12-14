@@ -17,6 +17,7 @@ class User extends UserValidator
     public $created;
     public $password;
     public $avatar;
+    public $role;
     public $rules;
 
     private static $config;
@@ -36,6 +37,7 @@ class User extends UserValidator
             $this->email = $data['email'];
             $this->password = $data['password'];
             $this->avatar = $data['avatar'];
+            $this->role = $data['role'];
             $this->created = $data['created'];
         }
     }
@@ -78,6 +80,7 @@ class User extends UserValidator
                 $this->deleteOldAvatar();
                 $this->repository->updateAvatar($target_dir . $FILE['name']);
             } else {
+                // Np: Gdy ścieżka jest niepoprawna [ nie istnieje ]
                 Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
             }
         }
@@ -88,6 +91,11 @@ class User extends UserValidator
     public function logout()
     {
         Session::clear('user:id');
+    }
+
+    public function isAdmin()
+    {
+        return (bool) ($this->role === "admin");
     }
 
     private function hashAvatarName(string $name)
