@@ -14,7 +14,7 @@ return [
     ],
     'upload' => [
         'path' => [
-            'avatar' => 'public/images/uploads/avatar/',
+            'avatar' => 'uploads/images/avatar/',
         ],
     ],
     'default' => [

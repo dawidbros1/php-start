@@ -58,7 +58,7 @@ class UserController extends AbstractController
 
     public function updateAvatarAction()
     {
-        $path = self::$configuration['upload']['path'['avatar']];
+        $path = self::$configuration['upload']['path']['avatar'];
 
         if ($file = $this->request->file('avatar')) {
             if ($this->user->updateAvatar($file, $path)) {
