@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Exception\AppException;
+
 abstract class Rules
 {
     protected $rules;
@@ -15,7 +17,7 @@ abstract class Rules
         $this->messages();
     }
 
-    // Metoda, która dodaje reguły
+    // Podstawowe metody do tworzenia reguł oraz wiadomości
     public function createRules(string $name, array $data)
     {
         foreach ($data as $key => $value) {
@@ -23,7 +25,6 @@ abstract class Rules
         }
     }
 
-    // Metody, która dodaje wiadomości do reguł
     public function createMessages(string $name, array $data)
     {
         foreach ($data as $key => $message) {
@@ -37,26 +38,44 @@ abstract class Rules
         }
     }
 
-    public function value(string $name)
+    // ===== ===== ===== ===== =====
+
+    public function value(?string $name = null)
     {
-        if (!$this->selectedType) {
-            $type = strtok($name, '.');
-            $param = substr($name, strpos($name, ".") + 1);
-            return $this->rules[$type][$param]['value'];
-        } else {
-            return $this->rules[$this->selectedType][$name]['value'];
-        }
+        return $this->getParam($name, 'value');
     }
 
-    public function message(string $name)
+    public function message(?string $name = null)
     {
-        if (!$this->selectedType) {
-            $type = strtok($name, '.');
-            $param = substr($name, strpos($name, ".") + 1);
-            return $this->rules[$type][$param]['message'];
+        return $this->getParam($name, 'message');
+    }
+
+    private function getParam($name, $param)
+    {
+        if ($this->selectedType) {
+            if (!array_key_exists($name, $this->rules[$this->selectedType])) {
+                throw new AppException('Wybrana reguła nie istnieje');
+            }
+
+            $message = $this->rules[$this->selectedType][$name][$param];
+
         } else {
-            return $this->rules[$this->selectedType][$name]['message'];
+            $type = strtok($name, '.');
+
+            if (!$this->checkType($type)) {
+                throw new AppException('Wprowadzony typ reguły nie istnieje');
+            }
+
+            $rule = substr($name, strpos($name, ".") + 1);
+
+            if (!array_key_exists($rule, $this->rules[$type])) {
+                throw new AppException('Wybrana reguła nie istnieje');
+            }
+
+            $message = $this->rules[$type][$rule][$param];
         }
+
+        return $message;
     }
 
     public function arrayValue(string $name, bool $uppercase = false)
@@ -69,27 +88,67 @@ abstract class Rules
             $output .= ($value . ", ");
         }
 
-        if ($uppercase) {
-            $output = strtoupper($output);
-        }
-
+        if ($uppercase) {$output = strtoupper($output);}
         $output = substr($output, 0, -2);
-
         return $output;
     }
 
-    public function get($type)
+    // ===== ===== ===== ===== =====
+
+    public function checkType(string $type)
     {
-        return $this->rules[$type];
+        if (array_key_exists($type, $this->rules)) {return true;} else {return false;}
     }
 
-    public function selectType($type)
+    public function selectType(string $type)
     {
+        if (!$this->checkType($type)) {
+            throw new AppException('Wybrany typ nie istnieje');
+        }
+
         $this->selectedType = $type;
     }
 
-    public function checkType($type)
+    public function clearType()
     {
-        if (array_key_exists($type, $this->rules)) {return true;} else {return false;}
+        $this->selectedType = null;
+    }
+
+    public function get(?string $type = null)
+    {
+        if ($this->selectedType != null) {
+            return $this->rules[$this->selectedType];
+        } else {
+            if ($type == null) {
+                throw new AppException('Typ reguły nie został wprowadzony');
+            }
+
+            if (!$this->checkType($type)) {
+                throw new AppException('Wybrany typ nie istnieje');
+            }
+
+            return $this->rules[$type];
+        }
+    }
+
+    public function hasKeys(array $keys, ?string $type = null)
+    {
+        if ($this->selectedType != null) {
+            $rules = $this->rules[$this->selectedType];
+        } else if ($type == null) {
+            throw new AppException('Typ reguły nie został wprowadzony');
+        } else if (!$this->checkType($type)) {
+            throw new AppException('Wybrany typ nie istnieje');
+        } else {
+            $rules = $this->rules[$type];
+        }
+
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $rules)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

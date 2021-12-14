@@ -6,10 +6,10 @@ namespace App\Validator;
 
 use App\Helper\Session;
 
+// use App\Excep
+
 abstract class AbstractValidator
 {
-    protected static $betweenStatus = false;
-
     // Metody walidacyjne wielokrotnego użytku
     protected function strlenBetween(string $variable, int $min, int $max)
     {
@@ -54,30 +54,25 @@ abstract class AbstractValidator
         foreach ($types as $type) {
             if (!$this->rules->checkType($type)) {continue;}
 
-            self::$betweenStatus = false;
-
-            $rules = $this->rules->get($type);
             $this->rules->selectType($type);
-
-            $between = (bool) (array_key_exists('min', $rules) && array_key_exists('max', $rules));
+            $between = (bool) $this->rules->hasKeys(['min', 'max']);
             $input = $data[$type];
 
-            foreach (array_keys($rules) as $rule) {
-                //! Tutaj zwrócic wyjątek, że brakuje message do rules
-                $message = $rules[$rule]['message'] ?? "Wyjątek";
-                $value = $rules[$rule]['value'];
+            foreach (array_keys($this->rules->get()) as $rule) {
+                $value = $this->rules->value($rule);
+                $message = $this->rules->message($rule);
 
                 // ================================================
-                if (($rule == "min" || $rule == "max") && $between == true && self::$betweenStatus == false) {
-                    $min = $rules['min']['value'];
-                    $max = $rules['max']['value'];
+                if (($rule == "min" || $rule == "max") && $between) {
+                    $min = $this->rules->value('min');
+                    $max = $this->rules->value('max');
 
                     if ($this->strlenBetween($input, $min - 1, $max + 1) == false) {
-                        Session::set("error:$type:between", $rules['min']['message']);
+                        Session::set("error:$type:between", $message);
                         $ok = false;
                     }
 
-                    self::$betweenStatus = true;
+                    $between = false;
                 }
                 // ================================================
                 else if ($rule == "max" && $between == false) {
