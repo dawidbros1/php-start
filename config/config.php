@@ -15,6 +15,7 @@ return [
     'upload' => [
         'path' => [
             'avatar' => 'uploads/images/avatar/',
+            'social_media' => 'uploads/images/social media/',
         ],
     ],
     'default' => [

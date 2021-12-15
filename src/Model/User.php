@@ -70,14 +70,17 @@ class User extends UserValidator
 
     public function updateAvatar($FILE, $path)
     {
-        if ($this->validateAvatarFile($FILE)) {
+        $this->rules = new UserRules();
+        $this->rules->selectType('avatar');
+
+        if ($this->validateImage($FILE, $this->rules)) {
             $target_dir = $path;
             $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
             $FILE['name'] = $this->hashAvatarName($FILE['name']);
             $target_file = $target_dir . basename($FILE["name"]);
 
             if ($ok = move_uploaded_file($FILE["tmp_name"], $target_file)) {
-                $this->deleteOldAvatar();
+                $this->deleteFile($this->avatar);
                 $this->repository->updateAvatar($target_dir . $FILE['name']);
             } else {
                 // Np: Gdy ścieżka jest niepoprawna [ nie istnieje ]
@@ -98,6 +101,8 @@ class User extends UserValidator
         return (bool) ($this->role === "admin");
     }
 
+    // ===== ===== ===== ===== =====
+
     private function hashAvatarName(string $name)
     {
         $type = strtolower(pathinfo($name, PATHINFO_EXTENSION));
@@ -106,13 +111,11 @@ class User extends UserValidator
         return $fileName;
     }
 
-    private function deleteOldAvatar()
+    private function deleteFile($file)
     {
-        $oldAvatar = $this->avatar;
-
-        if ($oldAvatar != "" || $oldAvatar != null) {
-            if (file_exists($oldAvatar)) {
-                unlink($oldAvatar);
+        if ($file != "" || $file != null) {
+            if (file_exists($file)) {
+                unlink($file);
             }
         }
     }

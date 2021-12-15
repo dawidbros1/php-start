@@ -26,6 +26,11 @@ use App\Helper\Session;
                             <input type = "file" name = "avatar" class = "rounded-circle" id = "file">
                         </div>
 
+                        <?php Error::render('input', Session::getNextClear('error:file:empty'))?>
+                        <?php Error::render('input', Session::getNextClear('error:file:notImage'))?>
+                        <?php Error::render('input', Session::getNextClear('error:file:maxSize'))?>
+                        <?php Error::render('input', Session::getNextClear('error:file:types'))?>
+
                         <div>
                             <div class="fw-bold"> <?=$user->username?></div>
                             <div class="text-black-50"><?=$user->email?></div>

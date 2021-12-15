@@ -42,7 +42,6 @@ class UserRepository extends AbstractRepository
 
     public function updateAvatar($avatar)
     {
-
         $data = ['avatar' => $avatar, 'id' => self::$user_id];
         $sql = "UPDATE users SET avatar=:avatar WHERE id=:id";
         $stmt = $this->pdo->prepare($sql);

@@ -20,18 +20,18 @@ abstract class AbstractValidator
         return false;
     }
 
-    protected function strlenMax(string $variable, int $max)
+    protected function strlenMax(string $input, int $max)
     {
-        if (strlen($variable) > $max) {
+        if (strlen($input) > $max) {
             return false;
         }
 
         return true;
     }
 
-    protected function strlenMin(string $variable, int $min)
+    protected function strlenMin(string $input, int $min)
     {
-        if (strlen($variable) < $min) {
+        if (strlen($input) < $min) {
             return false;
         }
 
@@ -52,7 +52,7 @@ abstract class AbstractValidator
         }
 
         foreach ($types as $type) {
-            if (!$this->rules->checkType($type)) {continue;}
+            if (!$this->rules->hasType($type)) {continue;}
 
             $this->rules->selectType($type);
             $between = (bool) $this->rules->hasKeys(['min', 'max']);
@@ -101,11 +101,51 @@ abstract class AbstractValidator
                         Session::set("error:$type:$rule", $message);
                         $ok = false;
                     }
+                } else if ($rule == "require" && $value == true) {
+                    if (empty($input)) {
+                        Session::set("error:$type:$rule", $message);
+                        $ok = false;
+                    }
                 }
                 // ================================================
             }
         }
 
         return $ok ?? true;
+    }
+
+    protected function validateImage($FILE, $rules)
+    {
+        $uploadOk = 1;
+
+        if (empty($FILE['name'])) {
+            Session::set('error:file:empty', "Nie został wybrany żaden plik");
+            return 0;
+        }
+
+        $check = getimagesize($FILE["tmp_name"]);
+
+        if ($check === false && $uploadOk) {
+            Session::set('error:file:notImage', 'Przesłany plik nie jest obrazem');
+            return 0;
+        }
+
+        if ($rules->hasKeys(['maxSize'])) {
+            if (($FILE["size"] >= $rules->value('maxSize')) && $uploadOk) {
+                Session::set('error:file:maxSize', $rules->message('maxSize'));
+                $uploadOk = 0;
+            }
+        }
+
+        if ($rules->hasKeys(['types'])) {
+            $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
+
+            if (!in_array($type, $rules->value('types'))) {
+                Session::set('error:file:types', $rules->message('types'));
+                $uploadOk = 0;
+            }
+        }
+
+        return $uploadOk;
     }
 }

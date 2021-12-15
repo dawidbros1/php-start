@@ -28,7 +28,7 @@ class UserRules extends AuthRules
     public function messages()
     {
         $this->createMessages('avatar', [
-            'maxSize' => "Przesłany obraz jest zbyt duży, jego rozmiar nie może być większy niż " . $this->value('avatar.maxSize') . " pixelów",
+            'maxSize' => "Przesłany plik jest zbyt duży. Rozmiar pliku nie może być większy niż " . $this->value('avatar.maxSize') . " pixelów",
             'types' => "Przesyłany plik posiada niedozwolone rozszerzenie. Dozwolone rozszeszenia to: " . $this->arrayValue('avatar.types', true),
         ]);
     }

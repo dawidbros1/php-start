@@ -50,34 +50,6 @@ abstract class Rules
         return $this->getParam($name, 'message');
     }
 
-    private function getParam($name, $param)
-    {
-        if ($this->selectedType) {
-            if (!array_key_exists($name, $this->rules[$this->selectedType])) {
-                throw new AppException('Wybrana reguła nie istnieje');
-            }
-
-            $message = $this->rules[$this->selectedType][$name][$param];
-
-        } else {
-            $type = strtok($name, '.');
-
-            if (!$this->checkType($type)) {
-                throw new AppException('Wprowadzony typ reguły nie istnieje');
-            }
-
-            $rule = substr($name, strpos($name, ".") + 1);
-
-            if (!array_key_exists($rule, $this->rules[$type])) {
-                throw new AppException('Wybrana reguła nie istnieje');
-            }
-
-            $message = $this->rules[$type][$rule][$param];
-        }
-
-        return $message;
-    }
-
     public function arrayValue(string $name, bool $uppercase = false)
     {
         $type = strtok($name, '.');
@@ -95,14 +67,14 @@ abstract class Rules
 
     // ===== ===== ===== ===== =====
 
-    public function checkType(string $type)
+    public function hasType(string $type)
     {
         if (array_key_exists($type, $this->rules)) {return true;} else {return false;}
     }
 
     public function selectType(string $type)
     {
-        if (!$this->checkType($type)) {
+        if (!$this->hasType($type)) {
             throw new AppException('Wybrany typ nie istnieje');
         }
 
@@ -123,7 +95,7 @@ abstract class Rules
                 throw new AppException('Typ reguły nie został wprowadzony');
             }
 
-            if (!$this->checkType($type)) {
+            if (!$this->hasType($type)) {
                 throw new AppException('Wybrany typ nie istnieje');
             }
 
@@ -137,7 +109,7 @@ abstract class Rules
             $rules = $this->rules[$this->selectedType];
         } else if ($type == null) {
             throw new AppException('Typ reguły nie został wprowadzony');
-        } else if (!$this->checkType($type)) {
+        } else if (!$this->hasType($type)) {
             throw new AppException('Wybrany typ nie istnieje');
         } else {
             $rules = $this->rules[$type];
@@ -150,5 +122,35 @@ abstract class Rules
         }
 
         return true;
+    }
+
+    // ===== ===== ===== ===== =====
+
+    private function getParam($name, $param)
+    {
+        if ($this->selectedType) {
+            if (!array_key_exists($name, $this->rules[$this->selectedType])) {
+                throw new AppException('Wybrana reguła nie istnieje');
+            }
+
+            $message = $this->rules[$this->selectedType][$name][$param];
+
+        } else {
+            $type = strtok($name, '.');
+
+            if (!$this->hasType($type)) {
+                throw new AppException('Wprowadzony typ reguły nie istnieje');
+            }
+
+            $rule = substr($name, strpos($name, ".") + 1);
+
+            if (!array_key_exists($rule, $this->rules[$type])) {
+                throw new AppException('Wybrana reguła nie istnieje');
+            }
+
+            $message = $this->rules[$type][$rule][$param];
+        }
+
+        return $message;
     }
 }

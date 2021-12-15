@@ -9,11 +9,11 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
+    <link href="public/css/style.css" rel="stylesheet">
+
     <?php foreach ($styles as $style): ?>
         <link href="public/css/<?=$style?>.css" rel="stylesheet">
     <?php endforeach;?>
-
-    <link href="public/css/style.css" rel="stylesheet">
 </head>
 
 <body>

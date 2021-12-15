@@ -30,6 +30,17 @@ class Request
         return $this->post[$name] ?? $default;
     }
 
+    public function postParams(array $names)
+    {
+        $output = [];
+
+        foreach ($names as $name) {
+            $output[$name] = $this->postParam($name);
+        }
+
+        return $output;
+    }
+
     public function hasPostName(string $name)
     {
         if (!isset($this->post[$name])) {return false;}
@@ -48,21 +59,21 @@ class Request
         return true;
     }
 
-    public function postParams(array $names)
-    {
-        $output = [];
-
-        foreach ($names as $name) {
-            $output[$name] = $this->post[$name];
-        }
-
-        return $output;
-    }
-
     // === GET ===
     public function getParam(string $name, $default = null)
     {
         return $this->get[$name] ?? $default;
+    }
+
+    public function getParams(array $names)
+    {
+        $output = [];
+
+        foreach ($names as $name) {
+            $output[$name] = $this->getParam($name);
+        }
+
+        return $output;
     }
 
     // === SERVER ===
