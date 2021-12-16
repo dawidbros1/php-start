@@ -11,9 +11,9 @@
 
     <link href="public/css/style.css" rel="stylesheet">
 
-    <?php foreach ($styles as $style): ?>
+    <?php if ($style): ?>
         <link href="public/css/<?=$style?>.css" rel="stylesheet">
-    <?php endforeach;?>
+    <?php endif;?>
 </head>
 
 <body>

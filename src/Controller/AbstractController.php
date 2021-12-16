@@ -17,7 +17,6 @@ abstract class AbstractController
     protected static $configuration = [];
     protected static $route = [];
 
-    protected $repository;
     protected $request;
     protected $view;
     protected $user;
@@ -35,6 +34,7 @@ abstract class AbstractController
         }
 
         AbstractRepository::initConfiguration(self::$configuration['db']);
+        View::setStyle($this->style ?? null);
 
         $this->request = $request;
         $this->user = new User();
@@ -48,7 +48,8 @@ abstract class AbstractController
         try {
             $action = $this->action() . 'Action';
             if (!method_exists($this, $action)) {
-                $action = $this->default_action . 'Action';
+                Session::set("error", 'Akcja do której chciałeś otrzymać dostęp nie istnieje');
+                $this->redirect(self::$route['home']);
             }
             $this->$action();
         } catch (StorageException $e) {
@@ -75,8 +76,10 @@ abstract class AbstractController
 
     final private function action(): string
     {
-        return $this->request->getParam('action', $this->default_action);
+        return $this->request->getParam('action');
     }
+
+    // ===== ===== ===== ===== =====
 
     final protected function requireLogin()
     {
@@ -95,6 +98,20 @@ abstract class AbstractController
         if (!$this->user->isAdmin()) {
             Session::set("error", "Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
             $this->redirect(self::$route['home']);
+        }
+    }
+
+    protected function uploadFile($path, $FILE)
+    {
+        $target_dir = $path;
+        $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
+        $target_file = $target_dir . basename($FILE["name"]);
+
+        if (move_uploaded_file($FILE["tmp_name"], $target_file)) {
+            return true;
+        } else {
+            Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
+            return false;
         }
     }
 }

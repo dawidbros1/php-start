@@ -20,7 +20,7 @@
                     Zarządzaj
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                    <li><a class="dropdown-item" href="<?=$route['social.list']?>">Media społecznościowe</a></li>
+                    <li><a class="dropdown-item" href="<?=$route['medium.list']?>">Media społecznościowe</a></li>
                 </ul>
             </li>
         <?php endif;?>

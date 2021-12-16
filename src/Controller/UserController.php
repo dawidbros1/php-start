@@ -10,7 +10,7 @@ use App\Helper\Session;
 
 class UserController extends AbstractController
 {
-    public $default_action = 'profile';
+    public $style = "profile";
 
     public function __construct(Request $request)
     {
@@ -27,7 +27,7 @@ class UserController extends AbstractController
 
     public function profileAction()
     {
-        $this->view->render('user/profile', [], ['profile']);
+        $this->view->render('user/profile', []);
     }
 
     public function updateUsernameAction()

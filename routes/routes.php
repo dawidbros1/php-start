@@ -8,6 +8,6 @@ $route = new Route();
 $route->group('', ['home', 'policy', 'contact', 'regulations']);
 $route->group('auth', ['register', 'login']);
 $route->group('user', ['logout', 'profile', 'updateUsername', 'updatePassword', 'updateAvatar']);
-$route->group('social', ['list', 'show', 'create', 'edit', 'delete']);
+$route->group('medium', ['list', 'create', 'edit', 'delete']);
 
 return $route->get();

@@ -7,18 +7,26 @@ use App\Helper\Session;
 
 ?>
 
+<?php $media = $params['media']?>
+
 <div class = "container my-sm-5">
     <div class = "row bg-white py-md-5">
-        <div class="col-12 offset-0 offset-md-1 col-md-10 p-2 px-4">
+        <div class="col-12 offset-0 offset-md-1 col-md-10 p-2">
         <!-- MEDIA SECTION [ START ] -->
-           <div class = "mb-5">
+           <div class = "mb-5 px-4">
                 <h2 class = "text-center fw-bold border-bottom py-1 col-12">Media społecznościowe</h2>
+
+                <?php if (!$params['media']): ?>
+                    <p class = "text-center h5">Brak danych do wyświetlenia</p>
+                <?php endif;?>
+
                 <div>
                     <div class = "row">
-                        <?php foreach ($params['media'] ?? [] as $medium): ?>
+                        <?php foreach ($media ?? [] as $medium): ?>
                             <!-- <div class = "col-3 col-md-2"> -->
                             <div class = "col-4 col-sm-3 col-md-3 col-lg-2 col-xl-1">
-                                <a href = "#"><img src = "<?=$medium['icon']?>" class = "medium-img mb-2"></a>
+                                <?php $link = $route['medium.edit'] . "&id=" . $medium->id;?>
+                                <a href = "<?=$link?>"><img src = "<?=$medium->icon?>" class = "medium-img mb-2"></a>
                             </div>
                         <?php endforeach;?>
                     </div>
@@ -27,10 +35,10 @@ use App\Helper\Session;
         <!-- MEDIA SECTION [ END ] -->
 
         <!-- ADD MEDIUM SECTION [ START ] -->
-            <div>
-                <h2 class = "text-center fw-bold border-bottom py-1 col-12">Dodaj nowe medium społecznościowe</h2>
+            <div class = "border px-4">
+                <h2 class = "text-center fw-bold border-bottom py-1 col-12">Dodaj medium społecznościowe</h2>
 
-                <form action="<?=$route['social.create']?>" method="post" enctype="multipart/form-data">
+                <form action="<?=$route['medium.create']?>" method="post" enctype="multipart/form-data">
                     <div class="row mt-1">
                         <div class="col-sm-12 mt-1">
                             <label class="labels">Nazwa</label>

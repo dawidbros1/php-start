@@ -7,6 +7,12 @@ namespace App;
 class View
 {
     private $user;
+    private static $style = null;
+
+    public static function setStyle($style)
+    {
+        self::$style = $style;
+    }
 
     public function __construct($user, $route)
     {
@@ -14,12 +20,12 @@ class View
         $this->route = $route;
     }
 
-    public function render(string $page, array $params = [], ?array $styles = []): void
+    public function render(string $page, array $params = []): void
     {
         $user = $this->user;
         $params = $this->escape($params);
         $route = $this->route;
-        $styles = $styles;
+        $style = self::$style ?? "";
 
         require_once 'templates/layout/main.php';
     }
@@ -28,6 +34,12 @@ class View
     {
         $clearParams = [];
         foreach ($params as $key => $param) {
+
+            if (gettype($params === "object")) {
+                $clearParams[$key] = $param;
+                continue;
+            }
+
             switch (true) {
                 case is_array($param):
                     $clearParams[$key] = $this->escape($param);

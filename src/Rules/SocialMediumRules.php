@@ -6,7 +6,7 @@ namespace App\Rules;
 
 use App\Model\Rules;
 
-class SocialMediaRules extends Rules
+class SocialMediumRules extends Rules
 {
     public function rules()
     {

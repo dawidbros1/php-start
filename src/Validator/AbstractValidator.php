@@ -40,7 +40,7 @@ abstract class AbstractValidator
 
     // Ogólna klasa VALIDATORA
 
-    protected function validate(array $data)
+    public function validate(array $data, $rules)
     {
         $types = array_keys($data);
 
@@ -52,20 +52,20 @@ abstract class AbstractValidator
         }
 
         foreach ($types as $type) {
-            if (!$this->rules->hasType($type)) {continue;}
+            if (!$rules->hasType($type)) {continue;}
 
-            $this->rules->selectType($type);
-            $between = (bool) $this->rules->hasKeys(['min', 'max']);
+            $rules->selectType($type);
+            $between = (bool) $rules->hasKeys(['min', 'max']);
             $input = $data[$type];
 
-            foreach (array_keys($this->rules->get()) as $rule) {
-                $value = $this->rules->value($rule);
-                $message = $this->rules->message($rule);
+            foreach (array_keys($rules->get()) as $rule) {
+                $value = $rules->value($rule);
+                $message = $rules->message($rule);
 
                 // ================================================
                 if (($rule == "min" || $rule == "max") && $between) {
-                    $min = $this->rules->value('min');
-                    $max = $this->rules->value('max');
+                    $min = $rules->value('min');
+                    $max = $rules->value('max');
 
                     if ($this->strlenBetween($input, $min - 1, $max + 1) == false) {
                         Session::set("error:$type:between", $message);
@@ -114,7 +114,7 @@ abstract class AbstractValidator
         return $ok ?? true;
     }
 
-    protected function validateImage($FILE, $rules)
+    public function validateImage($FILE, $rules, $type)
     {
         $uploadOk = 1;
 
@@ -129,6 +129,8 @@ abstract class AbstractValidator
             Session::set('error:file:notImage', 'Przesłany plik nie jest obrazem');
             return 0;
         }
+
+        $rules->selectType($type);
 
         if ($rules->hasKeys(['maxSize'])) {
             if (($FILE["size"] >= $rules->value('maxSize')) && $uploadOk) {

@@ -5,56 +5,39 @@ declare (strict_types = 1);
 namespace App\Model;
 
 use App\Helper\Session;
-use App\Repository\AuthRepository;
-use App\Rules\AuthRules;
 use App\Validator\AbstractValidator;
 
 class Auth extends AbstractValidator
 {
-    public $rules;
+    public $username;
+    public $email;
+    public $password;
+    public $repeat_password;
 
-    public function __construct()
+    public function __construct(array $data)
     {
-        $this->repository = new AuthRepository();
+        if ($data != null) {
+            $this->username = $data['username'] ?? null;
+            $this->email = $data['email'] ?? null;
+            $this->password = $data['password'] ?? null;
+            $this->repeat_password = $data['repeat_password'] ?? null;
+            $this->avatar = $data['avatar'] ?? null;
+        }
     }
 
-    public function register(array $data, $method)
+    public function isBusyEmail(?array $emails)
     {
-        $this->rules = new AuthRules();
-        $emails = $this->repository->getEmails();
-
-        if (!$unique = !in_array($data['email'], $emails)) {
-            Session::set("error:email:unique", "Podany adres email jest zajęty");
-        }
-
-        if ($ok = $this->validate($data) && $unique) {
-            $data['password'] = hash($method, $data['password']);
-            $data['role'] = "user";
-            $this->repository->createAccount($data);
-        }
-
-        return $ok;
-    }
-
-    public function login(string $email, string $password, $method)
-    {
-        $user = $this->repository->login($email, hash($method, $password));
-
-        if ($user == null) {
-            $emails = $this->repository->getEmails();
-
-            if (in_array($email, $emails)) {
-                Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
-            } else {
-                Session::set("error:email:null", "Podany adres email nie istnieje");
+        if ($emails != null) {
+            if ($busy = in_array($this->email, $emails)) {
+                Session::set("error:email:unique", "Podany adres email jest zajęty");
             }
         }
 
-        return $user;
+        return $busy ?? false;
     }
 
-    private function checkEmail()
+    public function hashPassword(string $method)
     {
-        $emails = $this->repository->getEmails();
+        $this->password = hash($method, $this->password);
     }
 }

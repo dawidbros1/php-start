@@ -4,19 +4,20 @@ declare (strict_types = 1);
 
 namespace App\Repository;
 
+use App\Model\Auth;
 use PDO;
 
 class AuthRepository extends AbstractRepository
 {
-    public function createAccount(array $data): void
+    public function createAccount(Auth $model): void
     {
         try {
             $data = [
-                'username' => $data['username'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'avatar' => $data['defaultPathAvatar'] ?? null,
-                'avatar' => $data['role'],
+                'username' => $model->username,
+                'email' => $model->email,
+                'password' => $model->password,
+                'avatar' => $model->avatar,
+                'role' => "user",
                 'created' => date('Y-m-d H:i:s'),
             ];
 
@@ -28,12 +29,12 @@ class AuthRepository extends AbstractRepository
         }
     }
 
-    public function login(string $email, string $password): ?array
+    public function login(Auth $model): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email=:email AND password=:password");
         $stmt->execute([
-            'email' => $email,
-            'password' => $password,
+            'email' => $model->email,
+            'password' => $model->password,
         ]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
