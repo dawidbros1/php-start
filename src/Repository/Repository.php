@@ -19,6 +19,7 @@ abstract class Repository
     {
         self::$config = $config;
     }
+    
     public function __construct()
     {
         try {

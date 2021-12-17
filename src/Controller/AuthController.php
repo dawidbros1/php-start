@@ -20,7 +20,7 @@ class AuthController extends Controller
     {
         parent::__construct($request);
         $this->repository = new AuthRepository();
-        $this->authRules = new AuthRules();
+        $this->resourcebundle_locales = new AuthRules();
     }
 
     public function registerAction(): void
@@ -31,8 +31,8 @@ class AuthController extends Controller
             $data = $this->request->postParams($names);
             $emails = $this->repository->getEmails();
 
-            if ($this->validate($data, $this->authRules) && !Auth::isBusyEmail($data['email'], $emails)) {
-                $data['password'] = $this->hashParam($data['password']);
+            if ($this->validate($data, $this->resourcebundle_locales) && !Auth::isBusyEmail($data['email'], $emails)) {
+                $data['password'] = $this->hash($data['password']);
                 $data['avatar'] = self::$configuration['default']['path']['avatar'];
                 $user = new User($data);
 
@@ -55,7 +55,7 @@ class AuthController extends Controller
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
 
-            if ($id = $this->repository->login($data['email'], $this->hashParam($data['password']))) {
+            if ($id = $this->repository->login($data['email'], $this->hash($data['password']))) {
                 Session::set('user:id', $id);
                 $lastPage = Session::getNextClear('lastPage');
                 $this->redirect($lastPage ? "?" . $lastPage : self::$route['home']);

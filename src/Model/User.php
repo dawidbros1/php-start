@@ -4,10 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
-// use App\Helper\Session;
-// use App\Rules\UserRules;
-
-class User
+class User extends Model
 {
     public $id;
     public $username;
@@ -29,32 +26,6 @@ class User
         $this->role = $data['role'] ?? null;
         $this->created = $data['created'] ?? null;
     }
-
-    // public function updateUsername($username)
-    // {
-    //     $this->rules = new UserRules();
-
-    //     if ($ok = $this->validate(['username' => $username])) {
-    //         $this->repository->updateUsername($username);
-    //     }
-
-    //     return $ok;
-    // }
-
-    // public function updatePassword($data, $method)
-    // {
-    //     $this->rules = new UserRules();
-
-    //     if (!$same = ($this->password == hash('sha256', $data['current_password']))) {
-    //         Session::set("error:password:current", "Podane hasło jest nieprawidłowe");
-    //     }
-
-    //     if ($ok = $this->validate($data) && $same) {
-    //         $this->repository->updatePassword(hash($method, $data['password']));
-    //     }
-
-    //     return $ok;
-    // }
 
     // public function updateAvatar($FILE, $path)
     // {
@@ -91,20 +62,10 @@ class User
 
     // ===== ===== ===== ===== =====
 
-    // private function hashAvatarName(string $name)
-    // {
-    //     $type = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-    //     $name = hash('md5', date('Y-m-d H:i:s') . "_" . $name);
-    //     $fileName = $name . '.' . $type;
-    //     return $fileName;
-    // }
-
-    // private function deleteFile($file)
-    // {
-    //     if ($file != "" || $file != null) {
-    //         if (file_exists($file)) {
-    //             unlink($file);
-    //         }
-    //     }
-    // }
+    public function deleteAvatar()
+    {
+        if (file_exists($this->avatar)) {
+            unlink($this->avatar);
+        }
+    }
 }

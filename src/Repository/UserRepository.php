@@ -21,26 +21,12 @@ class UserRepository extends Repository
         return $user;
     }
 
-    public function updateUsername($username)
+    public function update(User $user, string $property)
     {
-        $data = ['username' => $username, 'id' => self::$user_id];
-        $sql = "UPDATE users SET username=:username WHERE id=:id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($data);
-    }
+        $data = $user->getArray(['id', $property]);
+        $string = "$property=:$property";
 
-    public function updatePassword($password)
-    {
-        $data = ['password' => $password, 'id' => self::$user_id];
-        $sql = "UPDATE users SET password=:password WHERE id=:id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($data);
-    }
-
-    public function updateAvatar($avatar)
-    {
-        $data = ['avatar' => $avatar, 'id' => self::$user_id];
-        $sql = "UPDATE users SET avatar=:avatar WHERE id=:id";
+        $sql = "UPDATE users SET " . $string . " WHERE id=:id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($data);
     }

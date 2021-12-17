@@ -124,8 +124,16 @@ abstract class Controller extends Validator
         }
     }
 
-    protected function hashParam($param)
+    protected function hash($param)
     {
         return hash($this->hashMethod, $param);
+    }
+
+    protected function hashFile($file)
+    {
+        $type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $name = $this->hash(date('Y-m-d H:i:s') . "_" . $name);
+        $file['name'] = $name . '.' . $type;
+        return $file;
     }
 }
