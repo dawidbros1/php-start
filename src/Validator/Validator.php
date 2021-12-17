@@ -8,7 +8,7 @@ use App\Helper\Session;
 
 // use App\Excep
 
-abstract class AbstractValidator
+abstract class Validator
 {
     // Metody walidacyjne wielokrotnego użytku
     protected function strlenBetween(string $variable, int $min, int $max)

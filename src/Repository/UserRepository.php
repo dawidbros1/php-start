@@ -4,23 +4,20 @@ declare (strict_types = 1);
 
 namespace App\Repository;
 
-use App\Repository\AbstractRepository;
+use App\Model\User;
+use App\Repository\Repository;
 use PDO;
 
-class UserRepository extends AbstractRepository
+class UserRepository extends Repository
 {
-    public function get(int $id): ?array
+    public function get(int $id): ?User
     {
+        $user = null;
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id=:id");
         $stmt->execute(['id' => $id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
-            self::$user_id = (int) $user['id'];
-        } else {
-            $user = null;
-        }
-
+        if ($data) {$user = new User($data);}
         return $user;
     }
 

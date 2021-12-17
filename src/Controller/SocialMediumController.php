@@ -4,14 +4,13 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use App\Controller\AbstractController;
 use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\SocialMedium;
 use App\Repository\SocialMediumRepository;
 use App\Rules\SocialMediumRules;
 
-class SocialMediumController extends AbstractController
+class SocialMediumController extends Controller
 {
     public $style = "socialMedia";
 
@@ -71,7 +70,7 @@ class SocialMediumController extends AbstractController
 
             if (!empty($file['name'])) {
                 $upload = true;
-                $imageValidateStatus = $medium->validateImage($file, $rules, 'icon'); 
+                $imageValidateStatus = $medium->validateImage($file, $rules, 'icon');
             }
 
             if ($medium->validate($data, $rules)) {

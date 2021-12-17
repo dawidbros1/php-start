@@ -9,10 +9,10 @@ require_once 'vendor/autoload.php';
 $configuration = require_once 'config/config.php';
 $routing = require_once 'routes/routes.php';
 
-use App\Controller\AbstractController;
 use App\Controller\AuthController;
+use App\Controller\Controller;
 use App\Controller\GeneralController;
-use App\Controller\SocialMediumController;
+// use App\Controller\SocialMediumController;
 use App\Controller\UserController;
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
@@ -21,14 +21,14 @@ use App\Helper\Request;
 $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 
 try {
-    AbstractController::initConfiguration($configuration, $routing);
+    Controller::initConfiguration($configuration, $routing);
 
     $type = $request->getParam('type', 'general');
 
     if ($type == "auth") {(new AuthController($request))->run();} //
     else if ($type == "user") {(new UserController($request))->run();} //
     else if ($type == "general") {(new GeneralController($request))->run();} //
-    else if ($type == "medium") {(new SocialMediumController($request))->run();} //
+    // else if ($type == "medium") {(new SocialMediumController($request))->run();} //
     else {(new GeneralController($request))->run();} //
 
 } catch (ConfigurationException $e) {

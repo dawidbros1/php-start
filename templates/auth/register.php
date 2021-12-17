@@ -18,7 +18,7 @@ use App\Helper\Session;
                     <div class="input-group">
                         <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
                         <input type="text" name="email" class="form-control" placeholder="Adres email"
-                            value="<?=$params['data']['email'] ?? ''?>">
+                            value="<?=$params['email'] ?? ''?>">
                     </div>
 
                     <?php Error::render('input', Session::getNextClear('error:email:sanitize'))?>
@@ -29,7 +29,7 @@ use App\Helper\Session;
                         <span class="input-group-text bg-primary"><i
                                 class="bi bi-person-plus-fill text-white"></i></span>
                         <input type="text" name="username" class="form-control" placeholder="Nazwa użytkownika"
-                            value="<?=$params['data']['username'] ?? ''?>">
+                            value="<?=$params['username'] ?? ''?>">
                     </div>
 
                     <?php Error::render('input', Session::getNextClear('error:username:between'))?>

@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Helper\Session;
 use App\Model\Mail;
 
-class GeneralController extends AbstractController
+class GeneralController extends Controller
 {
     public $default_action = 'home';
 

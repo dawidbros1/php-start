@@ -9,17 +9,21 @@ use App\Exception\StorageException;
 use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\User;
-use App\Repository\AbstractRepository;
+use App\Repository\Repository;
+use App\Repository\UserRepository;
+use App\Validator\Validator;
 use App\View;
 
-abstract class AbstractController
+abstract class Controller extends Validator
 {
     protected static $configuration = [];
     protected static $route = [];
 
+    protected $userRepository;
+    protected $hashMethod;
     protected $request;
     protected $view;
-    protected $user;
+    protected $user = null;
 
     public static function initConfiguration(array $configuration, array $route): void
     {
@@ -33,17 +37,21 @@ abstract class AbstractController
             throw new ConfigurationException('Configuration error');
         }
 
-        AbstractRepository::initConfiguration(self::$configuration['db']);
+        Repository::initConfiguration(self::$configuration['db']);
         View::setStyle($this->style ?? null);
 
-        $this->request = $request;
-        $this->user = new User();
+        $this->hashMethod = self::$configuration['hash']['method'];
+        $this->userRepository = new UserRepository();
 
-        if ($this->user->id ?? $this->user = null);
+        if ($id = Session::get('user:id')) {
+            $this->user = $this->userRepository->get((int) $id);
+        }
+
+        $this->request = $request;
         $this->view = new View($this->user, self::$route);
     }
 
-    final public function run(): void
+    public function run(): void
     {
         try {
             $action = $this->action() . 'Action';
@@ -51,6 +59,7 @@ abstract class AbstractController
                 Session::set("error", 'Akcja do której chciałeś otrzymać dostęp nie istnieje');
                 $this->redirect(self::$route['home']);
             }
+
             $this->$action();
         } catch (StorageException $e) {
             $this->view->render('error', ['message' => $e->getMessage()]);
@@ -76,7 +85,7 @@ abstract class AbstractController
 
     final private function action(): string
     {
-        return $this->request->getParam('action');
+        return $this->request->getParam('action', "notExistAction");
     }
 
     // ===== ===== ===== ===== =====
@@ -113,5 +122,10 @@ abstract class AbstractController
             Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
             return false;
         }
+    }
+
+    protected function hashParam($param)
+    {
+        return hash($this->hashMethod, $param);
     }
 }

@@ -4,11 +4,11 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use App\Controller\AbstractController;
+use App\Controller\Controller;
 use App\Helper\Request;
 use App\Helper\Session;
 
-class UserController extends AbstractController
+class UserController extends Controller
 {
     public $style = "profile";
 

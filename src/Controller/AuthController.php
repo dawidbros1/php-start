@@ -4,20 +4,23 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
+use App\Controller\Controller;
 use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Auth;
+use App\Model\User;
 use App\Repository\AuthRepository;
 use App\Rules\AuthRules;
 
-class AuthController extends AbstractController
+class AuthController extends Controller
 {
     private $auth;
 
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->repository = new AuthRepository;
+        $this->repository = new AuthRepository();
+        $this->authRules = new AuthRules();
     }
 
     public function registerAction(): void
@@ -26,23 +29,22 @@ class AuthController extends AbstractController
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
-            $data['avatar'] = self::$configuration['default']['path']['avatar'];
-            $rules = new AuthRules($data);
+            $emails = $this->repository->getEmails();
 
-            $auth = new Auth($data);
+            if ($this->validate($data, $this->authRules) && !Auth::isBusyEmail($data['email'], $emails)) {
+                $data['password'] = $this->hashParam($data['password']);
+                $data['avatar'] = self::$configuration['default']['path']['avatar'];
+                $user = new User($data);
 
-            if ($auth->validate($data, $rules) && !$auth->isBusyEmail($this->repository->getEmails())) {
-                $method = self::$configuration['hash']['method'];
-                $auth->hashPassword($method);
-                $this->repository->createAccount($auth);
+                $this->repository->register($user);
                 Session::set('success', 'Konto zostało utworzone');
-                $this->redirect(self::$route['auth.login'], ['email' => $auth->email]);
+                $this->redirect(self::$route['auth.login'], ['email' => $user->email]);
             } else {
-                $this->view->render('auth/register', ['data' => $data]);
+                unset($data['password'], $data['repeat_password']);
+                $this->redirect(self::$route['auth.register'], $data);
             }
-
         } else {
-            $this->view->render('auth/register');
+            $this->view->render('auth/register', $this->request->getParams(['username', 'email']));
         }
     }
 
@@ -52,23 +54,21 @@ class AuthController extends AbstractController
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
-            $auth = new Auth($data);
-            $method = self::$configuration['hash']['method'];
-            $auth->hashPassword($method);
 
-            if ($user = $this->repository->login($auth)) {
-                Session::set('user:id', $user['id']);
+            if ($id = $this->repository->login($data['email'], $this->hashParam($data['password']))) {
+                Session::set('user:id', $id);
                 $lastPage = Session::getNextClear('lastPage');
                 $this->redirect($lastPage ? "?" . $lastPage : self::$route['home']);
             } else {
-                $this->view->render('auth/login', ['email' => $data['email']]);
-                if (in_array($auth->email, $this->repository->getEmails())) {
+                if (in_array($data["email"], $this->repository->getEmails())) {
                     Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
                 } else {
                     Session::set("error:email:null", "Podany adres email nie istnieje");
                 }
-            }
 
+                unset($data['password']);
+                $this->redirect(self::$route['auth.login'], $data);
+            }
         } else {
             $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
         }
