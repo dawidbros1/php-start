@@ -27,29 +27,6 @@ class User extends Model
         $this->created = $data['created'] ?? null;
     }
 
-    // public function updateAvatar($FILE, $path)
-    // {
-    //     $this->rules = new UserRules();
-    //     $this->rules->selectType('avatar');
-
-    //     if ($this->validateImage($FILE, $this->rules)) {
-    //         $target_dir = $path;
-    //         $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
-    //         $FILE['name'] = $this->hashAvatarName($FILE['name']);
-    //         $target_file = $target_dir . basename($FILE["name"]);
-
-    //         if ($ok = move_uploaded_file($FILE["tmp_name"], $target_file)) {
-    //             $this->deleteFile($this->avatar);
-    //             $this->repository->updateAvatar($target_dir . $FILE['name']);
-    //         } else {
-    //             // Np: Gdy ścieżka jest niepoprawna [ nie istnieje ]
-    //             Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
-    //         }
-    //     }
-
-    //     return $ok ?? false;
-    // }
-
     public function logout()
     {
         Session::clear('user:id');
