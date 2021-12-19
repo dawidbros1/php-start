@@ -1,5 +1,7 @@
 <!-- https://bbbootstrap.com/snippets/bootstrap-5-get-touch-contact-form-75878843 -->
 
+<?php $path = $params['path']?>
+
 <div class="content" id = "contact">
     <div class="contact">
         <div class="other">
@@ -8,16 +10,30 @@
                 <h3>Adres email</h3>
                 <div class = "email"> example@gmail.com </div>
 
-                <?php if ($params['social'] != []): ?>
-                    <h3>Media społecznościowe</h3>
+                <h3>Media społecznościowe</h3>
 
-                    <div id="icons">
-                        <?php foreach ($social = $params['social'] as $item): ?>
-                            <a target="_blank" href = "<?=$item['link']?>"><img src = "<?=$item['icon']?>"></a>
-                        <?php endforeach;?>
-                    </div>
+                <div id="icons">
+                    <!-- Social media [ links ] -->
+                    <a target="_blank" href = "https://www.facebook.com/">
+                        <img src = "<?=$path?>facebook.png">
+                    </a>
 
-                <?php endif;?>
+                    <a target="_blank" href = "https://www.youtube.com/">
+                        <img src = "<?=$path?>youtube.png">
+                    </a>
+
+                    <a target="_blank" href = "https://twitter.com/home">
+                        <img src = "<?=$path?>twitter.png">
+                    </a>
+
+                    <a target="_blank" href = "https://www.instagram.com/">
+                        <img src = "<?=$path?>instagram.png">
+                    </a>
+
+                    <a target="_blank" href = "https://www.linkedin.com/feed/">
+                        <img src = "<?=$path?>linkedin.png">
+                    </a>
+                </div>
             </div>
         </div>
         <div class="form">

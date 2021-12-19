@@ -10,6 +10,7 @@ use App\Model\Mail;
 class GeneralController extends Controller
 {
     public $default_action = 'home';
+    public $style = "contact";
 
     public function homeAction()
     {
@@ -43,18 +44,7 @@ class GeneralController extends Controller
             $this->redirect(self::$route['contact']);
         }
 
-        // === === === === ===
-        $social = [
-            "facebook" => [
-                'icon' => "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/1200px-Facebook_f_logo_%282019%29.svg.png",
-                'link' => "https://www.facebook.com/",
-            ],
-            "linkedin" => [
-                'icon' => "https://play-lh.googleusercontent.com/kMofEFLjobZy_bCuaiDogzBcUT-dz3BBbOrIEjJ-hqOabjK8ieuevGe6wlTD15QzOqw",
-                'link' => "https://www.linkedin.com/feed/",
-            ],
-        ];
-
-        $this->view->render('general/contact', ['social' => $social ?? []], ['contact']);
+        $path = self::$configuration['default']['path']['medium'] ?? "";
+        $this->view->render('general/contact', ['path' => $path]);
     }
 }

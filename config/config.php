@@ -20,9 +20,10 @@ return [
     'default' => [
         'path' => [
             'avatar' => 'public/images/avatar.png',
+            'medium' => 'public/images/SocialMedia/',
         ],
     ],
     'hash' => [
-        'method' => "sha256",
+        'method' => 'sha256',
     ],
 ];
