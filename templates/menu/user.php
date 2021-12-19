@@ -15,14 +15,7 @@
         <!-- ONLY ADMIN -->
 
         <?php if ($this->user->isAdmin()): ?>
-            <li class="nav-item dropdown">
-                <a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Zarządzaj
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                    <li><a class="dropdown-item" href="<?=$route['medium.list']?>">Media społecznościowe</a></li>
-                </ul>
-            </li>
+
         <?php endif;?>
 
         <!-- USERS -->
