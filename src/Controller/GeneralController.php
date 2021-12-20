@@ -6,11 +6,10 @@ namespace App\Controller;
 
 use App\Helper\Session;
 use App\Model\Mail;
+use App\View;
 
 class GeneralController extends Controller
 {
-    public $style = "contact";
-
     public function homeAction()
     {
         $this->view->render('general/home');
@@ -28,6 +27,7 @@ class GeneralController extends Controller
 
     public function contactAction()
     {
+        View::setStyle("contact");
         $names = ['name', 'from', 'message', 'subject'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {

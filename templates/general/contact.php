@@ -2,7 +2,7 @@
 
 <?php $path = $params['path']?>
 
-<div class="content" id = "contact">
+<div id="contact">
     <div class="contact">
         <div class="other">
             <div class="info">
@@ -39,8 +39,11 @@
         <div class="form">
             <h1>Napisz do nas</h1>
             <form action="<?=$route['contact']?>" method = "POST">
-                <div class="flex-rev"> <input type="text" placeholder="Podaj swoje imię oraz nazwisko" name="name"
-                        id="name" /> <label for="name">Imię i nazwisko</label> </div>
+                <div class="flex-rev">
+                    <input type="text" placeholder="Podaj swoje imię oraz nazwisko" name="name"
+                        id="name" />
+                    <label for="name">Imię i nazwisko</label>
+                </div>
 
                 <div class="flex-rev"> <input type="email" placeholder="example@gmail.com" name="from" id="from" />
                     <label for="from">Adres email</label>
@@ -50,10 +53,12 @@
                     <label for="subject">Temat</label>
                 </div>
 
-                <div class="flex-rev"> <textarea name="message" placeholder="Powiedz, w jakim celu do nas piszesz"
-                        id="message"></textarea>
+                <div class="flex-rev">
+                    <textarea name="message" placeholder="Powiedz, w jakim celu do nas piszesz" id="message"></textarea>
                     <label for="message">Wiadomość</label>
-                </div> <button>Wyślij wiadomość</button>
+                </div>
+
+                <button>Wyślij wiadomość</button>
             </form>
         </div>
     </div>
