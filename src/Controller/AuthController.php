@@ -35,6 +35,7 @@ class AuthController extends Controller
                 $data['password'] = $this->hash($data['password']);
                 $data['avatar'] = self::$configuration['default']['path']['avatar'];
                 $user = new User($data);
+                $user->escape();
 
                 $this->repository->register($user);
                 Session::set('success', 'Konto zostało utworzone');

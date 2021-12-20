@@ -19,12 +19,24 @@ class Model
     {
         $properties = get_object_vars($this);
 
-        foreach ($properties as $key => $property) {
+        foreach ($properties as $key => $value) {
             if (!in_array($key, $array)) {
                 unset($properties[$key]);
             }
         }
 
         return $properties;
+    }
+
+    public function escape()
+    {
+        $properties = get_object_vars($this);
+
+        foreach ($properties as $key => $value) {
+            if ($value != null) {
+                $this->$key = htmlentities($value);
+            }
+
+        }
     }
 }

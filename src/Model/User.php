@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Helper\Session;
+
 class User extends Model
 {
     public $id;

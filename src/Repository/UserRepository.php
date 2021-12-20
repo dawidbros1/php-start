@@ -14,10 +14,7 @@ class UserRepository extends Repository
     {
         $user = null;
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id=:id");
-
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-        $stmt->execute();
-
+        $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($data) {$user = new User($data);}
@@ -26,11 +23,11 @@ class UserRepository extends Repository
 
     public function update(User $user, string $property)
     {
+        $user->escape();
+        $data = $user->getArray(['id', $property]);
         $sql = "UPDATE users SET $property=:$property WHERE id=:id";
         $stmt = $this->pdo->prepare($sql);
 
-        $stmt->bindParam(":id", $user->id, PDO::PARAM_INT);
-        $stmt->bindParam(":" . $property, $user->$property, PDO::PARAM_STR);
-        $stmt->execute();
+        $stmt->execute($data);
     }
 }

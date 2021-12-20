@@ -44,14 +44,6 @@ class AuthRepository extends Repository
         return $id;
     }
 
-    public function get(int $id): ?array
-    {
-        $stmt = $this->pdo->prepare("SELECT id FROM users WHERE id=:id");
-        $stmt->execute(['id' => $id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user;
-    }
-
     public function getEmails()
     {
         $stmt = $this->pdo->prepare("SELECT email FROM users");

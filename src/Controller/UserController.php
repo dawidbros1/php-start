@@ -42,8 +42,6 @@ class UserController extends Controller
             if ($this->validate($data, $this->rules)) {
                 $this->user->update($data);
                 $this->userRepository->update($this->user, 'username');
-
-                // $this->repository->updateUsername($username);
                 Session::set('success', "Nazwa użytkownika została zmieniona");
             }
         }

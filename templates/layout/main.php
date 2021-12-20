@@ -21,8 +21,7 @@
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <ul class="navbar-nav">
                 <li class="nav-item ps-sm-2">
-                    <!-- <a class="nav-link" href="<?=$route['home']?>">Strona główna</a> -->
-                    <a class="nav-link" href="./">Strona główna</a>
+                    <a class="nav-link" href="<?=$route['home']?>">Strona główna</a>
                 </li>
 
                 <?php if ($user) {require_once "templates/menu/user.php";}?>
