@@ -74,6 +74,7 @@ use App\Helper\Session;
                         </div>
 
                         <?php Error::render('input', Session::getNextClear('error:username:between'))?>
+                        <?php Error::render('input', Session::getNextClear('error:username:specialCharacters'))?>
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
                                 type="submit">Aktualizuj nazwę </button></div>

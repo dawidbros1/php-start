@@ -23,10 +23,8 @@ class View
     public function render(string $page, array $params = []): void
     {
         $user = $this->user;
-        $params = $this->escape($params);
         $route = $this->route;
         $style = self::$style ?? "";
-
         require_once 'templates/layout/main.php';
     }
 

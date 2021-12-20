@@ -8,7 +8,7 @@ use App\Helper\Session;
 
 // use App\Excep
 
-abstract class Validator
+class Validator
 {
     // Metody walidacyjne wielokrotnego użytku
     protected function strlenBetween(string $variable, int $min, int $max)
@@ -101,8 +101,17 @@ abstract class Validator
                         Session::set("error:$type:$rule", $message);
                         $ok = false;
                     }
-                } else if ($rule == "require" && $value == true) {
+                }
+                // ================================================
+                else if ($rule == "require" && $value == true) {
                     if (empty($input)) {
+                        Session::set("error:$type:$rule", $message);
+                        $ok = false;
+                    }
+                }
+                // ================================================
+                else if ($rule == "specialCharacters" && $value == true) {
+                    if (preg_match('/[\'^£$%&*()}{@#~"?><>,|=_+¬-]/', $input)) {
                         Session::set("error:$type:$rule", $message);
                         $ok = false;
                     }

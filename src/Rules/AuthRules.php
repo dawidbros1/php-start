@@ -10,7 +10,7 @@ class AuthRules extends Rules
 {
     public function rules()
     {
-        $this->createRules('username', ['min' => 3, "max" => 16]);
+        $this->createRules('username', ['min' => 3, "max" => 166, 'specialCharacters' => true]);
         $this->createRules('password', ['min' => 6, 'max' => 36]);
         $this->createRules('email', ['sanitize' => true, "validate" => true]);
     }
@@ -19,6 +19,7 @@ class AuthRules extends Rules
     {
         $this->createMessages('username', [
             'between' => "Nazwa użytkownika powinna zawierać od " . $this->value('username.min') . " do " . $this->value('username.max') . " znaków",
+            'specialCharacters' => "Nazwa użytkownika nie może zawierać znaków specjalnych",
         ]);
 
         $this->createMessages('password', [
