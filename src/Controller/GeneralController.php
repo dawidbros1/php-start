@@ -9,7 +9,6 @@ use App\Model\Mail;
 
 class GeneralController extends Controller
 {
-    public $default_action = 'home';
     public $style = "contact";
 
     public function homeAction()
