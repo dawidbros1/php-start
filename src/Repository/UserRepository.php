@@ -15,7 +15,7 @@ class UserRepository extends Repository
         $user = null;
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id=:id");
 
-        $stmt->bindParam(":id", $user->id, PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
 
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
