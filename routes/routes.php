@@ -9,4 +9,4 @@ $route->group('', ['home', 'policy', 'contact', 'regulations']);
 $route->group('auth', ['register', 'login']);
 $route->group('user', ['logout', 'profile', 'updateUsername', 'updatePassword', 'updateAvatar']);
 
-return $route->get();
+return $route;

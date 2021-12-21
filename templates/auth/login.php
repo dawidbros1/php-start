@@ -14,7 +14,7 @@ use App\Helper\Session;
                 <h3 class="text-primary">Logowanie</h3>
             </div>
             <div class="p-4">
-                <form action="?type=auth&action=login" method="post">
+                <form action="<?=$route->get('auth.login')?>" method="post">
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
                         <input type="email" name="email" class="form-control" placeholder="Adres email"
@@ -34,7 +34,7 @@ use App\Helper\Session;
                         <button class="btn btn-primary" type="submit"><span></span> Zaloguj się </button>
                     </div>
                     <p class="text-center mt-3">Nie masz jeszcze konta?
-                        <a href="?type=auth&action=register" class="link">Zarejestruj się</a>
+                        <a href="<?=$route->get('auth.register')?>" class="link">Zarejestruj się</a>
                     </p>
                 </form>
             </div>

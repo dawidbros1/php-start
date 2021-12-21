@@ -6,8 +6,8 @@ session_start();
 
 require_once 'src/Utils/debug.php';
 require_once 'vendor/autoload.php';
-$configuration = require_once 'config/config.php';
-$routing = require_once 'routes/routes.php';
+$config = require_once 'config/config.php';
+$route = require_once 'routes/routes.php';
 
 use App\Controller\AuthController;
 use App\Controller\Controller;
@@ -20,7 +20,7 @@ use App\Helper\Request;
 $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 
 try {
-    Controller::initConfiguration($configuration, $routing);
+    Controller::initConfiguration($config, $route);
 
     $type = $request->getParam('type', 'general');
 

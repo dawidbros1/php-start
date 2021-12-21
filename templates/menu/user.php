@@ -24,8 +24,8 @@
                 <?=$user->username?>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li><a class="dropdown-item" href="<?=$route['user.profile']?>">Profil</a></li>
-                <li><a class="dropdown-item" href="<?=$route['user.logout']?>">Wyloguj</a></li>
+                <li><a class="dropdown-item" href="<?=$route->get('user.profile')?>">Profil</a></li>
+                <li><a class="dropdown-item" href="<?=$route->get('user.logout')?>">Wyloguj</a></li>
             </ul>
         </li>
     </ul>

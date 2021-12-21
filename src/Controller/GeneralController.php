@@ -40,10 +40,10 @@ class GeneralController extends Controller
                 Session::set('error', "Nie udało się wysłać wiadomości, prosimy spróbować później");
             }
 
-            $this->redirect(self::$route['contact']);
+            $this->redirect(self::$route->get('contact'));
         }
 
-        $path = self::$configuration['default']['path']['medium'] ?? "";
+        $path = self::$config->get('default.path.medium') ?? "";
         $this->view->render('general/contact', ['path' => $path]);
     }
 }

@@ -33,16 +33,16 @@ class AuthController extends Controller
 
             if ($this->validate($data, $this->resourcebundle_locales) && !Auth::isBusyEmail($data['email'], $emails)) {
                 $data['password'] = $this->hash($data['password']);
-                $data['avatar'] = self::$configuration['default']['path']['avatar'];
+                $data['avatar'] = self::$config->get('default.path.avatar');
                 $user = new User($data);
                 $user->escape();
 
                 $this->repository->register($user);
                 Session::set('success', 'Konto zostało utworzone');
-                $this->redirect(self::$route['auth.login'], ['email' => $user->email]);
+                $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
             } else {
                 unset($data['password'], $data['repeat_password']);
-                $this->redirect(self::$route['auth.register'], $data);
+                $this->redirect(self::$route->get('auth.register'), $data);
             }
         } else {
             $this->view->render('auth/register', $this->request->getParams(['username', 'email']));
@@ -59,7 +59,7 @@ class AuthController extends Controller
             if ($id = $this->repository->login($data['email'], $this->hash($data['password']))) {
                 Session::set('user:id', $id);
                 $lastPage = Session::getNextClear('lastPage');
-                $this->redirect($lastPage ? "?" . $lastPage : self::$route['home']);
+                $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
             } else {
                 if (in_array($data["email"], $this->repository->getEmails())) {
                     Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
@@ -68,7 +68,7 @@ class AuthController extends Controller
                 }
 
                 unset($data['password']);
-                $this->redirect(self::$route['auth.login'], $data);
+                $this->redirect(self::$route->get('auth.login'), $data);
             }
         } else {
             $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);

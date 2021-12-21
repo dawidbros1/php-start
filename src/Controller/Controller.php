@@ -8,6 +8,8 @@ use App\Exception\ConfigurationException;
 use App\Exception\StorageException;
 use App\Helper\Request;
 use App\Helper\Session;
+use App\Model\Config;
+use App\Model\Route;
 use App\Model\User;
 use App\Repository\Repository;
 use App\Repository\UserRepository;
@@ -16,7 +18,7 @@ use App\View;
 
 abstract class Controller extends Validator
 {
-    protected static $configuration = [];
+    protected static $config = [];
     protected static $route = [];
 
     protected $userRepository;
@@ -25,22 +27,22 @@ abstract class Controller extends Validator
     protected $view;
     protected $user = null;
 
-    public static function initConfiguration(array $configuration, array $route): void
+    public static function initConfiguration(Config $config, Route $route): void
     {
-        self::$configuration = $configuration;
+        self::$config = $config;
         self::$route = $route;
     }
 
     public function __construct(Request $request)
     {
-        if (empty(self::$configuration['db'])) {
+        if (empty(self::$config->get('db'))) {
             throw new ConfigurationException('Configuration error');
         }
 
-        Repository::initConfiguration(self::$configuration['db']);
+        Repository::initConfiguration(self::$config->get('db'));
         View::setStyle($this->style ?? null);
 
-        $this->hashMethod = self::$configuration['hash']['method'];
+        $this->hashMethod = self::$config->get('hash.method');
         $this->userRepository = new UserRepository();
 
         if ($id = Session::get('user:id')) {
@@ -95,7 +97,7 @@ abstract class Controller extends Validator
         if ($this->user == null) {
             Session::set('lastPage', $this->request->queryString());
             Session::set("error", "Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
-            $this->redirect(self::$route['auth.login']);
+            $this->redirect(self::$route->get('auth.login'));
         }
     }
 
@@ -106,7 +108,7 @@ abstract class Controller extends Validator
 
         if (!$this->user->isAdmin()) {
             Session::set("error", "Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
-            $this->redirect(self::$route['home']);
+            $this->redirect(self::$route->get('home'));
         }
     }
 

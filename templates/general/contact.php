@@ -38,7 +38,7 @@
         </div>
         <div class="form">
             <h1>Napisz do nas</h1>
-            <form action="<?=$route['contact']?>" method = "POST">
+            <form action="<?=$route->get('contact')?>" method = "POST">
                 <div class="flex-rev">
                     <input type="text" placeholder="Podaj swoje imię oraz nazwisko" name="name"
                         id="name" />

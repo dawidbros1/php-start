@@ -2,27 +2,32 @@
 
 declare (strict_types = 1);
 
-return [
-    'db' => [
-        'host' => 'localhost',
-        'database' => '',
-        'user' => '',
-        'password' => '',
-    ],
-    'mail' => [
-        'to' => 'email',
-    ],
-    'upload' => [
-        'path' => [
-            'avatar' => 'uploads/images/avatar/',
+use App\Model\Config;
+
+return new Config(
+    [
+        'db' => [
+            'host' => 'localhost',
+            'database' => '',
+            'user' => '',
+            'password' => '',
         ],
-    ],
-    'default' => [
-        'path' => [
-            'avatar' => 'public/images/avatar.png',
+        'mail' => [
+            'to' => 'example@email.com',
         ],
-    ],
-    'hash' => [
-        'method' => "sha256", // sha256 / md5 / ...
-    ],
-];
+        'upload' => [
+            'path' => [
+                'avatar' => 'uploads/images/avatar/',
+            ],
+        ],
+        'default' => [
+            'path' => [
+                'avatar' => 'public/images/avatar.png',
+                'medium' => 'public/images/SocialMedia/',
+            ],
+        ],
+        'hash' => [
+            'method' => 'sha256', // sha25 || md5 ...
+        ],
+    ]
+);

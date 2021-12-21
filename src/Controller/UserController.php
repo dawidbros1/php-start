@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         $this->user->logout();
         Session::set('success', "Nastąpiło wylogowanie z systemu");
-        $this->redirect(self::$route['auth.login'], ['email' => $this->user->email]);
+        $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
     }
 
     public function profileAction()
@@ -46,7 +46,7 @@ class UserController extends Controller
             }
         }
 
-        $this->redirect(self::$route['user.profile']);
+        $this->redirect(self::$route->get('user.profile'));
     }
 
     public function updatePasswordAction()
@@ -68,13 +68,13 @@ class UserController extends Controller
             }
         }
 
-        $this->redirect(self::$route['user.profile']);
+        $this->redirect(self::$route->get('user.profile'));
     }
 
     public function updateAvatarAction()
     {
-        $path = self::$configuration['upload']['path']['avatar'];
-        $defaultAvatar = self::$configuration['default']['path']['avatar'];
+        $path = self::$config->get('upload.path.avatar');
+        $defaultAvatar = self::$config->get('default.path.avatar');
 
         if ($file = $this->request->file('avatar')) {
             if ($this->validateImage($file, $this->rules, 'avatar')) {
@@ -92,6 +92,6 @@ class UserController extends Controller
             }
         }
 
-        $this->redirect(self::$route['user.profile']);
+        $this->redirect(self::$route->get('user.profile'));
     }
 }
