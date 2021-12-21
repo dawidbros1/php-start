@@ -28,22 +28,38 @@ class GeneralController extends Controller
     public function contactAction()
     {
         View::setStyle("contact");
-        $names = ['name', 'from', 'message', 'subject'];
+        $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+            $secret = self::$config->get('reCAPTCHA.key.secret');
+            $response = null;
+            $reCaptcha = new \ReCaptcha($secret);
+
             $data = $this->request->postParams($names);
             $mail = new Mail($data);
 
-            if ($mail->send(self::$configuration['mail'])) {
-                Session::set('success', "Wiadomość została wysłana");
+            $response = $reCaptcha->verifyResponse(
+                $_SERVER["REMOTE_ADDR"],
+                $data['g-recaptcha-response']
+            );
+
+            if ($response != null && $response->success) {
+                if ($mail->send(self::$config->get('mail'))) {
+                    Session::set('success', "Wiadomość została wysłana");
+                } else {
+                    Session::set('error', "Nie udało się wysłać wiadomości, prosimy spróbować później");
+                }
+
             } else {
-                Session::set('error', "Nie udało się wysłać wiadomości, prosimy spróbować później");
+                Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }
+
+            // ===== //
 
             $this->redirect(self::$route->get('contact'));
         }
 
         $path = self::$config->get('default.path.medium') ?? "";
-        $this->view->render('general/contact', ['path' => $path]);
+        $this->view->render('general/contact', ['path' => $path, 'sideKey' => self::$config->get('reCAPTCHA.key.side')]);
     }
 }

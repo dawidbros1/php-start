@@ -33,6 +33,7 @@ use App\Helper\Session;
                     </div>
 
                     <?php Error::render('input', Session::getNextClear('error:username:between'))?>
+                    <?php Error::render('input', Session::getNextClear('error:username:specialCharacters'))?>
 
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>

@@ -16,12 +16,12 @@ class Mail
 
     public function send($config)
     {
-        $headers[] = 'MIME-Version: 1.0';
-        $headers[] = 'Content-type: text/html; charset=utf-8';
-        $headers[] = 'To: ' . $config['to'];
-        $headers[] = 'From: ' . $this->from;
+        $headers = "From: " . strip_tags($this->from) . "\r\n";
+        $headers .= "Reply-To: " . strip_tags($this->from) . "\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-        $message = "<html> <head> </head> <body> " . $this->message . " </body> </html>";
+        $message = "<html> <head> </head> <body> <p>Imię i nazwisko: " . $this->name . " </p> " . $this->message . " </body> </html>";
 
         return mail($config['to'], $this->subject, $message, $headers);
     }

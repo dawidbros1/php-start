@@ -13,7 +13,7 @@ return new Config(
             'password' => '',
         ],
         'mail' => [
-            'to' => 'example@email.com',
+            'to' => 'websideEmail@domaina.com',
         ],
         'upload' => [
             'path' => [
@@ -28,6 +28,12 @@ return new Config(
         ],
         'hash' => [
             'method' => 'sha256', // sha25 || md5 ...
+        ],
+        'reCAPTCHA' => [
+            'key' => [
+                'side' => '',
+                'secret' => '',
+            ],
         ],
     ]
 );

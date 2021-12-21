@@ -1,5 +1,12 @@
 <!-- https://bbbootstrap.com/snippets/bootstrap-5-get-touch-contact-form-75878843 -->
 
+<?php
+
+use App\Error;
+use App\Helper\Session;
+
+?>
+
 <?php $path = $params['path']?>
 
 <div id="contact">
@@ -58,7 +65,12 @@
                     <label for="message">Wiadomość</label>
                 </div>
 
-                <button>Wyślij wiadomość</button>
+
+                <div class="g-recaptcha" data-sitekey="<?=$params['sideKey']?>"></div>
+
+                <?php Error::render('input', Session::getNextClear('error:reCAPTCHA:robot'))?>
+
+                <button class = "mt-1">Wyślij wiadomość</button>
             </form>
         </div>
     </div>

@@ -6,6 +6,8 @@ session_start();
 
 require_once 'src/Utils/debug.php';
 require_once 'vendor/autoload.php';
+require_once 'recaptchalib.php';
+
 $config = require_once 'config/config.php';
 $route = require_once 'routes/routes.php';
 
