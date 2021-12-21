@@ -7,9 +7,9 @@ use App\Helper\Session;
 
 ?>
 
-<div style="margin-top:150px">
+<div class="mt-sm-5 pt-sm-5">
     <div class="rounded d-flex justify-content-center">
-        <div class="col-md-4 col-sm-12 shadow-lg p-5 bg-light">
+        <div class="col-xl-5 col-lg-6 col-md-8 col-sm-11 col-12 shadow-lg p-5 bg-light">
             <div class="text-center">
                 <h3 class="text-primary">Rejestracja</h3>
             </div>

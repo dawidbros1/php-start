@@ -92,6 +92,14 @@ abstract class Controller extends Validator
 
     // ===== ===== ===== ===== =====
 
+    final protected function guest()
+    {
+        if ($this->user != null) {
+            Session::set("error", "Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
+            $this->redirect(self::$route->get('home'));
+        }
+    }
+
     final protected function requireLogin()
     {
         if ($this->user == null) {

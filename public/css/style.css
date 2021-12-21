@@ -7,14 +7,6 @@ div.container-fluid {
     padding: 0;
 }
 
-#register {
-    right: 115px;
-}
-
-#login {
-    right: 15px;
-}
-
 .fs-mini {
     font-size: 13px;
 }
@@ -31,3 +23,8 @@ div.container-fluid {
 .alert {
     margin-bottom: 0 !important;
 }
+
+.text-white{
+    color: white;
+}
+

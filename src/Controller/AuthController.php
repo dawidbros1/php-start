@@ -19,6 +19,7 @@ class AuthController extends Controller
     public function __construct(Request $request)
     {
         parent::__construct($request);
+        $this->guest();
         $this->repository = new AuthRepository();
         $this->resourcebundle_locales = new AuthRules();
     }

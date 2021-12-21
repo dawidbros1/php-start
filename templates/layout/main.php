@@ -19,16 +19,68 @@
 
 <body>
     <div class="container-fluid">
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-            <ul class="navbar-nav">
-                <li class="nav-item ps-sm-2">
-                    <a class="nav-link" href="./">Strona główna</a>
-                </li>
 
-                <?php if ($user) {require_once "templates/menu/user.php";}?>
-                <?php if (!$user) {require_once "templates/menu/guest.php";}?>
-            </ul>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand ms-2 ms-md-3" href="./">Strona główna</a>
+
+
+
+            <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                <!-- Trigger -->
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+
+                <!-- LEFT POSITION MENU -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 1</a></li>
+                    <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 2</a></li>
+                    <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 3</a></li>
+
+
+                    <?php if ($user): ?>
+                        <div class = "d-sm-none border-top">
+                            <li><a class="nav-link ms-2 ms-sm-0" href="<?=$route->get('user.profile')?>">Profil</a></li>
+                            <li><a class="nav-link ms-2 ms-sm-0" href="<?=$route->get('user.logout')?>">Wyloguj</a></li>
+                        </div>
+                    <?php endif;?>
+                </ul>
+
+                <!-- RIGHT POSITION MENU -->
+                <ul class="navbar-nav">
+
+                <!-- GUEST MENU -->
+                <?php if (!$user): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?=$route->get('auth.register')?>">Zarejestruj się</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?=$route->get('auth.login')?>">Zaloguj się</a>
+                    </li>
+                <?php endif;?>
+
+
+                <!-- USER MENU -->
+                <?php if ($user): ?>
+                    <ul class="navbar-nav d-none d-sm-block">
+                        <!-- USERS -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?=$user->username?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                                <li><a class="dropdown-item" href="<?=$route->get('user.profile')?>">Profil</a></li>
+                                <li><a class="dropdown-item" href="<?=$route->get('user.logout')?>">Wyloguj</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                <?php endif;?>
+                </ul>
+            </div>
         </nav>
+
 
         <div class="content">
             <?php require_once "templates/messages.php";?>
@@ -39,6 +91,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+
+   <!-- Remove the container if you want to extend the Footer to full width. -->
+
+
+<footer class="bg-dark text-center text-white position-fixed w-100 bottom-0">
+    <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.2);">
+        Treść stopki
+    </div>
+</footer>
+
 </body>
 
 </html>
