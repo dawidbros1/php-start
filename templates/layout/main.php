@@ -23,8 +23,6 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <a class="navbar-brand ms-2 ms-md-3" href="./">Strona główna</a>
 
-
-
             <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <!-- Trigger -->
                 <span class="navbar-toggler-icon"></span>
@@ -34,12 +32,11 @@
 
                 <!-- LEFT POSITION MENU -->
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 1</a></li>
-                    <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 2</a></li>
-                    <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 3</a></li>
-
-
                     <?php if ($user): ?>
+                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 1</a></li>
+                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 2</a></li>
+                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 3</a></li>
+
                         <div class = "d-sm-none border-top">
                             <li><a class="nav-link ms-2 ms-sm-0" href="<?=$route->get('user.profile')?>">Profil</a></li>
                             <li><a class="nav-link ms-2 ms-sm-0" href="<?=$route->get('user.logout')?>">Wyloguj</a></li>
@@ -52,13 +49,11 @@
 
                 <!-- GUEST MENU -->
                 <?php if (!$user): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?=$route->get('auth.register')?>">Zarejestruj się</a>
-                    </li>
+                    <div class = "d-sm-none border-top">
+                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="<?=$route->get('auth.register')?>">Zarejestruj się</a></li>
+                        <li class="nav-item ms-2 ms-sm-0"><a class="nav-link" href="<?=$route->get('auth.login')?>">Zaloguj się</a></li>
+                    </div>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?=$route->get('auth.login')?>">Zaloguj się</a>
-                    </li>
                 <?php endif;?>
 
 

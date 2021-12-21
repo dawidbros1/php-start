@@ -28,3 +28,11 @@ div.container-fluid {
     color: white;
 }
 
+.navbar-toggler-icon{
+    width: 20px;
+    height: 20px;
+}
+
+.navbar-toggler{
+    padding: .125rem .375rem;
+}
