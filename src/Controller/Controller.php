@@ -9,6 +9,7 @@ use App\Exception\StorageException;
 use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Config;
+use App\Model\Mail;
 use App\Model\Route;
 use App\Model\User;
 use App\Repository\Repository;
@@ -40,6 +41,7 @@ abstract class Controller extends Validator
         }
 
         Repository::initConfiguration(self::$config->get('db'));
+        Mail::initConfiguration(self::$config->get('mail'));
         View::setStyle($this->style ?? null);
 
         $this->hashMethod = self::$config->get('hash.method');
@@ -134,9 +136,9 @@ abstract class Controller extends Validator
         }
     }
 
-    protected function hash($param)
+    protected function hash($param, $method = null)
     {
-        return hash($this->hashMethod, $param);
+        return hash($method ?? $this->hashMethod, $param);
     }
 
     protected function hashFile($file)

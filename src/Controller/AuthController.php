@@ -8,6 +8,7 @@ use App\Controller\Controller;
 use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Auth;
+use App\Model\Mail;
 use App\Model\User;
 use App\Repository\AuthRepository;
 use App\Rules\AuthRules;
@@ -21,7 +22,7 @@ class AuthController extends Controller
         parent::__construct($request);
         $this->guest();
         $this->repository = new AuthRepository();
-        $this->resourcebundle_locales = new AuthRules();
+        $this->rules = new AuthRules();
     }
 
     public function registerAction(): void
@@ -32,7 +33,7 @@ class AuthController extends Controller
             $data = $this->request->postParams($names);
             $emails = $this->repository->getEmails();
 
-            if ($this->validate($data, $this->resourcebundle_locales) && !Auth::isBusyEmail($data['email'], $emails)) {
+            if ($this->validate($data, $this->rules) && !Auth::isBusyEmail($data['email'], $emails)) {
                 $data['password'] = $this->hash($data['password']);
                 $data['avatar'] = self::$config->get('default.path.avatar');
                 $user = new User($data);
@@ -73,6 +74,83 @@ class AuthController extends Controller
             }
         } else {
             $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
+        }
+    }
+
+    public function forgotPasswordAction()
+    {
+        if ($this->request->isPost() && $email = $this->request->postParam('email')) {
+            if (in_array($email, $this->repository->getEmails())) {
+                $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+                $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
+                $hash = $this->hash($code, 'md5');
+
+                Session::set($hash, $email);
+                Session::set('created:' . $hash, time());
+
+                $data = [];
+                $data['email'] = $email;
+                $data['link'] = $location . self::$route->get('auth.resetPassword') . "&code=$hash";
+                $data['subject'] = $_SERVER['HTTP_HOST'] . " - Reset hasła";
+                $data['username'] = $this->userRepository->get($email, 'email')->username;
+
+                if (Mail::forgotPassword($data)) {
+                    Session::set('success', "Link do zresetowania hasła został wysłany na podany adres email");
+                }
+            } else {
+                Session::set("error:email:null", "Podany adres email nie istnieje");
+            }
+
+            $this->redirect(self::$route->get('auth.forgotPassword'));
+
+        } else {
+            $this->view->render('auth/forgotPassword');
+        }
+    }
+
+    public function resetPasswordAction()
+    {
+        $names = ['password', 'repeat_password', 'code'];
+
+        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+            $data = $this->request->postParams($names);
+            $code = $data['code'];
+            $this->checkCodeSession($data['code']);
+
+            if ($this->validate($data, $this->rules)) {
+                $user = $this->userRepository->get(Session::get($code), 'email');
+                $user->password = $this->hash($data['password']);
+                $this->userRepository->update($user, 'password');
+                Session::clearArray([$code, "created:" . $code]);
+                Session::set('success', 'Hasło do konta zostało zmienione');
+                $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
+            } else {
+                $this->redirect(self::$route->get('auth.resetPassword'), ['code' => $code]);
+            }
+        }
+
+        if ($this->request->isGet() && $code = $this->request->getParam('code')) {
+            $this->checkCodeSession($code);
+            $this->view->render('auth/resetPassword', ['email' => Session::get($code), 'code' => $code]);
+        } else {
+            Session::set('error', 'Kod resetu hasła nie został podany');
+            $this->redirect(self::$route->get('auth.forgotPassword'));
+        }
+    }
+
+    private function checkCodeSession($code)
+    {
+        $names = [$code, "created:" . $code];
+
+        if (Session::hasArray($names)) {
+            if ((time() - Session::get("created:" . $code)) > 86400) {
+                Session::set('error', 'Link do zresetowania hasła stracił ważność');
+                Session::clearArray($names);
+                $this->redirect(self::$route->get('auth.forgotPassword'));
+            }
+        } else {
+            Session::set('error', 'Nieprawiłowy kod resetu hasła');
+            $this->redirect(self::$route->get('auth.forgotPassword'));
         }
     }
 }

@@ -10,11 +10,11 @@ use PDO;
 
 class UserRepository extends Repository
 {
-    public function get(int $id): ?User
+    public function get($param, $type = "id"): ?User
     {
         $user = null;
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id=:id");
-        $stmt->execute(['id' => $id]);
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE $type=:$type");
+        $stmt->execute([$type => $param]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($data) {$user = new User($data);}

@@ -33,9 +33,15 @@ use App\Helper\Session;
                     <div class="d-grid col-12 mx-auto mt-3">
                         <button class="btn btn-primary" type="submit"><span></span> Zaloguj się </button>
                     </div>
-                    <p class="text-center mt-3">Nie masz jeszcze konta?
-                        <a href="<?=$route->get('auth.register')?>" class="link">Zarejestruj się</a>
-                    </p>
+
+                    <div class="text-center mt-3 w-100">
+                        <div> Nie masz jeszcze konta?
+                            <a href="<?=$route->get('auth.register')?>" class="link">Zarejestruj się</a>
+                        </div>
+                        <div> Zapomniałeś hasła?
+                            <a href="<?=$route->get('auth.forgotPassword')?>" class="link">Przypomnij hasło</a>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

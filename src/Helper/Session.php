@@ -8,12 +8,16 @@ class Session
 {
     public static function has($name)
     {
-        if (isset($_SESSION[$name]) && !empty($_SESSION[$name])) {
-            return true;
-        } else {
-            return false;
+        if (isset($_SESSION[$name]) && !empty($_SESSION[$name])) {return true;} else {return false;}
+    }
+
+    public static function hasArray(array $names)
+    {
+        foreach ($names as $name) {
+            if (!Session::has($name)) {return false;}
         }
 
+        return true;
     }
 
     public static function get($name)
@@ -46,5 +50,12 @@ class Session
     public static function clear($name)
     {
         unset($_SESSION[$name]);
+    }
+
+    public static function clearArray(array $names)
+    {
+        foreach ($names as $name) {
+            Session::clear($name);
+        }
     }
 }

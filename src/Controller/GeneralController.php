@@ -36,7 +36,6 @@ class GeneralController extends Controller
             $reCaptcha = new \ReCaptcha($secret);
 
             $data = $this->request->postParams($names);
-            $mail = new Mail($data);
 
             $response = $reCaptcha->verifyResponse(
                 $_SERVER["REMOTE_ADDR"],
@@ -44,12 +43,9 @@ class GeneralController extends Controller
             );
 
             if ($response != null && $response->success) {
-                if ($mail->send(self::$config->get('mail'))) {
+                if (Mail::contact($data)) {
                     Session::set('success', "Wiadomość została wysłana");
-                } else {
-                    Session::set('error', "Nie udało się wysłać wiadomości, prosimy spróbować później");
                 }
-
             } else {
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }

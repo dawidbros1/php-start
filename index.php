@@ -2,6 +2,11 @@
 
 declare (strict_types = 1);
 
+ini_set("session.gc_maxlifetime", '31536000');
+ini_set('session.cookie_lifetime', '31536000');
+ini_set('session.gc_probability', '1');
+ini_set('session.gc_divisor', '1');
+
 session_start();
 
 require_once 'src/Utils/debug.php';
