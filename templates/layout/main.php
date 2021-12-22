@@ -30,34 +30,39 @@
 
             <div class="collapse navbar-collapse" id="menu">
 
-                <!-- LEFT POSITION MENU -->
+            <!-- SET MARGIN WITH PHP -->
+            <?php $margin = "ms-2 ms-sm-0"?>
+                <!-- ===== LEFT POSITION MENU ===== -->
+                <!-- USER MENU -->
                 <ul class="navbar-nav me-auto">
                     <?php if ($user): ?>
-                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 1</a></li>
-                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 2</a></li>
-                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="#">Link 3</a></li>
+                        <div class = "d-sm-flex <?=$margin?>">
+                            <li class="nav-item"> <a class="nav-link" href="#">Link 1</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="#">Link 2</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="#">Link 3</a></li>
+                        </div>
 
-                        <div class = "d-sm-none border-top">
-                            <li><a class="nav-link ms-2 ms-sm-0" href="<?=$route->get('user.profile')?>">Profil</a></li>
-                            <li><a class="nav-link ms-2 ms-sm-0" href="<?=$route->get('user.logout')?>">Wyloguj</a></li>
+                        <div class = "d-sm-none border-top"></div>
+
+                        <div class = "d-sm-none <?=$margin?>">
+                            <li><a class="nav-link" href="<?=$route->get('user.profile')?>">Profil</a></li>
+                            <li><a class="nav-link" href="<?=$route->get('user.logout')?>">Wyloguj</a></li>
                         </div>
                     <?php endif;?>
                 </ul>
-
-                <!-- RIGHT POSITION MENU -->
+                <!-- ===== RIGHT POSITION MENU ===== -->
                 <ul class="navbar-nav">
 
                 <!-- GUEST MENU -->
                 <?php if (!$user): ?>
-                    <div class = "d-sm-none border-top">
-                        <li class="nav-item ms-2 ms-sm-0"> <a class="nav-link" href="<?=$route->get('auth.register')?>">Zarejestruj się</a></li>
-                        <li class="nav-item ms-2 ms-sm-0"><a class="nav-link" href="<?=$route->get('auth.login')?>">Zaloguj się</a></li>
+                    <div class = "d-sm-none border-top"></div>
+                    <div class = "d-sm-flex <?=$margin?>">
+                        <li class="nav-item"> <a class="nav-link" href="<?=$route->get('auth.register')?>">Zarejestruj się</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?=$route->get('auth.login')?>">Zaloguj się</a></li>
                     </div>
-
                 <?php endif;?>
 
-
-                <!-- USER MENU -->
+                <!-- USER MENU DROPDOWN ONLY ON SM+ -->
                 <?php if ($user): ?>
                     <ul class="navbar-nav d-none d-sm-block">
                         <!-- USERS -->
