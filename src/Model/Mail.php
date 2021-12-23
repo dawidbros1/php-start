@@ -20,6 +20,9 @@ class Mail
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
+        $data['name'] = htmlentities($data['name']);
+        $data['message'] = htmlentities($data['message']);
+
         $html = "<html> <head> </head> <body> <p>Imię i nazwisko: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
 
         return Mail::send(self::$config['email'], $data['subject'], $html, $headers);
