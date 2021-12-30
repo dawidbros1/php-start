@@ -41,3 +41,15 @@ div.container-fluid {
     font-size: 12px;
     font-weight: bold;
 }
+
+/*  */
+
+.close{
+    color: red;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-weight: bold;
+    font-size: 21px;
+    cursor: pointer;
+}

@@ -15,6 +15,7 @@
     <?php endif;?>
 
     <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="public/js/main.js"></script>
 </head>
 
 <body>
