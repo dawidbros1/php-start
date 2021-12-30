@@ -13,7 +13,7 @@ return new Config(
             'password' => '',
         ],
         'mail' => [
-            'to' => 'websideEmail@domaina.com',
+            'email' => 'websideEmail@domaina.com',
         ],
         'upload' => [
             'path' => [
