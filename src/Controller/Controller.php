@@ -27,7 +27,6 @@ abstract class Controller extends Validator
     protected $request;
     protected $view;
     protected $user = null;
-    protected $title;
 
     public static function initConfiguration(Config $config, Route $route): void
     {
