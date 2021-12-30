@@ -12,6 +12,7 @@ use App\Model\Mail;
 use App\Model\User;
 use App\Repository\AuthRepository;
 use App\Rules\AuthRules;
+use App\View;
 
 class AuthController extends Controller
 {
@@ -27,6 +28,7 @@ class AuthController extends Controller
 
     public function registerAction(): void
     {
+        View::set(['title' => "Rejestracja"]);
         $names = ['username', 'email', 'password', 'repeat_password'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
@@ -53,6 +55,7 @@ class AuthController extends Controller
 
     public function loginAction(): void
     {
+        View::set(['title' => "Logowanie"]);
         $names = ['email', 'password'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
@@ -79,6 +82,7 @@ class AuthController extends Controller
 
     public function forgotPasswordAction()
     {
+        View::set(['title' => "Przypomnienie hasła"]);
         if ($this->request->isPost() && $email = $this->request->postParam('email')) {
             if (in_array($email, $this->repository->getEmails())) {
                 $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
@@ -110,6 +114,7 @@ class AuthController extends Controller
 
     public function resetPasswordAction()
     {
+        View::set(['title' => "Reset hasła"]);
         $names = ['password', 'repeat_password', 'code'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {

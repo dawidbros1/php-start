@@ -12,22 +12,25 @@ class GeneralController extends Controller
 {
     public function homeAction()
     {
+        View::set(['title' => "Strona główna"]);
         $this->view->render('general/home');
     }
 
     public function policyAction()
     {
+        View::set(['title' => "Polityka prywatności"]);
         $this->view->render('general/policy');
     }
 
     public function regulationsAction()
     {
+        View::set(['title' => "Regulamin"]);
         $this->view->render('general/regulations');
     }
 
     public function contactAction()
     {
-        View::setStyle("contact");
+        View::set(['title' => "Rejestracja", 'style' => "contact"]);
         $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {

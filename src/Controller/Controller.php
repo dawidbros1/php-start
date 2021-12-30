@@ -27,6 +27,7 @@ abstract class Controller extends Validator
     protected $request;
     protected $view;
     protected $user = null;
+    protected $title;
 
     public static function initConfiguration(Config $config, Route $route): void
     {
@@ -42,7 +43,6 @@ abstract class Controller extends Validator
 
         Repository::initConfiguration(self::$config->get('db'));
         Mail::initConfiguration(self::$config->get('mail'));
-        View::setStyle($this->style ?? null);
 
         $this->hashMethod = self::$config->get('hash.method');
         $this->userRepository = new UserRepository();

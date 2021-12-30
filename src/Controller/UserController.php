@@ -9,11 +9,10 @@ use App\Helper\Request;
 use App\Helper\Session;
 use App\Repository\UserRepository;
 use App\Rules\UserRules;
+use App\View;
 
 class UserController extends Controller
 {
-    public $style = "profile";
-
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -30,13 +29,38 @@ class UserController extends Controller
 
     public function profileAction()
     {
-        $this->view->render('user/profile', []);
+        View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
+        $this->view->render('user/profile');
+
     }
 
-    public function updateUsernameAction()
+    public function updateAction()
     {
-        if ($this->request->isPost() && $this->request->hasPostName('username')) {
+        if ($this->request->isPost()) {
+            $update = $this->request->postParam('update');
 
+            switch ($update) {
+                case 'username':{
+                        $this->updateUsername();
+                        break;
+                    }
+                case 'password':{
+                        $this->updatePassword();
+                        break;
+                    }
+                case 'avatar':{
+                        $this->updateAvatar();
+                        break;
+                    }
+            }
+        }
+
+        $this->redirect(self::$route->get('user.profile'));
+    }
+
+    private function updateUsername()
+    {
+        if ($this->request->hasPostName('username')) {
             $data = ['username' => $this->request->postParam('username')];
 
             if ($this->validate($data, $this->rules)) {
@@ -45,15 +69,13 @@ class UserController extends Controller
                 Session::set('success', "Nazwa użytkownika została zmieniona");
             }
         }
-
-        $this->redirect(self::$route->get('user.profile'));
     }
 
-    public function updatePasswordAction()
+    private function updatePassword()
     {
         $names = ['current_password', 'password', 'repeat_password'];
 
-        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+        if ($this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
 
             if (!$same = ($this->user->password == $this->hash($data['current_password']))) {
@@ -67,11 +89,9 @@ class UserController extends Controller
                 Session::set('success', 'Hasło zostało zaktualizowane');
             }
         }
-
-        $this->redirect(self::$route->get('user.profile'));
     }
 
-    public function updateAvatarAction()
+    private function updateAvatar()
     {
         $path = self::$config->get('upload.path.avatar');
         $defaultAvatar = self::$config->get('default.path.avatar');
@@ -91,7 +111,5 @@ class UserController extends Controller
                 }
             }
         }
-
-        $this->redirect(self::$route->get('user.profile'));
     }
 }

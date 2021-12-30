@@ -19,7 +19,7 @@ use App\Helper\Session;
 
             <!-- START -->
                 <div class = "w-100 fw-bold px-2 pt-1">
-                    <form action = "<?=$route->get('user.updateAvatar')?>" method = "post" enctype="multipart/form-data">
+                    <form action = "<?=$route->get('user.update')?>" method = "post" enctype="multipart/form-data">
 
                         <div class = "position-relative mx-auto mt-5" id = "avatarBox">
                             <img id = "avatar" class="rounded-circle" src="<?=$user->avatar?>">
@@ -40,6 +40,8 @@ use App\Helper\Session;
                         <div class="text-center">
                             <button class="btn btn-primary profile-button w-100" type="submit">Zmień awatar</button>
                         </div>
+
+                        <input type = "hidden" name = "update" value = "avatar">
                     </form>
                 </div>
              <!-- END -->
@@ -65,7 +67,7 @@ use App\Helper\Session;
                         <h6 class="text-center w-100">Zmień nazwę użytkownika</h6>
                     </div>
 
-                    <form action="<?=$route->get('user.updateUsername')?>" method="post">
+                    <form action="<?=$route->get('user.update')?>" method="post">
                         <div class="row mt-1">
                             <div class="col-md-12"><label class="labels">Nazwa użytkownika</label><input type="text"
                                     class="form-control" placeholder="Nazwa użytkownika" value="<?=$user->username?>"
@@ -78,13 +80,15 @@ use App\Helper\Session;
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
                                 type="submit">Aktualizuj nazwę </button></div>
+
+                        <input type = "hidden" name = "update" value = "username">
                     </form>
                 </div>
 
                 <!-- Zmiana hasła -->
 
                 <div class="mb-1 border p-2 pt-1">
-                    <form action="<?=$route->get('user.updatePassword')?>" method="post">
+                    <form action="<?=$route->get('user.update')?>" method="post">
                         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom">
                             <h6 class="text-center w-100">Zmień hasło</h6>
                         </div>
@@ -114,6 +118,7 @@ use App\Helper\Session;
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
                                 type="submit">Aktualizuj hasło</button></div>
+                        <input type = "hidden" name = "update" value = "password">
                     </form>
                 </div>
             </div>

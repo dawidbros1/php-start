@@ -8,10 +8,17 @@ class View
 {
     private $user;
     private static $style = null;
+    private static $title = "Brak tytułu";
 
-    public static function setStyle($style)
+    public static function set($data)
     {
-        self::$style = $style;
+        if (array_key_exists('style', $data)) {
+            self::$style = $data['style'] ?? null;
+        }
+
+        if (array_key_exists('title', $data)) {
+            self::$title = $data['title'] ?? null;
+        }
     }
 
     public function __construct($user, $route)
@@ -24,7 +31,8 @@ class View
     {
         $user = $this->user;
         $route = $this->route;
-        $style = self::$style ?? "";
+        $style = self::$style;
+        $title = self::$title;
         require_once 'templates/layout/main.php';
     }
 

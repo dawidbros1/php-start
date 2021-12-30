@@ -1,7 +1,7 @@
 <html lang="pl">
 
 <head>
-    <title>Widok główny</title>
+    <title><?=$title?></title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
 
