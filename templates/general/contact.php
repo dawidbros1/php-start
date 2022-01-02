@@ -2,7 +2,7 @@
 
 <?php
 
-use App\Error;
+use App\Component;
 use App\Helper\Session;
 
 ?>
@@ -68,7 +68,7 @@ use App\Helper\Session;
 
                 <div class="g-recaptcha" data-sitekey="<?=$params['sideKey']?>"></div>
 
-                <?php Error::render('input', Session::getNextClear('error:reCAPTCHA:robot'))?>
+                <?php Component::render('error', ['text' => Session::getNextClear('error:reCAPTCHA:robot')])?>
 
                 <button class = "mt-1">Wyślij wiadomość</button>
             </form>
