@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-use App\Error;
+use App\Component;
 use App\Helper\Session;
 
 ?>
@@ -22,7 +22,7 @@ use App\Helper\Session;
                             value="<?=$params['email'] ?? ""?>">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:email:null'))?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:null')])?>
 
                     <div class="d-grid col-12 mx-auto mt-3">
                         <button class="btn btn-primary" type="submit"><span></span> Przypomnij hasło </button>

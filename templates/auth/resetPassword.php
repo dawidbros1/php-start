@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-use App\Error;
+use App\Component;
 use App\Helper\Session;
 
 ?>
@@ -27,7 +27,7 @@ use App\Helper\Session;
                         <input type="password" name="password" class="form-control">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:password:between'))?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:between')])?>
 
                     <div class="input-group mt-3">
                         <label for="repeat_password" class= "w-100 labels">Powtórz nowe hasło </label>
@@ -35,7 +35,7 @@ use App\Helper\Session;
                         <input type="password" name="repeat_password" class="form-control">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:password:same'))?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:same')])?>
 
                     <input type = "hidden" name = "code" value = "<?=$params['code']?>">
                     <div class="d-grid col-12 mx-auto mt-3">

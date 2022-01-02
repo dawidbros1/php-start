@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-use App\Error;
+use App\Component;
 use App\Helper\Session;
 
 ?>
@@ -26,10 +26,10 @@ use App\Helper\Session;
                             <input type = "file" name = "avatar" class = "rounded-circle" id = "file">
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:file:empty'))?>
-                        <?php Error::render('input', Session::getNextClear('error:file:notImage'))?>
-                        <?php Error::render('input', Session::getNextClear('error:file:maxSize'))?>
-                        <?php Error::render('input', Session::getNextClear('error:file:types'))?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:file:empty')])?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:file:notImage')])?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:file:maxSize')])?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:file:types')])?>
 
                         <div>
                             <div class="fw-bold"> <?=$user->username?></div>
@@ -75,8 +75,8 @@ use App\Helper\Session;
                             </div>
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:username:between'))?>
-                        <?php Error::render('input', Session::getNextClear('error:username:specialCharacters'))?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:username:between')])?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:username:specialCharacters')])?>
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
                                 type="submit">Aktualizuj nazwę </button></div>
@@ -98,7 +98,7 @@ use App\Helper\Session;
                                     class="form-control" placeholder="Aktualne hasło" name="current_password"></div>
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:password:current'))?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:password:current')])?>
 
                         <div class="row mt-3">
                             <div class="col-md-12"><label class="labels">Nowe hasło</label><input type="password"
@@ -106,7 +106,7 @@ use App\Helper\Session;
                             </div>
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:password:between'))?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:password:between')])?>
 
                         <div class="row mt-3">
                             <div class="col-md-12"><label class="labels">Powtórz nowe hasło</label><input
@@ -114,7 +114,7 @@ use App\Helper\Session;
                                     name="repeat_password"></div>
                         </div>
 
-                        <?php Error::render('input', Session::getNextClear('error:password:same'))?>
+                        <?php Component::render('error', ['text' => Session::getNextClear('error:password:same')])?>
 
                         <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
                                 type="submit">Aktualizuj hasło</button></div>

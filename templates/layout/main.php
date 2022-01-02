@@ -96,8 +96,8 @@
    <!-- Remove the container if you want to extend the Footer to full width. -->
 
 
-<footer class="bg-dark text-center text-white position-fixed w-100 bottom-0">
-    <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.2);">
+   <footer class="bg-dark text-center text-white position-relative w-100 bottom-0">
+    <div class="text-center" style="background-color: rgba(0, 0, 0, 0.2);">
         Treść stopki
     </div>
 </footer>

@@ -69,14 +69,18 @@ abstract class Controller extends Validator
         }
     }
 
-    final protected function redirect(string $to, array $params = []): void
+    protected function redirect(string $to, array $params = []): void
     {
         $location = $to;
 
         if (count($params)) {
             $queryParams = [];
             foreach ($params as $key => $value) {
-                $queryParams[] = urlencode($key) . '=' . urlencode($value);
+                if (gettype($value) == "integer") {
+                    $queryParams[] = urlencode($key) . '=' . $value;
+                } else {
+                    $queryParams[] = urlencode($key) . '=' . urlencode($value);
+                }
             }
 
             $location .= ($queryParams = "&" . implode('&', $queryParams));

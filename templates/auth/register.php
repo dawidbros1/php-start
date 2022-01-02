@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-use App\Error;
+use App\Component;
 use App\Helper\Session;
 
 ?>
@@ -21,9 +21,9 @@ use App\Helper\Session;
                             value="<?=$params['email'] ?? ''?>">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:email:sanitize'))?>
-                    <?php Error::render('input', Session::getNextClear('error:email:validate'))?>
-                    <?php Error::render('input', Session::getNextClear('error:email:unique'))?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:sanitize')])?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:validate')])?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:unique')])?>
 
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i
@@ -32,22 +32,22 @@ use App\Helper\Session;
                             value="<?=$params['username'] ?? ''?>">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:username:between'))?>
-                    <?php Error::render('input', Session::getNextClear('error:username:specialCharacters'))?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:username:between')])?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:username:specialCharacters')])?>
 
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>
                         <input type="password" name="password" class="form-control" placeholder="Hasło">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:password:between'))?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:between')])?>
 
                     <div class="input-group mt-3">
                         <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>
                         <input type="password" name="repeat_password" class="form-control" placeholder="Powtórz hasło">
                     </div>
 
-                    <?php Error::render('input', Session::getNextClear('error:password:same'))?>
+                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:same')])?>
 
                     <div class="d-grid col-12 mx-auto mt-3">
                         <button class="btn btn-primary" type="submit"><span></span> Utwórz konto </button>

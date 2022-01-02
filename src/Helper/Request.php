@@ -19,6 +19,17 @@ class Request
         $this->files = $files;
     }
 
+    // === GENERAL ===
+
+    public function param(string $name, $default = null)
+    {
+        if ($this->isPost()) {
+            return $this->postParam($name, $default);
+        } else {
+            return $this->getParam($name, $default);
+        }
+    }
+
     // === POST ===
     public function hasPost(): bool
     {

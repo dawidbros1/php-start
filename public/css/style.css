@@ -42,8 +42,6 @@ div.container-fluid {
     font-weight: bold;
 }
 
-/*  */
-
 .close{
     color: red;
     position: absolute;
@@ -52,4 +50,17 @@ div.container-fluid {
     font-weight: bold;
     font-size: 21px;
     cursor: pointer;
+}
+
+.container-fluid{
+    min-height: calc(100% - 40px); 
+}
+
+footer{
+    height: 40px;
+}
+
+footer div{
+    height: 100%;
+    line-height: 35px;
 }
