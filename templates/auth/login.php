@@ -18,13 +18,10 @@ use App\Helper\Session;
                     <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
-
                     <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", "placeholder" => "Hasło"])?>
                     <?php Component::render('error', ['type' => "password", 'names' => ['incorrect']])?>
 
-                    <div class="d-grid col-12 mx-auto mt-3">
-                        <button class="btn btn-primary" type="submit"><span></span> Zaloguj się </button>
-                    </div>
+                    <?php Component::render('form.button', ['text' => "Zaloguj się"])?>
 
                     <div class="text-center mt-3 w-100">
                         <div> Nie masz jeszcze konta?

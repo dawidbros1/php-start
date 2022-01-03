@@ -34,11 +34,9 @@ use App\Helper\Session;
                             <div class = "border-top w-100 mb-2"></div>
                         </div>
 
-                        <div class="text-center">
-                            <button class="btn btn-primary profile-button w-100" type="submit">Zmień awatar</button>
-                        </div>
-
                         <input type = "hidden" name = "update" value = "avatar">
+
+                        <?php Component::render('form.button', ['text' => "Zmień awatar"])?>
                     </form>
                 </div>
              <!-- END -->
@@ -68,11 +66,8 @@ use App\Helper\Session;
                         <?php Component::render('form.input', ['class' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->username])?>
                         <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
-
-                        <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
-                                type="submit">Aktualizuj nazwę </button></div>
-
                         <input type = "hidden" name = "update" value = "username">
+                        <?php Component::render('form.button', ['text' => "Zmień nazwę użytkownika"])?>
                     </form>
                 </div>
 
@@ -93,9 +88,8 @@ use App\Helper\Session;
                         <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz nowe hasło", 'label' => 'Powtórz nowe hasło '])?>
                         <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
 
-                        <div class="mt-2 text-center"><button class="btn btn-primary profile-button w-100"
-                                type="submit">Aktualizuj hasło</button></div>
                         <input type = "hidden" name = "update" value = "password">
+                        <?php Component::render('form.button', ['text' => "Aktualizuj hasło"])?>
                     </form>
                 </div>
             </div>
