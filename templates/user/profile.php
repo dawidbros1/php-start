@@ -36,7 +36,7 @@ use App\Helper\Session;
 
                         <input type = "hidden" name = "update" value = "avatar">
 
-                        <?php Component::render('form.button', ['text' => "Zmień awatar"])?>
+                        <?php Component::render('form.button', ['text' => "Zmień awatar", 'class' => "profile-button"])?>
                     </form>
                 </div>
              <!-- END -->
@@ -67,7 +67,7 @@ use App\Helper\Session;
                         <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
                         <input type = "hidden" name = "update" value = "username">
-                        <?php Component::render('form.button', ['text' => "Zmień nazwę użytkownika"])?>
+                        <?php Component::render('form.button', ['text' => "Zmień nazwę użytkownika", 'class' => "profile-button"])?>
                     </form>
                 </div>
 
@@ -89,7 +89,7 @@ use App\Helper\Session;
                         <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
 
                         <input type = "hidden" name = "update" value = "password">
-                        <?php Component::render('form.button', ['text' => "Aktualizuj hasło"])?>
+                        <?php Component::render('form.button', ['text' => "Aktualizuj hasło", 'class' => "profile-button"])?>
                     </form>
                 </div>
             </div>
