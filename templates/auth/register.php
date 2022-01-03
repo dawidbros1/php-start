@@ -27,7 +27,7 @@ use App\Helper\Session;
                     <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz hasło"])?>
                     <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
 
-                    <?php Component::render('form.button', ['text' => "Utwórz konto"])?>
+                    <?php Component::render('form.button', ['text' => "Utwórz konto"])?>2
 
                     <p class="text-center mt-3">Masz już konto?
                         <a href="<?=$route->get('auth.login')?>" class="link">Zaloguj się</a>
