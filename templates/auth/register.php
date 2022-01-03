@@ -15,39 +15,17 @@ use App\Helper\Session;
             </div>
             <div class="p-4">
                 <form action="<?=$route->get('auth.register')?>" method="post">
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
-                        <input type="text" name="email" class="form-control" placeholder="Adres email"
-                            value="<?=$params['email'] ?? ''?>">
-                    </div>
+                    <?php Component::render('auth.input', ['class' => "", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
+                    <?php Component::render('error', ['type' => "email", 'names' => ['sanitize', 'validate', 'unique']])?>
 
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:sanitize')])?>
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:validate')])?>
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:unique')])?>
+                    <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'value' => $params['username'] ?? ''])?>
+                    <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
-                    <div class="input-group mt-3">
-                        <span class="input-group-text bg-primary"><i
-                                class="bi bi-person-plus-fill text-white"></i></span>
-                        <input type="text" name="username" class="form-control" placeholder="Nazwa użytkownika"
-                            value="<?=$params['username'] ?? ''?>">
-                    </div>
+                    <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", "placeholder" => "Hasło"])?>
+                    <?php Component::render('error', ['type' => "password", 'names' => ['between']])?>
 
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:username:between')])?>
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:username:specialCharacters')])?>
-
-                    <div class="input-group mt-3">
-                        <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>
-                        <input type="password" name="password" class="form-control" placeholder="Hasło">
-                    </div>
-
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:between')])?>
-
-                    <div class="input-group mt-3">
-                        <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>
-                        <input type="password" name="repeat_password" class="form-control" placeholder="Powtórz hasło">
-                    </div>
-
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:same')])?>
+                    <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz hasło"])?>
+                    <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
 
                     <div class="d-grid col-12 mx-auto mt-3">
                         <button class="btn btn-primary" type="submit"><span></span> Utwórz konto </button>

@@ -15,20 +15,12 @@ use App\Helper\Session;
             </div>
             <div class="p-4">
                 <form action="<?=$route->get('auth.login')?>" method="post">
-                    <div class="input-group mt-3">
-                        <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
-                        <input type="email" name="email" class="form-control" placeholder="Adres email"
-                            value="<?=$params['email'] ?? ""?>">
-                    </div>
+                    <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
+                    <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:null')])?>
 
-                    <div class="input-group mt-3">
-                        <span class="input-group-text bg-primary"><i class="bi bi-key-fill text-white"></i></span>
-                        <input type="password" name="password" class="form-control" placeholder="Hasło">
-                    </div>
-
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:incorrect')])?>
+                    <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", "placeholder" => "Hasło"])?>
+                    <?php Component::render('error', ['type' => "password", 'names' => ['incorrect']])?>
 
                     <div class="d-grid col-12 mx-auto mt-3">
                         <button class="btn btn-primary" type="submit"><span></span> Zaloguj się </button>

@@ -79,7 +79,7 @@ class UserController extends Controller
             $data = $this->request->postParams($names);
 
             if (!$same = ($this->user->password == $this->hash($data['current_password']))) {
-                Session::set("error:password:current", "Podane hasło jest nieprawidłowe");
+                Session::set("error:current_password:same", "Podane hasło jest nieprawidłowe");
             }
 
             if ($this->validate($data, $this->rules) && $same) {
