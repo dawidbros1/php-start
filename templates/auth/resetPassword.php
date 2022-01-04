@@ -16,31 +16,17 @@ use App\Helper\Session;
             <div class="p-4">
                 <form action="<?=$route->get('auth.resetPassword')?>" method="post">
 
-                    <div class="input-group mt-3">
-                        <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
-                        <input disabled type="email" class="form-control" value="<?=$params['email'] ?? ""?>">
-                    </div>
+                    <?php Component::render('form.input', ['class' => "mt-3", 'value' => $params['email'] ?? "", 'disabled' => 'disabled', 'prefix' => true])?>
 
-                    <div class="input-group mt-3">
-                        <label for="password" class= "w-100 labels">Nowe hasło</label>
-                        <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
-                        <input type="password" name="password" class="form-control">
-                    </div>
+                    <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", 'description' => "Nowe hasło", 'prefix' => true])?>
+                    <?php Component::render('error', ['type' => "password", 'names' => ['between']])?>
 
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:between')])?>
-
-                    <div class="input-group mt-3">
-                        <label for="repeat_password" class= "w-100 labels">Powtórz nowe hasło </label>
-                        <span class="input-group-text bg-primary"><i class="bi bi-envelope text-white"></i></span>
-                        <input type="password" name="repeat_password" class="form-control">
-                    </div>
-
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:password:same')])?>
+                    <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "repeat_password", 'description' => "Powtórz nowe hasło", 'prefix' => true])?>
+                    <?php Component::render('error', ['type' => "password", 'names' => ['same']])?>
 
                     <input type = "hidden" name = "code" value = "<?=$params['code']?>">
-                    <div class="d-grid col-12 mx-auto mt-3">
-                        <button class="btn btn-primary" type="submit"><span></span> Przypomnij hasło </button>
-                    </div>
+
+                    <?php Component::render('form.button', ['text' => "Przypomnij hasło"])?>
                 </form>
             </div>
         </div>

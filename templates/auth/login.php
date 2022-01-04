@@ -15,10 +15,10 @@ use App\Helper\Session;
             </div>
             <div class="p-4">
                 <form action="<?=$route->get('auth.login')?>" method="post">
-                    <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
+                    <?php Component::render('form.input', ['class' => "mt-3", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? '', 'prefix' => true])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
-                    <?php Component::render('auth.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", "placeholder" => "Hasło"])?>
+                    <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", "placeholder" => "Hasło", 'prefix' => true])?>
                     <?php Component::render('error', ['type' => "password", 'names' => ['incorrect']])?>
 
                     <?php Component::render('form.button', ['text' => "Zaloguj się"])?>

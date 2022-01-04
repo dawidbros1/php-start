@@ -18,6 +18,12 @@ class Component
             throw new AppException("Podana ścieżka do komponentu [ $path ] nie istnieje");
         }
 
+        if (array_key_exists('description', $params)) {
+            $params['label'] = $params['description'];
+            $params['placeholder'] = $params['description'];
+            unset($params['description']);
+        }
+
         include $path;
     }
 }
