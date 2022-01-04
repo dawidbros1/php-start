@@ -6,12 +6,27 @@ use App\Helper\Session;
 
 ?>
 
-<div class="<?=$params['class'] ?? ''?>">
-
-    <?php if ($params['label'] ?? null == true): ?>
+<div class="input-group <?=$params['class'] ?? ''?>">
+    <?php if (array_key_exists('label', $params)): ?>
         <div class = "col-12"><label class="labels"><?=$params['label']?></label></div>
     <?php endif;?>
 
-    <input type="<?=$params['type'] ?? "text"?>" name="<?=$params['name']?>" class="form-control" placeholder="<?=$params['placeholder'] ?? ""?>"
-        value="<?=$params['value'] ?? ""?>">
+    <?php if (array_key_exists('prefix', $params)): ?>
+        <span class="input-group-text bg-primary"></span>
+    <?php endif;?>
+
+    <?php $array = ['type', 'name', 'placeholder', 'disabled', 'value']?>
+
+    <input class="form-control"
+       <?php foreach ($array as $name): ?>
+            <?php if (array_key_exists($name, $params)): ?>
+                <?php if ($name == "placeholder"): ?>
+                    placeholder = "<?=$params[$name]?>"
+                <?php else: ?>
+                    <?=$name . "=" . $params[$name]?>
+
+                <?php endif;?>
+            <?php endif?>
+       <?php endforeach;?>
+    >
 </div>
