@@ -64,3 +64,8 @@ footer div{
     height: 100%;
     line-height: 35px;
 }
+
+.back:hover {
+    color: #682773;
+    cursor: pointer
+}

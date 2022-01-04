@@ -31,7 +31,7 @@ use App\Helper\Session;
                         <div>
                             <div class="fw-bold"> <?=$user->username?></div>
                             <div class="text-black-50"><?=$user->email?></div>
-                            <div class = "border-top w-100 mb-2"></div>
+                            <div class = "border-top w-100"></div>
                         </div>
 
                         <input type = "hidden" name = "update" value = "avatar">
