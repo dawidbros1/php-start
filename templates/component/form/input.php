@@ -18,15 +18,11 @@ use App\Helper\Session;
     <?php $array = ['type', 'name', 'placeholder', 'disabled', 'value']?>
 
     <input class="form-control"
-       <?php foreach ($array as $name): ?>
+        <?php foreach ($array as $name): ?>
             <?php if (array_key_exists($name, $params)): ?>
-                <?php if ($name == "placeholder"): ?>
-                    placeholder = "<?=$params[$name]?>"
-                <?php else: ?>
-                    <?=$name . "=" . $params[$name]?>
-
-                <?php endif;?>
-            <?php endif?>
-       <?php endforeach;?>
+                <?=$name?> = "<?=$params[$name]?>"
+            <?php endif;?>
+        <?php endforeach;?>
     >
+
 </div>
