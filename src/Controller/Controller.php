@@ -147,7 +147,7 @@ abstract class Controller extends Validator
     protected function hashFile($file)
     {
         $type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $name = $this->hash(date('Y-m-d H:i:s') . "_" . $name);
+        $name = $this->hash(date('Y-m-d H:i:s') . "_" . $file['name']);
         $file['name'] = $name . '.' . $type;
         return $file;
     }
