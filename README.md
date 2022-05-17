@@ -2,7 +2,7 @@
 Stworzona podstawka to gotowy pakiet startowy do tworzenia aplikacji w technologii PHP. 
 
 # Użyte technologie
-• PHP \
+• PHP 7.4 \
 • PDO
 
 # Funkcjonalności
