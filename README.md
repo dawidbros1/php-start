@@ -8,7 +8,7 @@ Stworzona podstawka to gotowy pakiet startowy do tworzenia aplikacji w technolog
 # Funkcjonalności
 • Rejestracja / Logowanie \
 • Przywrócenie hasła \
-• Zarządzani profilem użytkownika [ nazwa / zdjęcie / hasło ] \ 
+• Zarządzani profilem użytkownika [ nazwa / zdjęcie / hasło ]
 
 # Instalacja
 • Pobranie repozytorium \
