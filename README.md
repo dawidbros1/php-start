@@ -1,16 +1,18 @@
 # PHP Start
-Stworzona podstawka to gotowy pakiet startowy do tworzenia aplikacji w technologii PHP. 
+The created project is a ready file package to create applications in PHP technology.
 
-# Użyte technologie
+## Build with
 • PHP 7.4 \
 • PDO
 
-# Funkcjonalności
-• Rejestracja / Logowanie \
-• Przywrócenie hasła \
-• Zarządzani profilem użytkownika [ nazwa / zdjęcie / hasło ]
+## Features
+• Registration / Login \
+• Password recovery \
+• User profile management (name / photo / password)
 
-# Instalacja
-• Pobranie repozytorium \
-• Utworzenie bazy danych \
-• Import bazy danych z pliku ./sql/database.sql [ ustawić poprawną nazwę bazy danych w pliku ]
+## Setup
+• Download repozitorium \
+• Create database (project) \
+• Import database from file ./sql/database.sql
+
+## Controlery - IN PROGRESS
