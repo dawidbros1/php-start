@@ -25,7 +25,7 @@ The created project is a ready file package to create applications in PHP techno
   <li>
    <details>
     <summary>initConfiguration</summary>
-    Initialize properties such as configuration and route.
+    Initialize properties such as config and route.
    </details>
   </li>
 
