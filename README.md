@@ -41,8 +41,7 @@ The created project is a ready file package to create applications in PHP techno
   <li>
    <details>
     <summary>run</summary>
-    Get action, and check if action exists.
-    If action exists run selected action else redirect to homePage with error message.
+    If given action exists run it else redirect to homePage with error message.
    </details>
   </li>
 
