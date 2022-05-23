@@ -22,11 +22,10 @@ use App\Helper\Session;
                     <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
                     <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", "placeholder" => "Hasło", 'prefix' => true])?>
-                    <?php Component::render('error', ['type' => "password", 'names' => ['between']])?>
+                    <?php Component::render('error', ['type' => "password", 'names' => ['between','same']])?>
 
                     <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz hasło", 'prefix' => true])?>
-                    <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
-
+      
                     <?php Component::render('form.button', ['text' => "Utwórz konto"])?>
 
                     <p class="text-center mt-3">Masz już konto?
