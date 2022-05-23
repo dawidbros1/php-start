@@ -46,7 +46,7 @@ class Validator
 
         if (array_key_exists('password', $data) && array_key_exists('repeat_password', $data)) {
             if ($data['password'] != $data['repeat_password']) {
-                Session::set("error:repeat_password:same", "Hasła nie są jednakowe");
+                Session::set("error:password:same", "Hasła nie są jednakowe");
                 $ok = false;
             }
         }
@@ -58,7 +58,7 @@ class Validator
             $between = (bool) $rules->hasKeys(['min', 'max']);
             $input = $data[$type];
 
-            foreach (array_keys($rules->get()) as $rule) {
+            foreach (array_keys($rules->getType()) as $rule) {
                 $value = $rules->value($rule);
                 $message = $rules->message($rule);
 
