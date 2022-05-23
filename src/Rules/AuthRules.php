@@ -10,6 +10,7 @@ class AuthRules extends Rules
 {
     public function rules()
     {
+        // (TYPE, [name => value, name => value])
         $this->createRules('username', ['min' => 3, "max" => 16, 'specialCharacters' => true]);
         $this->createRules('password', ['min' => 6, 'max' => 36]);
         $this->createRules('email', ['sanitize' => true, "validate" => true]);
