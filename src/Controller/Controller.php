@@ -50,7 +50,7 @@ abstract class Controller extends Validator
             $this->user = $this->userRepository->get((int) $id);
         }
 
-        $this->request = $request;
+        $this->request = $request;	
         $this->view = new View($this->user, self::$route);
     }
 
