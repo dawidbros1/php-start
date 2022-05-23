@@ -1,231 +1,123 @@
 # PHP Start
-The created project is a ready file package to create applications in PHP technology.
+The project is a complete file package to create applications in PHP technology.
 
-## Build with
-• PHP 7.4 \
-• PDO
+### Build with
+1. PHP 7.4 \
+2. PDO
 
-## Features
-• Registration / Login \
-• Password recovery \
-• User profile management (name / photo / password)
+### Features
+1. Registration / Login \
+2. Password recovery \
+3. User profile management (name / photo / password)
 
-## Setup
-• Download repozitorium \
-• Create database (project) \
-• Import database from file ./sql/database.sql
+### Installation Instructions
+1. Run `git clone https://github.com/dawidbros1/php-start.git`
+2. Create a MySQL database for the project
+3. From the project root folder run `cd .\config\` and next `rename config_dist.php config.php`
+4. Configure your `./config/config.php` file
+5. Import tables from file `./sql/database.sql` to your database
 
-## DOCUMENTATION - IN PROGRESS
+### Routes
+| Method | Action | URI | Name |
+| --- | --- | --- | --- |
+| GET | ./?action=home | src/Controller/GeneralController@homeAction | home |
+| GET | ./?action=regulations | src/Controller/GeneralController@policyAction | regulations |
+| GET | ./?action=policy | src/Controller/GeneralController@regulationsAction | pollicy |
+| GET\|POST | ./?action=contact| src/Controller/GeneralController@contactAction | contact |
+| GET\|POST | ./?type=auth&action=register | src/Controller/AuthController@registerAction | auth.register |
+| GET\|POST | /?type=auth&action=login | src/Controller/AuthController@loginAction | auth.login |
+| GET\|POST | ./?type=auth&action=forgotPassword | src/Controller/AuthController@forgotPasswordAction | auth.forgotPassword |
+| GET\|POST | ./?type=auth&action=resetPassword&code={given_code} | src/Controller/AuthController@resetPasswordAction | auth.resetPassword |
+| ANY | ./?type=user&action=logout | src/Controller/UserController@logoutAction | user.logout |
+| GET | ./?type=user&action=profile | src/Controller/UserController@profileAction | user.profile |
+| POST | ./?type=user&action=update&update={username/password/avatar} | src/Controller/UserController@updateAction | user.update |
 
-<!-- CONTROLLER -->
-
-<details>
- <summary>Controller</summary>
- <ul>
-  <li>
-   <details>
-    <summary>initConfiguration</summary>
-    Initialize properties such as config and route.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>__construct</summary>
-    Check connection with database. Initialize configuration in repozitory and mail.
-    Get user if he is logged. Assigns an request class object to a property.
-    Create object of view class and set to a property.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>run</summary>
-    If given action exists run it else redirect to homePage with error message.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>redirect</summary>
-    Redirect user to selected page with parameters.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>action</summary>
-    Return action param from request.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>guest</summary>
-    Method check if user is not logged in. Logged user is redirect to homePage with error message.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>requireLogin</summary>
-    Method check if user is logged in. Guest is redirect to login page with error message.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>requireAdmin</summary>
-    Method check if user is admin. Guest is redirect to login page with error message.
-    User which is not admin is redirect to homePage with error message.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>uploadFile</summary>
-    Method upload file on server.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>hash</summary>
-    Method return hash of input param.
-    If hash method isn't sent, selected is default hash method from config.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>hashFile</summary>
-    Method create unique filename.
-   </details>
-  </li>
- </ul>
-</details>
-
-<!-- AUTH CONTROLLER -->
-
-<details>
- <summary>AuthController</summary>
- <ul>
-  <li>
-   <details>
-    <summary>registerAction</summary>
-    <b>GET: </b> Show register form. <br>
-    <b>POST: </b> Validate data given by user. If data is validated, user is added to database.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>loginAction</summary>
-    <b>GET: </b> Show login form. <br>
-    <b>POST: </b>Action check if exist user with appropriate e-mail address and password.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>forgotPasswordAction</summary>
-    <b>GET: </b> Show form to reset password. <br>
-    <b>POST: </b> Send a message on address-email given from user with special code which is used to user
-    authorize to reset password.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>resetPasswordAction</summary>
-    <b>GET: </b> Show reset password form. <br>
-    <b>POST: </b> Action check if code is sent and active, next set new password given by user.
-   </details>
-  </li>
- </ul>
-</details>
-
-<!-- USER CONTROLLER -->
-
-<details>
- <summary>UserController</summary>
- <ul>
-  <li>
-   <details>
-    <summary>logoutAction</summary>
-    Logout user, clear session data.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>profileAction</summary>
-    Show user profile.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>updateAction</summary>
-    <b>POST: </b> Select method which data will be updated by post param(update), next redirect to user profile.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>updateUsername</summary>
-    <b>POST: </b> Validate username given by user and set new username.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>updatePassword</summary>
-    <b>POST: </b> Validate data given by user and set new password.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>updateAvatar</summary>
-    <b>POST: </b> Validate image sent by user. If validate is ok, old avatar is deleted and new avatar is uploaded.
-   </details>
-  </li>
- </ul>
-</details>
-
-<!-- GENERAL CONTROLLER -->
-
-<details>
- <summary>GeneralController</summary>
- <ul>
-  <li>
-   <details>
-    <summary>homeAction</summary>
-    Show home page.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>policyAction</summary>
-    Show policy page.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>regulationsAction</summary>
-    Show regulations page.
-   </details>
-  </li>
-
-  <li>
-   <details>
-    <summary>contactAction</summary>
-    <b>GET: </b> Show contant form. <br>
-    <b>POST: </b> Send message to website admin.
-   </details>
-  </li>
- </ul>
-</details>
+### Tree directory
+- __C:\\xampp\\htdocs\\php\-start__
+   - [composer.json](composer.json)
+   - [composer.lock](composer.lock)
+   - __config__
+     - [config.php](config/config.php)
+     - [config\_dist.php](config/config_dist.php)
+   - [index.php](index.php)
+   - __public__
+     - __css__
+       - [contact.css](public/css/contact.css)
+       - [profile.css](public/css/profile.css)
+       - [style.css](public/css/style.css)
+     - __images__
+       - __SocialMedia__
+         - [facebook.png](public/images/SocialMedia/facebook.png)
+         - [instagram.png](public/images/SocialMedia/instagram.png)
+         - [linkedin.png](public/images/SocialMedia/linkedin.png)
+         - [twitter.png](public/images/SocialMedia/twitter.png)
+         - [youtube.png](public/images/SocialMedia/youtube.png)
+       - [avatar.png](public/images/avatar.png)
+     - __js__
+       - [main.js](public/js/main.js)
+   - [recaptchalib.php](recaptchalib.php)
+   - __routes__
+     - [routes.php](routes/routes.php)
+   - __sql__
+     - [database.sql](sql/database.sql)
+   - __src__
+     - [Component.php](src/Component.php)
+     - __Controller__
+       - [AuthController.php](src/Controller/AuthController.php)
+       - [Controller.php](src/Controller/Controller.php)
+       - [GeneralController.php](src/Controller/GeneralController.php)
+       - [UserController.php](src/Controller/UserController.php)
+     - __Exception__
+       - [AppException.php](src/Exception/AppException.php)
+       - [ConfigurationException.php](src/Exception/ConfigurationException.php)
+       - [NotFoundException.php](src/Exception/NotFoundException.php)
+       - [StorageException.php](src/Exception/StorageException.php)
+     - __Helper__
+       - [Request.php](src/Helper/Request.php)
+       - [Session.php](src/Helper/Session.php)
+     - __Model__
+       - [Auth.php](src/Model/Auth.php)
+       - [Config.php](src/Model/Config.php)
+       - [Mail.php](src/Model/Mail.php)
+       - [Model.php](src/Model/Model.php)
+       - [Route.php](src/Model/Route.php)
+       - [Rules.php](src/Model/Rules.php)
+       - [User.php](src/Model/User.php)
+     - __Repository__
+       - [AuthRepository.php](src/Repository/AuthRepository.php)
+       - [Repository.php](src/Repository/Repository.php)
+       - [UserRepository.php](src/Repository/UserRepository.php)
+     - __Rules__
+       - [AuthRules.php](src/Rules/AuthRules.php)
+       - [UserRules.php](src/Rules/UserRules.php)
+     - __Utils__
+       - [debug.php](src/Utils/debug.php)
+     - __Validator__
+       - [Validator.php](src/Validator/Validator.php)
+     - [View.php](src/View.php)
+   - __templates__
+     - __auth__
+       - [forgotPassword.php](templates/auth/forgotPassword.php)
+       - [login.php](templates/auth/login.php)
+       - [register.php](templates/auth/register.php)
+       - [resetPassword.php](templates/auth/resetPassword.php)
+     - __component__
+       - __button__
+         - [back.php](templates/component/button/back.php)
+       - [error.php](templates/component/error.php)
+       - __form__
+         - [button.php](templates/component/form/button.php)
+         - [input.php](templates/component/form/input.php)
+     - __general__
+       - [contact.php](templates/general/contact.php)
+       - [home.php](templates/general/home.php)
+       - [policy.php](templates/general/policy.php)
+       - [regulations.php](templates/general/regulations.php)
+     - __layout__
+       - [main.php](templates/layout/main.php)
+     - [messages.php](templates/messages.php)
+     - __user__
+       - [profile.php](templates/user/profile.php)
+   - __uploads__
+     - __images__
+       - __avatar__
