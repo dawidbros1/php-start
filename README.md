@@ -3,7 +3,7 @@ The project is a complete file package to create applications in PHP technology.
 
 ### Build with
 1. PHP 7.4
-2. 
+
 ### Features
 1. Registration / Login
 2. Password recovery
