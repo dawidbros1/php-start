@@ -123,19 +123,51 @@ The project is a complete file package to create applications in PHP technology.
 # IN PROGRESS
 
 ### Rules
-Class `src/model/rules` is created to define validate rules for data given by user.
-1. createRules(string type, array rules) This method add rules to protected property.
-2. createMessages(string type, array rules) This method add error messages to rules
-3. value(?string name = null) This method return value of rules
-4. message(?string name = null) This method return messages of rules
-5. arrayValue(string name, bool uppercase = false) This methos return array value of rules as string. Value of urles must be array.
-6. hasType(string type) This method check if exists input type
-7. selectType(string type) This method select default type
-8. clearType() This method clear default type
-9. hasKeys(array keys, ?string type = null)
+Class `./src/model/rules` is created to define validate rules for data given by user.
++ **createRules(string type, array rules)** Add rule to property rules.
++ **createMessages(string type, array rules)** Add error messages to rule.
++ **value(?string name = null)** Return value of rules.
++ **message(?string name = null**) Return messages of rules.
++ **arrayValue(string name, bool uppercase = false)** Return array value of rules as string. Value of rule name must be array.
++ **hasType(string type)** Check if exists input type.
++ **selectType(string type)** Set selectedType.
++ **clearType()** Set selectedType on null.
++ **typeHasKeys(array keys, ?string type = null)** Check if type of rule has all input keys.
 
-#### How use rules
+#### How to create rule
+1. Create new file in ./src/rules/ with name like a **NameRules.php**
+2. Example rule file:
+```
+<?php
 
+declare (strict_types = 1);
+
+namespace App\Rules;
+
+use App\Model\Rules;
+
+class NameRules extends Rules
+{
+    public function rules()
+    {
+        $this->createRule('username', ['min' => 3, "max" => 16, 'specialCharacters' => false]);
+    }
+
+    public function messages()
+    {
+        $this->createMessages('username', [
+            'min' => "Username cannot contain less than". $this->value('username.min') "characters",
+            'max' => "Username cannot contain more than". $this->value('username.max') "characters",
+            'specialCharacters' => "Username cannot contain special characters",
+        ]);
+    }
+}
+```
+
+**Min** and **max** can be replace with **between** rule:
+```
+   'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
+```
 
 ### Validator
 
