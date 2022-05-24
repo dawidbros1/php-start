@@ -2,20 +2,20 @@
 The project is a complete file package to create applications in PHP technology.
 
 ### Build with
-1. PHP 7.4 \
-2. PDO
+1. PHP 7.4
 
 ### Features
-1. Registration / Login \
-2. Password recovery \
-3. User profile management (name / photo / password)
+1. Registration / Login
+2. Password recovery
+3. User profile management (username / photo / password)
 
 ### Installation Instructions
 1. Run `git clone https://github.com/dawidbros1/php-start.git`
-2. Create a MySQL database for the project
-3. From the project root folder run `cd .\config\` and next `rename config_dist.php config.php`
-4. Configure your `./config/config.php` file
-5. Import tables from file `./sql/database.sql` to your database
+2. Run `componser install`
+3. Create a MySQL database for the project
+4. From the project root folder run `cd .\config\` and next `rename config_dist.php config.php`
+5. Configure your `./config/config.php` file
+6. Import tables from file `./sql/database.sql` to your database
 
 ### Routes
 | Method | Action | URI | Name |
@@ -37,7 +37,6 @@ The project is a complete file package to create applications in PHP technology.
    - [composer.json](composer.json)
    - [composer.lock](composer.lock)
    - __config__
-     - [config.php](config/config.php)
      - [config\_dist.php](config/config_dist.php)
    - [index.php](index.php)
    - __public__
