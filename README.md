@@ -18,7 +18,7 @@ The project is a complete file package to create applications in PHP technology.
 6. Import tables from file `./sql/database.sql` to your database
 
 ### Routes
-| Method | URI ( ./?... ) | Action | Name |
+| Method | URI ( ./? ) | Action | Name |
 | --- | --- | --- | --- |
 | GET | action=home | src/Controller/GeneralController@homeAction | home |
 | GET | action=regulations | src/Controller/GeneralController@policyAction | regulations |
@@ -33,7 +33,6 @@ The project is a complete file package to create applications in PHP technology.
 | POST | type=user&action=update&update=... | src/Controller/UserController@updateAction | user.update |
 
 ### Tree directory
-- __C:\\xampp\\htdocs\\php\-start__
    - [composer.json](composer.json)
    - [composer.lock](composer.lock)
    - __config__
