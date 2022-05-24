@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Model;
 
@@ -18,7 +18,7 @@ abstract class Rules
     }
 
     // Podstawowe metody do tworzenia reguł oraz wiadomości
-    public function createRules(string $type, array $rules)
+    public function createRule(string $type, array $rules)
     {
         foreach ($rules as $name => $value) {
             $this->rules[$type][$name]['value'] = $value;
@@ -37,7 +37,7 @@ abstract class Rules
         }
     }
 
-    // ===== ===== USE FROM NameRules like AuthRules ===== =====
+    // ===== ===== USE IN NameRules like AuthRules ===== =====
     public function value(?string $name = null)
     {
         return $this->getRule($name)['value'];

@@ -110,7 +110,7 @@ class Validator
                     }
                 }
                 // ================================================
-                else if ($rule == "specialCharacters" && $value == true) {
+                else if ($rule == "specialCharacters" && $value == false) {
                     if (preg_match('/[\'^£$%&*()}{@#~"?><>,|=_+¬-]/', $input)) {
                         Session::set("error:$type:$rule", $message);
                         $ok = false;
