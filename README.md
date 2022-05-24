@@ -2,42 +2,40 @@
 The project is a complete file package to create applications in PHP technology.
 
 ### Build with
-1. PHP 7.4 \
-2. PDO
+1. PHP 7.4
 
 ### Features
-1. Registration / Login \
-2. Password recovery \
-3. User profile management (name / photo / password)
+1. Registration / Login
+2. Password recovery
+3. User profile management (username / photo / password)
 
 ### Installation Instructions
 1. Run `git clone https://github.com/dawidbros1/php-start.git`
-2. Create a MySQL database for the project
-3. From the project root folder run `cd .\config\` and next `rename config_dist.php config.php`
-4. Configure your `./config/config.php` file
-5. Import tables from file `./sql/database.sql` to your database
+2. Run `componser install`
+3. Create a MySQL database for the project
+4. From the project root folder run `cd .\config\` and next `rename config_dist.php config.php`
+5. Configure your `./config/config.php` file
+6. Import tables from file `./sql/database.sql` to your database
 
 ### Routes
-| Method | Action | URI | Name |
+| Method | URI ( ./? ) | Action | Name |
 | --- | --- | --- | --- |
-| GET | ./?action=home | src/Controller/GeneralController@homeAction | home |
-| GET | ./?action=regulations | src/Controller/GeneralController@policyAction | regulations |
-| GET | ./?action=policy | src/Controller/GeneralController@regulationsAction | pollicy |
-| GET\|POST | ./?action=contact| src/Controller/GeneralController@contactAction | contact |
-| GET\|POST | ./?type=auth&action=register | src/Controller/AuthController@registerAction | auth.register |
-| GET\|POST | /?type=auth&action=login | src/Controller/AuthController@loginAction | auth.login |
-| GET\|POST | ./?type=auth&action=forgotPassword | src/Controller/AuthController@forgotPasswordAction | auth.forgotPassword |
-| GET\|POST | ./?type=auth&action=resetPassword&code={given_code} | src/Controller/AuthController@resetPasswordAction | auth.resetPassword |
-| ANY | ./?type=user&action=logout | src/Controller/UserController@logoutAction | user.logout |
-| GET | ./?type=user&action=profile | src/Controller/UserController@profileAction | user.profile |
-| POST | ./?type=user&action=update&update={username/password/avatar} | src/Controller/UserController@updateAction | user.update |
+| GET | action=home | src/Controller/GeneralController@homeAction | home |
+| GET | action=regulations | src/Controller/GeneralController@policyAction | regulations |
+| GET | action=policy | src/Controller/GeneralController@regulationsAction | pollicy |
+| GET\|POST | action=contact| src/Controller/GeneralController@contactAction | contact |
+| GET\|POST | type=auth&action=register | src/Controller/AuthController@registerAction | auth.register |
+| GET\|POST | type=auth&action=login | src/Controller/AuthController@loginAction | auth.login |
+| GET\|POST | type=auth&action=forgotPassword | src/Controller/AuthController@forgotPasswordAction | auth.forgotPassword |
+| GET\|POST | type=auth&action=resetPassword&code=... | src/Controller/AuthController@resetPasswordAction | auth.resetPassword |
+| ANY | type=user&action=logout | src/Controller/UserController@logoutAction | user.logout |
+| GET | type=user&action=profile | src/Controller/UserController@profileAction | user.profile |
+| POST | type=user&action=update&update=... | src/Controller/UserController@updateAction | user.update |
 
 ### Tree directory
-- __C:\\xampp\\htdocs\\php\-start__
    - [composer.json](composer.json)
    - [composer.lock](composer.lock)
    - __config__
-     - [config.php](config/config.php)
      - [config\_dist.php](config/config_dist.php)
    - [index.php](index.php)
    - __public__
@@ -121,3 +119,40 @@ The project is a complete file package to create applications in PHP technology.
    - __uploads__
      - __images__
        - __avatar__
+
+# IN PROGRESS
+
+### Rules
+Class `src/model/rules` is created to define validate rules for data given by user.
+1. createRules(string type, array rules) This method add rules to protected property.
+2. createMessages(string type, array rules) This method add error messages to rules
+3. value(?string name = null) This method return value of rules
+4. message(?string name = null) This method return messages of rules
+5. arrayValue(string name, bool uppercase = false) This methos return array value of rules as string. Value of urles must be array.
+6. hasType(string type) This method check if exists input type
+7. selectType(string type) This method select default type
+8. clearType() This method clear default type
+9. hasKeys(array keys, ?string type = null)
+
+#### How use rules
+
+
+### Validator
+
+### 
+
+### How create
+#### How create new Controller
+#### How create new Model
+#### How create new Rules
+#### How works route
+### Helpers
+#### Session
+#### Request
+### Repository
+### Component
+### View
+
+
+
+
