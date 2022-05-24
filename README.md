@@ -3,7 +3,7 @@ The project is a complete file package to create applications in PHP technology.
 
 ### Build with
 1. PHP 7.4
-
+2. 
 ### Features
 1. Registration / Login
 2. Password recovery
@@ -18,19 +18,19 @@ The project is a complete file package to create applications in PHP technology.
 6. Import tables from file `./sql/database.sql` to your database
 
 ### Routes
-| Method | Action | URI | Name |
+| Method | URI ( ./?... ) | Action | Name |
 | --- | --- | --- | --- |
-| GET | ./?action=home | src/Controller/GeneralController@homeAction | home |
-| GET | ./?action=regulations | src/Controller/GeneralController@policyAction | regulations |
-| GET | ./?action=policy | src/Controller/GeneralController@regulationsAction | pollicy |
-| GET\|POST | ./?action=contact| src/Controller/GeneralController@contactAction | contact |
-| GET\|POST | ./?type=auth&action=register | src/Controller/AuthController@registerAction | auth.register |
-| GET\|POST | /?type=auth&action=login | src/Controller/AuthController@loginAction | auth.login |
-| GET\|POST | ./?type=auth&action=forgotPassword | src/Controller/AuthController@forgotPasswordAction | auth.forgotPassword |
-| GET\|POST | ./?type=auth&action=resetPassword&code={given_code} | src/Controller/AuthController@resetPasswordAction | auth.resetPassword |
-| ANY | ./?type=user&action=logout | src/Controller/UserController@logoutAction | user.logout |
-| GET | ./?type=user&action=profile | src/Controller/UserController@profileAction | user.profile |
-| POST | ./?type=user&action=update&update={username/password/avatar} | src/Controller/UserController@updateAction | user.update |
+| GET | action=home | src/Controller/GeneralController@homeAction | home |
+| GET | action=regulations | src/Controller/GeneralController@policyAction | regulations |
+| GET | action=policy | src/Controller/GeneralController@regulationsAction | pollicy |
+| GET\|POST | action=contact| src/Controller/GeneralController@contactAction | contact |
+| GET\|POST | type=auth&action=register | src/Controller/AuthController@registerAction | auth.register |
+| GET\|POST | type=auth&action=login | src/Controller/AuthController@loginAction | auth.login |
+| GET\|POST | type=auth&action=forgotPassword | src/Controller/AuthController@forgotPasswordAction | auth.forgotPassword |
+| GET\|POST | type=auth&action=resetPassword&code=... | src/Controller/AuthController@resetPasswordAction | auth.resetPassword |
+| ANY | type=user&action=logout | src/Controller/UserController@logoutAction | user.logout |
+| GET | type=user&action=profile | src/Controller/UserController@profileAction | user.profile |
+| POST | type=user&action=update&update=... | src/Controller/UserController@updateAction | user.update |
 
 ### Tree directory
 - __C:\\xampp\\htdocs\\php\-start__
