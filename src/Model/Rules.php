@@ -105,20 +105,20 @@ abstract class Rules
         }
     }
 
-    public function hasKeys(array $keys, ?string $type = null)
+    public function typeHasKeys(array $keys, ?string $type = null)
     {
         if ($this->selectedType != null) {
-            $rules = $this->rules[$this->selectedType];
+            $type = $this->rules[$this->selectedType];
         } elseif ($type == null) {
             throw new AppException('Typ reguły nie został wprowadzony');
         } elseif (!$this->hasType($type)) {
             throw new AppException('Wybrany typ nie istnieje');
         } else {
-            $rules = $this->rules[$type];
+            $type = $this->rules[$type];
         }
 
         foreach ($keys as $key) {
-            if (!array_key_exists($key, $rules)) {
+            if (!array_key_exists($key, $type)) {
                 return false;
             }
         }
