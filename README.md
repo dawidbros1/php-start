@@ -119,3 +119,40 @@ The project is a complete file package to create applications in PHP technology.
    - __uploads__
      - __images__
        - __avatar__
+
+# IN PROGRESS
+
+### Rules
+Class `src/model/rules` is created to define validate rules for data given by user.
+1. createRules(string type, array rules) This method add rules to protected property.
+2. createMessages(string type, array rules) This method add error messages to rules
+3. value(?string name = null) This method return value of rules
+4. message(?string name = null) This method return messages of rules
+5. arrayValue(string name, bool uppercase = false) This methos return array value of rules as string. Value of urles must be array.
+6. hasType(string type) This method check if exists input type
+7. selectType(string type) This method select default type
+8. clearType() This method clear default type
+9. hasKeys(array keys, ?string type = null)
+
+#### How use rules
+
+
+### Validator
+
+### 
+
+### How create
+#### How create new Controller
+#### How create new Model
+#### How create new Rules
+#### How works route
+### Helpers
+#### Session
+#### Request
+### Repository
+### Component
+### View
+
+
+
+
