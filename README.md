@@ -120,8 +120,6 @@ The project is a complete file package to create applications in PHP technology.
      - __images__
        - __avatar__
 
-# IN PROGRESS
-
 ### Rules
 Class `./src/model/rules` is created to define validate rules for data given by user.
 + **createRules(string type, array rules)** Add rule to property rules.
@@ -134,7 +132,7 @@ Class `./src/model/rules` is created to define validate rules for data given by 
 + **clearType()** Set selectedType on null.
 + **typeHasRules(array keys, ?string type = null)** Check if type of rule has all input keys.
 
-#### How to create rule
+#### How to create new rule
 1. Create new file in ./src/rules/ with name like a **NameRules.php**
 2. Example rule file:
 ```
@@ -202,17 +200,133 @@ private function NameAction()
 ```
 
 ### Validator
+Class Controller extends Validator, so we can validate data given by object with class Rules.
 
-### 
+We can validate with the following rules: 
+1. **min** and **max** for length of input string
+2. **validate** and **sanitize** for adress email
+3. **require** to check if the field is not empty
+4. **specialCharacters** to check if string have special characters
 
-### How create
-#### How create new Controller
-#### How create new Model
-#### How works route
+We can alse validate images sent by user with the following rules:
+1. **maxSize** to limited max size of image
+2. **types** to check if sent image have extension like a (.png, .jpg etc.)
+
+# IN PROGRESS
+
+### Example of basic files
+
+<details>
+   <summary> <b> NameController </b> </summary>
+   
+   <b>Location: </b> src/Controller/
+   ```
+   <?php
+
+   declare (strict_types = 1);
+
+   namespace App\Controller;
+
+   use App\Controller\Controller;
+   use App\Helper\Request;
+   use App\Helper\Session;
+   use App\Repository\NameRepository;
+   use App\Rules\NameRules;
+   use App\View;
+
+   class NameController extends Controller
+   {
+       public function __construct(Request $request)
+       {
+           parent::__construct($request);
+           $this->requireLogin();
+           $this->rules = new UserRules();
+       }
+      ...
+   }
+   ```
+</details>
+
+<details>
+   <summary> <b> NameRules </b> </summary>
+   
+   <b>Location: </b> src/Rules/
+   ```
+   <?php
+
+   declare (strict_types = 1);
+
+   namespace App\Rules;
+
+   use App\Model\Rules;
+
+   class NameRules extends Rules
+   {
+       public function rules()
+       {
+           $this->createRule('username', ['max' => 3]);
+       }
+
+       public function messages()
+       {
+           $this->createMessages('username', [
+               'max' => "Username cannot contain more than". $this->value('username.min') "characters",
+           ]);
+       }
+   }
+   ```
+</details>
+
+<details>
+   <summary> <b> NameRepository </b> </summary>
+   
+   <b>Location: </b> src/Repository/
+   ```
+   <?php
+
+   declare (strict_types = 1);
+
+   namespace App\Repository;
+
+   use App\Model\Name;
+   use App\Repository\Repository;
+   use PDO;
+
+   class NameRepository extends Repository
+   {
+       public function methodOne( ... ) { ... }
+       public function methodTwo( ... ) { ... }
+   }
+   ```
+</details>
+
+
+### Routing
+#### How create new routing
+Register a new group in `./routes/routes.php`
+```
+$route->group('name', ['one', 'two', 'three']);
+```
+
+example:
+```
+$route->group('user', ['logout', 'profile', 'update']);
+```
+
+#### How use created routing
+Inside of method in NameController
+```
+$this->redirect(self::$route->get('name.action'), ['param' => $value, 'param2' => $value2]);
+```
+example: 
+```
+$this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
+```
+
 ### Helpers
 #### Session
 #### Request
-### Repository
+
 ### Component
 ### View
 
