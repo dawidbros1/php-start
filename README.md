@@ -125,14 +125,14 @@ The project is a complete file package to create applications in PHP technology.
 ### Rules
 Class `./src/model/rules` is created to define validate rules for data given by user.
 + **createRules(string type, array rules)** Add rule to property rules.
-+ **createMessages(string type, array rules)** Add error messages to rule.
-+ **value(?string name = null)** Return value of rules.
-+ **message(?string name = null**) Return messages of rules.
-+ **arrayValue(string name, bool uppercase = false)** Return array value of rules as string. Value of rule name must be array.
++ **createMessages(string type, array rules)** Add error messages to rules of type.
++ **value(?string name = null)** Return value of rule.
++ **message(?string name = null**) Return messages of rule.
++ **arrayValue(string name, bool uppercase = false)** Return array value of rules as string.
 + **hasType(string type)** Check if exists input type.
-+ **selectType(string type)** Set selectedType.
++ **selectType(string type)** Set selectedType on input type.
 + **clearType()** Set selectedType on null.
-+ **typeHasKeys(array keys, ?string type = null)** Check if type of rule has all input keys.
++ **typeHasRules(array keys, ?string type = null)** Check if type of rule has all input keys.
 
 #### How to create rule
 1. Create new file in ./src/rules/ with name like a **NameRules.php**
@@ -169,6 +169,38 @@ class NameRules extends Rules
    'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
 ```
 
+### How create object of rules (NameController)
+```
+use App\Helper\Request;
+use App\Rules\NameRules;
+
+class NameController extends Controller
+{
+   public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->rules = new NameRules();
+    }
+}
+```
+
+### How use rules to validate data given by user (NameController)
+```
+private function NameAction()
+ {
+     if ($this->request->hasPostName('username')) {
+         $data = ['username' => $this->request->postParam('username')];
+
+         if ($this->validate($data, $this->rules)) {
+            ... OK
+         }
+         else {
+            ... NOT OK
+         }
+     }
+ }
+```
+
 ### Validator
 
 ### 
@@ -176,7 +208,6 @@ class NameRules extends Rules
 ### How create
 #### How create new Controller
 #### How create new Model
-#### How create new Rules
 #### How works route
 ### Helpers
 #### Session
