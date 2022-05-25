@@ -121,16 +121,16 @@ The project is a complete file package to create applications in PHP technology.
        - __avatar__
 
 ### Rules
-Class `./src/model/rules` is created to define validate rules for data given by user.
-+ **createRules(string type, array rules)** Add rule to property rules.
-+ **createMessages(string type, array rules)** Add error messages to rules of type.
-+ **value(?string name = null)** Return value of rule.
-+ **message(?string name = null**) Return messages of rule.
-+ **arrayValue(string name, bool uppercase = false)** Return array value of rules as string.
-+ **hasType(string type)** Check if exists input type.
-+ **selectType(string type)** Set selectedType on input type.
-+ **clearType()** Set selectedType on null.
-+ **typeHasRules(array keys, ?string type = null)** Check if type of rule has all input keys.
+Class `./src/model/rules` is created to define validate rules.
++ **createRules(string type, array rules)** Add rule to property rules
++ **createMessages(string type, array rules)** Add error messages to rules of type
++ **value(?string name = null)** Return value of rule
++ **message(?string name = null**) Return messages of rule
++ **arrayValue(string name, bool uppercase = false)** Return array value of rules as string
++ **hasType(string type)** Check if exists input type
++ **selectType(string type)** Set selectedType on input type
++ **clearType()** Set selectedType on null
++ **typeHasRules(array keys, ?string type = null)** Check if type of rule has all input keys
 
 #### How to create new rule
 1. Create new file in ./src/rules/ with name like a **NameRules.php**
@@ -164,142 +164,94 @@ class NameRules extends Rules
 
 **Min** and **max** can be replace with **between** rule:
 ```
-   'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
+'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
 ```
 
-### How create object of rules (NameController)
-```
+### Controllers
+...
+
+#### How to create new controller
+1. Create new file in src/controller/ with name like a **NameController.php**
+2. Example controller file:
+ ```
+<?php
+
+declare (strict_types = 1);
+
+namespace App\Controller;
+
+use App\Controller\Controller;
 use App\Helper\Request;
+use App\Helper\Session;
+use App\Repository\NameRepository;
 use App\Rules\NameRules;
+use App\View;
 
 class NameController extends Controller
 {
-   public function __construct(Request $request)
+    public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->rules = new NameRules();
+        $this->requireLogin();
+        $this->rules = new NameRules(); // Here is object of rules to validate data
     }
+   
+   public function methodOneAction( ... ) { ... }
 }
 ```
 
-### How use rules to validate data given by user (NameController)
-```
-private function NameAction()
- {
-     if ($this->request->hasPostName('username')) {
-         $data = ['username' => $this->request->postParam('username')];
-
-         if ($this->validate($data, $this->rules)) {
-            ... OK
-         }
-         else {
-            ... NOT OK
-         }
-     }
- }
-```
-
 ### Validator
-Class Controller extends Validator, so we can validate data given by object with class Rules.
+Validator is use to validate data given by user.
 
-We can validate with the following rules: 
+We can validate data with the following rules: 
 1. **min** and **max** for length of input string
 2. **validate** and **sanitize** for adress email
 3. **require** to check if the field is not empty
 4. **specialCharacters** to check if string have special characters
 
-We can alse validate images sent by user with the following rules:
+We can also validate images with the following rules:
 1. **maxSize** to limited max size of image
 2. **types** to check if sent image have extension like a (.png, .jpg etc.)
 
-# IN PROGRESS
+#### How validate data ( in NameController )
+```
+public function methodOneAction()
+{
+  if ($this->request->hasPostName('username')) {
+      $data = ['username' => $this->request->postParam('username')];
 
-### Example of basic files
+      if ($this->validate($data, $this->rules)) {
+         // ... OK ...
+      }
+      else {
+         // ... NOT OK ...
+      }
+  }
+}
+```
 
-<details>
-   <summary> <b> NameController </b> </summary>
-   
-   <b>Location: </b> src/Controller/
-   ```
-   <?php
+### Repositories
+...
+#### How to create new repository
+1. Create new file in src/repository/ with name like a **NameRepository.php**
+2. Example repository file:
+```
+<?php
 
-   declare (strict_types = 1);
+declare (strict_types = 1);
 
-   namespace App\Controller;
+namespace App\Repository;
 
-   use App\Controller\Controller;
-   use App\Helper\Request;
-   use App\Helper\Session;
-   use App\Repository\NameRepository;
-   use App\Rules\NameRules;
-   use App\View;
+use App\Model\Name;
+use App\Repository\Repository;
+use PDO;
 
-   class NameController extends Controller
-   {
-       public function __construct(Request $request)
-       {
-           parent::__construct($request);
-           $this->requireLogin();
-           $this->rules = new UserRules();
-       }
-      ...
-   }
-   ```
-</details>
-
-<details>
-   <summary> <b> NameRules </b> </summary>
-   
-   <b>Location: </b> src/Rules/
-   ```
-   <?php
-
-   declare (strict_types = 1);
-
-   namespace App\Rules;
-
-   use App\Model\Rules;
-
-   class NameRules extends Rules
-   {
-       public function rules()
-       {
-           $this->createRule('username', ['max' => 3]);
-       }
-
-       public function messages()
-       {
-           $this->createMessages('username', [
-               'max' => "Username cannot contain more than". $this->value('username.min') "characters",
-           ]);
-       }
-   }
-   ```
-</details>
-
-<details>
-   <summary> <b> NameRepository </b> </summary>
-   
-   <b>Location: </b> src/Repository/
-   ```
-   <?php
-
-   declare (strict_types = 1);
-
-   namespace App\Repository;
-
-   use App\Model\Name;
-   use App\Repository\Repository;
-   use PDO;
-
-   class NameRepository extends Repository
-   {
-       public function methodOne( ... ) { ... }
-       public function methodTwo( ... ) { ... }
-   }
-   ```
-</details>
-
+class NameRepository extends Repository
+{
+    public function methodOne( ... ) { ... }
+    public function methodTwo( ... ) { ... }
+}
+```
 
 ### Routing
 #### How create new routing
@@ -322,6 +274,8 @@ example:
 ```
 $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
 ```
+
+# IN PROGRESS
 
 ### Helpers
 #### Session
