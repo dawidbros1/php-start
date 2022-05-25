@@ -105,7 +105,7 @@ abstract class Rules
         }
     }
 
-    public function typeHasKeys(array $keys, ?string $type = null)
+    public function typeHasRules(array $rules, ?string $type = null)
     {
         if ($this->selectedType != null) {
             $type = $this->rules[$this->selectedType];
@@ -117,8 +117,8 @@ abstract class Rules
             $type = $this->rules[$type];
         }
 
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $type)) {
+        foreach ($rules as $rule) {
+            if (!array_key_exists($rule, $type)) {
                 return false;
             }
         }

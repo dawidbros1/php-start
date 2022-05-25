@@ -55,7 +55,7 @@ class Validator
             if (!$rules->hasType($type)) {continue;}
 
             $rules->selectType($type);
-            $between = (bool) $rules->typeHasKeys(['min', 'max']);
+            $between = (bool) $rules->typeHasRules(['min', 'max']);
             $input = $data[$type];
 
             foreach (array_keys($rules->getType()) as $rule) {
@@ -141,14 +141,14 @@ class Validator
 
         $rules->selectType($type);
 
-        if ($rules->typeHasKeys(['maxSize'])) {
+        if ($rules->typeHasRules(['maxSize'])) {
             if (($FILE["size"] >= $rules->value('maxSize')) && $uploadOk) {
                 Session::set('error:file:maxSize', $rules->message('maxSize'));
                 $uploadOk = 0;
             }
         }
 
-        if ($rules->typeHasKeys(['types'])) {
+        if ($rules->typeHasRules(['types'])) {
             $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
 
             if (!in_array($type, $rules->value('types'))) {
