@@ -173,7 +173,6 @@ class NameRules extends Rules
 Controllers are designed to manage the entire application.
 
 #### Basic controllers
-
 <details>
    <summary>Controller</summary>
    
@@ -304,7 +303,7 @@ Return action param from request.
 final protected function guest(): void
  {
      if ($this->user != null) {
-         Session::set("error", "Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
+         Session::set("error", "The page you tried to access is only available to users who are not logged in.");
          $this->redirect(self::$route->get('home'));
      }
  }
@@ -317,7 +316,7 @@ final protected function requireLogin(): void
  {
      if ($this->user == null) {
          Session::set('lastPage', $this->request->queryString());
-         Session::set("error", "Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
+         Session::set("error", "The page you tried to access requires login.");
          $this->redirect(self::$route->get('auth.login'));
      }
  }
@@ -332,7 +331,7 @@ final protected function requireAdmin(): void
      Session::clear('lastPage');
 
      if (!$this->user->isAdmin()) {
-         Session::set("error", "Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
+         Session::set("error", "You do not have sufficient permissions for the action you wanted to perform");
          $this->redirect(self::$route->get('home'));
      }
  }
@@ -351,16 +350,16 @@ User which is not admin is redirect to homePage with error message.
      if (move_uploaded_file($FILE["tmp_name"], $target_file)) {
          return true;
      } else {
-         Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
+         Session::set('error', 'Sorry, there was a problem sending the file');
          return false;
      }
  }
 ```
 Method upload file on server.
 
-+ hash($param, $method = null)
++ hash($param, $method = null): string
 ```
-protected function hash($param, $method = null)
+protected function hash($param, $method = null): string
  {
      return hash($method ?? $this->hashMethod, $param);
  }
@@ -385,62 +384,357 @@ Method create unique filename.
 <details>
    <summary>AuthController</summary>
    
-   registerAction
-   <b>GET: </b> Show register form. <br>
-   <b>POST: </b> Validate data given by user. If data is validated, user is added to database.
++ registerAction(): void
+```
+ public function registerAction(): void
+ {
+     View::set(['title' => "Rejestracja"]);
+     $names = ['username', 'email', 'password', 'repeat_password'];
 
-   loginAction
-   <b>GET: </b> Show login form. <br>
-   <b>POST: </b>Action check if exist user with appropriate e-mail address and password.
+     if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+         $data = $this->request->postParams($names);
+         $emails = $this->repository->getEmails();
 
-   forgotPasswordAction
-   <b>GET: </b> Show form to reset password. <br>
-   <b>POST: </b> Send a message on address-email given from user with special code which is used to user
-   authorize to reset password.
+         if ($this->validate($data, $this->rules) && !Auth::isBusyEmail($data['email'], $emails)) {
+             $data['password'] = $this->hash($data['password']);
+             $data['avatar'] = self::$config->get('default.path.avatar');
+             $user = new User($data);
+             $user->escape();
 
-   resetPasswordAction
-   <b>GET: </b> Show reset password form. <br>
-   <b>POST: </b> Action check if code is sent and active, next set new password given by user.
+             $this->repository->register($user);
+             Session::set('success', 'Konto zostało utworzone');
+             $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
+         } else {
+             unset($data['password'], $data['repeat_password']);
+             $this->redirect(self::$route->get('auth.register'), $data);
+         }
+     } else {
+         $this->view->render('auth/register', $this->request->getParams(['username', 'email']));
+     }
+ }
+```
+<b>GET: </b> Show register form. <br>
+<b>POST: </b> Validate data given by user. If data is validated, user is added to database.
+
++ loginAction(): void
+```
+ public function loginAction(): void
+ {
+     View::set(['title' => "Logowanie"]);
+     $names = ['email', 'password'];
+
+     if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+         $data = $this->request->postParams($names);
+
+         if ($id = $this->repository->login($data['email'], $this->hash($data['password']))) {
+             Session::set('user:id', $id);
+             $lastPage = Session::getNextClear('lastPage');
+             $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
+         } else {
+             if (in_array($data["email"], $this->repository->getEmails())) {
+                 Session::set("error:password:incorrect", "The entered password is incorrect");
+             } else {
+                 Session::set("error:email:null", "The email address provided does not exist");
+             }
+
+             unset($data['password']);
+             $this->redirect(self::$route->get('auth.login'), $data);
+         }
+     } else {
+         $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
+     }
+ }
+```
+<b>GET: </b> Show login form. <br>
+<b>POST: </b>Action check if exist user with appropriate e-mail address and password.
+
++ forgotPasswordAction(): void
+```
+  public function forgotPasswordAction()
+ {
+     View::set(['title' => "Przypomnienie hasła"]);
+     if ($this->request->isPost() && $email = $this->request->postParam('email')) {
+         if (in_array($email, $this->repository->getEmails())) {
+             $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+             $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
+             $hash = $this->hash($code, 'md5');
+
+             Session::set($hash, $email);
+             Session::set('created:' . $hash, time());
+
+             $data = [];
+             $data['email'] = $email;
+             $data['link'] = $location . self::$route->get('auth.resetPassword') . "&code=$hash";
+             $data['subject'] = $_SERVER['HTTP_HOST'] . " - Reset hasła";
+             $data['username'] = $this->userRepository->get($email, 'email')->username;
+
+             if (Mail::forgotPassword($data)) {
+                 Session::set('success', "A link to reset your password has been sent to the email address you provided");
+             }
+         } else {
+             Session::set("error:email:null", "The email address provided does not exist");
+         }
+
+         $this->redirect(self::$route->get('auth.forgotPassword'));
+
+     } else {
+         $this->view->render('auth/forgotPassword');
+     }
+ }
+```
+<b>GET: </b> Show form to reset password. <br>
+<b>POST: </b> Send a message on address-email given from user with special code which is used to user
+authorize to reset password.
+
++ resetPasswordAction(): void
+```
+ public function resetPasswordAction()
+ {
+     View::set(['title' => "Reset hasła"]);
+     $names = ['password', 'repeat_password', 'code'];
+
+     if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+         $data = $this->request->postParams($names);
+         $code = $data['code'];
+         $this->checkCodeSession($data['code']);
+
+         if ($this->validate($data, $this->rules)) {
+             $user = $this->userRepository->get(Session::get($code), 'email');
+             $user->password = $this->hash($data['password']);
+             $this->userRepository->update($user, 'password');
+             Session::clearArray([$code, "created:" . $code]);
+             Session::set('success', 'Hasło do konta zostało zmienione');
+             $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
+         } else {
+             $this->redirect(self::$route->get('auth.resetPassword'), ['code' => $code]);
+         }
+     }
+
+     if ($this->request->isGet() && $code = $this->request->getParam('code')) {
+         $this->checkCodeSession($code);
+         $this->view->render('auth/resetPassword', ['email' => Session::get($code), 'code' => $code]);
+     } else {
+         Session::set('error', 'Kod resetu hasła nie został podany');
+         $this->redirect(self::$route->get('auth.forgotPassword'));
+     }
+ }
+```
+<b>GET: </b> Show reset password form. <br>
+<b>POST: </b> Action check if code is sent and active, next set new password given by user.
+   
++ checkCodeSession(): void   
+```
+ private function checkCodeSession($code): void
+ {
+     $names = [$code, "created:" . $code];
+
+     if (Session::hasArray($names)) {
+         if ((time() - Session::get("created:" . $code)) > 86400) {
+             Session::set('error', 'The link to reset your password has expired');
+             Session::clearArray($names);
+             $this->redirect(self::$route->get('auth.forgotPassword'));
+         }
+     } else {
+         Session::set('error', 'Invalid password reset code');
+         $this->redirect(self::$route->get('auth.forgotPassword'));
+     }
+ }
+   Private method to check session code.
+```
+   
 </details>
 
 
 <details>
    <summary>UserController</summary>
 
-logoutAction
++ logoutAction()
+```
+public function logoutAction()
+ {
+     $this->user->logout();
+     Session::set('success', "Nastąpiło wylogowanie z systemu");
+     $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
+ }
+```
 Logout user, clear session data.
 
-profileAction
++ profileAction()
+```
+  public function profileAction()
+ {
+     View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
+     $this->view->render('user/profile');
+
+ }
+```
 Show user profile.
    
-   
-updateAction
++ updateAction()
+```
+ public function updateAction()
+ {
+     if ($this->request->isPost()) {
+         $update = $this->request->postParam('update');
+
+         switch ($update) {
+             case 'username':{
+                     $this->updateUsername();
+                     break;
+                 }
+             case 'password':{
+                     $this->updatePassword();
+                     break;
+                 }
+             case 'avatar':{
+                     $this->updateAvatar();
+                     break;
+                 }
+         }
+     }
+
+     $this->redirect(self::$route->get('user.profile'));
+ }
+```
 <b>POST: </b> Select method which data will be updated by post param(update), next redirect to user profile.
    
-updateUsername
++ updateUsername()
+```
+ private function updateUsername()
+ {
+     if ($this->request->hasPostName('username')) {
+         $data = ['username' => $this->request->postParam('username')];
+
+         if ($this->validate($data, $this->rules)) {
+             $this->user->update($data);
+             $this->userRepository->update($this->user, 'username');
+             Session::set('success', "Nazwa użytkownika została zmieniona");
+         }
+     }
+ }
+```
 <b>POST: </b> Validate username given by user and set new username.
 
-updatePassword
++ updatePassword()
+```
+private function updatePassword()
+ {
+     $names = ['current_password', 'password', 'repeat_password'];
+
+     if ($this->request->hasPostNames($names)) {
+         $data = $this->request->postParams($names);
+
+         if (!$same = ($this->user->password == $this->hash($data['current_password']))) {
+             Session::set("error:current_password:same", "Podane hasło jest nieprawidłowe");
+         }
+
+         if ($this->validate($data, $this->rules) && $same) {
+             $data['password'] = $this->hash($data['password']);
+             $this->user->update($data);
+             $this->userRepository->update($this->user, 'password');
+             Session::set('success', 'Hasło zostało zaktualizowane');
+         }
+     }
+ }
+```
 <b>POST: </b> Validate data given by user and set new password.
 
-updateAvatar
-<b>POST: </b> Validate image sent by user. If validate is ok, old avatar is deleted and new avatar is
-uploaded.
++ updateAvatar()
+```
+ private function updateAvatar()
+ {
+     $path = self::$config->get('upload.path.avatar');
+     $defaultAvatar = self::$config->get('default.path.avatar');
+
+     if ($file = $this->request->file('avatar')) {
+         if ($this->validateImage($file, $this->rules, 'avatar')) {
+             $file = $this->hashFile($file);
+
+             if ($this->uploadFile($path, $file)) {
+                 if ($this->user->avatar != $defaultAvatar) {
+                     $this->user->deleteAvatar();
+                 }
+
+                 $this->user->update(['avatar' => $path . $file['name']]);
+                 $this->userRepository->update($this->user, 'avatar');
+                 Session::set('success', 'Awatar został zaktualizowany');
+             }
+         }
+     }
+ }
+```
+<b>POST: </b> Validate image sent by user. If validate is ok, old avatar is deleted and new avatar is uploaded.
 </details>
 
 <details>
    <summary>GeneralController</summary>
 
-homeAction
++ homeAction()
+```
+public function homeAction()
+ {
+     View::set(['title' => "Home"]);
+     $this->view->render('general/home');
+ }
+```
 Show home page.
 
-policyAction
++ policyAction()
+```
+public function policyAction()
+ {
+     View::set(['title' => "privacy policy"]);
+     $this->view->render('general/policy');
+ }
+```
 Show policy page.
 
-regulationsAction
++ regulationsAction()
+```
+public function regulationsAction()
+ {
+     View::set(['title' => "Regulations"]);
+     $this->view->render('general/regulations');
+ }
+```
 Show regulations page.
    
-contactAction
++ contactAction()
+```
+public function contactAction()
+ {
+     View::set(['title' => "Contact page", 'style' => "contact"]);
+     $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
+
+     if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+         $secret = self::$config->get('reCAPTCHA.key.secret');
+         $response = null;
+         $reCaptcha = new \ReCaptcha($secret);
+
+         $data = $this->request->postParams($names);
+
+         $response = $reCaptcha->verifyResponse(
+             $_SERVER["REMOTE_ADDR"],
+             $data['g-recaptcha-response']
+         );
+
+         if ($response != null && $response->success) {
+             if (Mail::contact($data)) {
+                 Session::set('success', "Message was sent");
+             }
+         } else {
+             Session::set('error:reCAPTCHA:robot', "We don't let robots in");
+         }
+
+         // ===== //
+
+         $this->redirect(self::$route->get('contact'));
+     }
+
+     $path = self::$config->get('default.path.medium') ?? "";
+     $this->view->render('general/contact', ['path' => $path, 'sideKey' => self::$config->get('reCAPTCHA.key.side')]);
+ }
+```
 <b>GET: </b> Show contant form. <br>
 <b>POST: </b> Send message to website admin.
 </details>
