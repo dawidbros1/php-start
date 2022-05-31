@@ -121,16 +121,16 @@ The project is a complete file package to create applications in PHP technology.
        - __avatar__
 
 ### Rules
-Class `./src/model/rules` is created to define validate rules.
-+ **createRules(string type, array rules)** Add rule to property rules
-+ **createMessages(string type, array rules)** Add error messages to rules of type
-+ **value(?string name = null)** Return value of rule
-+ **message(?string name = null**) Return messages of rule
-+ **arrayValue(string name, bool uppercase = false)** Return array value of rules as string
-+ **hasType(string type)** Check if exists input type
-+ **selectType(string type)** Set selectedType on input type
+Class `src/model/rules` is created to define validate rules.
++ **createRules(string $type, array $rules)** Add rule to property rules
++ **createMessages(string $type, array $rules)** Add error messages to rules of type
++ **value(?string $name = null)** Return value of rule
++ **message(?string $name = null**) Return messages of rule
++ **arrayValue(string $name, bool $uppercase = false)** Return array value of rules as string
++ **hasType(string $type)** Check if exists given type
++ **selectType(string $type)** Set selectedType on given type
 + **clearType()** Set selectedType on null
-+ **typeHasRules(array keys, ?string type = null)** Check if type of rule has all input keys
++ **typeHasRules(array $keys, ?string $type = null)** Check if type of rule has all given keys
 
 #### How to create new rule
 1. Create new file in ./src/rules/ with name like a **NameRules.php**
@@ -167,8 +167,284 @@ class NameRules extends Rules
 'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
 ```
 
+# IN PROGRESS
+
 ### Controllers
-...
+Controllers are designed to manage the entire application.
+
+#### Basic controllers
+
+<details>
+   <summary>Controller</summary>
+   
+  + initConfiguration(Config $config, Route $route): void
+```
+ public static function initConfiguration(Config $config, Route $route): void
+ {
+     self::$config = $config;
+     self::$route = $route;
+ }
+```
+Initialize properties such as config and route.
+
++ __construct(Request $request)
+```
+ public function __construct(Request $request)
+ {
+     if (empty(self::$config->get('db'))) {
+         throw new ConfigurationException('Configuration error');
+     }
+
+     Repository::initConfiguration(self::$config->get('db'));
+     Mail::initConfiguration(self::$config->get('mail'));
+
+     $this->hashMethod = self::$config->get('hash.method');
+     $this->userRepository = new UserRepository();
+
+     if ($id = Session::get('user:id')) {
+         $this->user = $this->userRepository->get((int) $id);
+     }
+
+     $this->request = $request;
+     $this->view = new View($this->user, self::$route);
+ }
+```
+
++ initConfiguration(Config $config, Route $route): void
+```
+ public static function initConfiguration(Config $config, Route $route): void
+ {
+     self::$config = $config;
+     self::$route = $route;
+ }
+```
+Initialize properties such as config and route.
+
++ __construct(Request $request)
+```
+ public function __construct(Request $request)
+ {
+     if (empty(self::$config->get('db'))) {
+         throw new ConfigurationException('Configuration error');
+     }
+
+     Repository::initConfiguration(self::$config->get('db'));
+     Mail::initConfiguration(self::$config->get('mail'));
+
+     $this->hashMethod = self::$config->get('hash.method');
+     $this->userRepository = new UserRepository();
+
+     if ($id = Session::get('user:id')) {
+         $this->user = $this->userRepository->get((int) $id);
+     }
+
+     $this->request = $request;
+     $this->view = new View($this->user, self::$route);
+ }
+```
+Check connection with database. Initialize configuration in repository and mail.
+Get user if he is logged. Assigns an request class object to a property.
+Create object of view class and set to a property.
+
++ run(): void
+```
+public function run(): void
+ {
+     try {
+         $action = $this->action() . 'Action';
+         if (!method_exists($this, $action)) {
+             Session::set("error", 'The action you wanted to access does not exist');
+             $this->redirect("./");
+         }
+
+         $this->$action();
+     } catch (StorageException $e) {
+         $this->view->render('error', ['message' => $e->getMessage()]);
+     }
+ }
+```
+If given action exists run it else redirect to homePage with error message.
+
++ redirect(string $to, array $params = []): void
+```
+protected function redirect(string $to, array $params = []): void
+ {
+     $location = $to;
+
+     if (count($params)) {
+         $queryParams = [];
+         foreach ($params as $key => $value) {
+             if (gettype($value) == "integer") {
+                 $queryParams[] = urlencode($key) . '=' . $value;
+             } else {
+                 $queryParams[] = urlencode($key) . '=' . urlencode($value);
+             }
+         }
+
+         $location .= ($queryParams = "&" . implode('&', $queryParams));
+     }
+
+     header("Location: " . $location);
+     exit();
+ }
+```
+Redirect user to selected page with parameters.
+
++ action(): string
+```
+final private function action(): string
+ {
+     return $this->request->getParam('action', "home");
+ }
+ ```
+Return action param from request.
+
++ guest(): void
+```
+final protected function guest(): void
+ {
+     if ($this->user != null) {
+         Session::set("error", "Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
+         $this->redirect(self::$route->get('home'));
+     }
+ }
+ ```
+Method check if user is not logged in. Logged user is redirect to homePage with error message.
+
++ requireLogin(): void
+```
+final protected function requireLogin(): void
+ {
+     if ($this->user == null) {
+         Session::set('lastPage', $this->request->queryString());
+         Session::set("error", "Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
+         $this->redirect(self::$route->get('auth.login'));
+     }
+ }
+```
+Method check if user is logged in. Guest is redirect to login page with error message.
+
++ requireAdmin()
+```
+final protected function requireAdmin(): void
+ {
+     $this->requireLogin();
+     Session::clear('lastPage');
+
+     if (!$this->user->isAdmin()) {
+         Session::set("error", "Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
+         $this->redirect(self::$route->get('home'));
+     }
+ }
+```
+Method check if user is admin. Guest is redirect to login page with error message.
+User which is not admin is redirect to homePage with error message.
+
++ uploadFile($path, $FILE): boolval
+```
+ protected function uploadFile($path, $FILE): boolval
+ {
+     $target_dir = $path;
+     $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
+     $target_file = $target_dir . basename($FILE["name"]);
+
+     if (move_uploaded_file($FILE["tmp_name"], $target_file)) {
+         return true;
+     } else {
+         Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
+         return false;
+     }
+ }
+```
+Method upload file on server.
+
++ hash($param, $method = null)
+```
+protected function hash($param, $method = null)
+ {
+     return hash($method ?? $this->hashMethod, $param);
+ }
+```
+Method return hash of input param.
+If hash method isn't sent, selected is default hash method from config.
+
++ hashFile($file)
+```
+protected function hashFile($file)
+ {
+     $type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+     $name = $this->hash(date('Y-m-d H:i:s') . "_" . $file['name']);
+     $file['name'] = $name . '.' . $type;
+     return $file;
+ }
+```
+Method create unique filename.
+      
+</details>
+
+<details>
+   <summary>AuthController</summary>
+   
+   registerAction
+   <b>GET: </b> Show register form. <br>
+   <b>POST: </b> Validate data given by user. If data is validated, user is added to database.
+
+   loginAction
+   <b>GET: </b> Show login form. <br>
+   <b>POST: </b>Action check if exist user with appropriate e-mail address and password.
+
+   forgotPasswordAction
+   <b>GET: </b> Show form to reset password. <br>
+   <b>POST: </b> Send a message on address-email given from user with special code which is used to user
+   authorize to reset password.
+
+   resetPasswordAction
+   <b>GET: </b> Show reset password form. <br>
+   <b>POST: </b> Action check if code is sent and active, next set new password given by user.
+</details>
+
+
+<details>
+   <summary>UserController</summary>
+
+logoutAction
+Logout user, clear session data.
+
+profileAction
+Show user profile.
+   
+   
+updateAction
+<b>POST: </b> Select method which data will be updated by post param(update), next redirect to user profile.
+   
+updateUsername
+<b>POST: </b> Validate username given by user and set new username.
+
+updatePassword
+<b>POST: </b> Validate data given by user and set new password.
+
+updateAvatar
+<b>POST: </b> Validate image sent by user. If validate is ok, old avatar is deleted and new avatar is
+uploaded.
+</details>
+
+<details>
+   <summary>GeneralController</summary>
+
+homeAction
+Show home page.
+
+policyAction
+Show policy page.
+
+regulationsAction
+Show regulations page.
+   
+contactAction
+<b>GET: </b> Show contant form. <br>
+<b>POST: </b> Send message to website admin.
+</details>
+
 
 #### How to create new controller
 1. Create new file in src/controller/ with name like a **NameController.php**
@@ -274,8 +550,6 @@ example:
 ```
 $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
 ```
-
-# IN PROGRESS
 
 ### Helpers
 #### Session
