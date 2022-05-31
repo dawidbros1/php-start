@@ -120,17 +120,178 @@ The project is a complete file package to create applications in PHP technology.
      - __images__
        - __avatar__
 
+# IN PROGRESS
+
 ### Rules
 Class `src/model/rules` is created to define validate rules.
-+ **createRules(string $type, array $rules)** Add rule to property rules
-+ **createMessages(string $type, array $rules)** Add error messages to rules of type
-+ **value(?string $name = null)** Return value of rule
-+ **message(?string $name = null**) Return messages of rule
-+ **arrayValue(string $name, bool $uppercase = false)** Return array value of rules as string
-+ **hasType(string $type)** Check if exists given type
-+ **selectType(string $type)** Set selectedType on given type
-+ **clearType()** Set selectedType on null
-+ **typeHasRules(array $keys, ?string $type = null)** Check if type of rule has all given keys
+
++ **createRules(string $type, array $rules): void**
+```
+public function createRule(string $type, array $rules): void
+{
+  foreach ($rules as $name => $value) {
+      $this->rules[$type][$name]['value'] = $value;
+  }
+}
+```
+Add rule to property rules.
+
++ **createMessages(string $type, array $rules): void**
+```
+public function createMessages(string $type, array $rules): void
+{
+  foreach ($rules as $name => $message) {
+      if ($name == 'between') {
+          $this->rules[$type]['min']['message'] = $message;
+          $this->rules[$type]['max']['message'] = $message;
+      } else {
+          $this->rules[$type][$name]['message'] = $message;
+      }
+  }
+}
+```
+Add error messages to rules of type.
+
++ **value(?string $name = null)**
+```
+public function value(?string $name = null)
+{
+  return $this->getRule($name)['value'];
+}
+```
+Return value of rule.
+ 
++ **message(?string $name = null: string): string**
+```
+public function message(?string $name = null): string
+{
+  return $this->getRule($name)['message'];
+}
+```
+Return messages of rule.
+
++ **arrayValue(string $name, bool $uppercase = false): string**
+```
+public function arrayValue(string $name, bool $uppercase = false): string
+{
+  $type = strtok($name, '.');
+  $rule = substr($name, strpos($name, '.') + 1);
+  $output = '';
+
+  foreach ($this->rules[$type][$rule]['value'] as $value) {
+      $output .= $value . ', ';
+  }
+
+  if ($uppercase) {
+      $output = strtoupper($output);
+  }
+  $output = substr($output, 0, -2);
+  return $output;
+}
+```
+Return array value of rules as string
+ 
++ **hasType(string $type): bool**
+```
+public function hasType(string $type): bool
+{
+  if (array_key_exists($type, $this->rules)) {
+      return true;
+  } else {
+      return false;
+  }
+}
+```
+Check if exists given type.
+ 
++ **selectType(string $type): void**
+```
+public function selectType(string $type): void
+{
+  if (!$this->hasType($type)) {
+      throw new AppException('Wybrany typ nie istnieje');
+  }
+  $this->selectedType = $type;
+}
+```
+Set selectedType on given type
+
++ **clearType(): void** 
+```
+public function clearType(): void
+{
+  $this->selectedType = null;
+}
+```
+Set selectedType on null
+
++ **getType(): array**
+```
+public function getType(?string $type = null): array
+{
+  if ($type === null) {
+      if ($this->selectedType !== null) {
+          return $this->rules[$this->selectedType];
+      } else {
+          throw new AppException('Typ reguły nie został wprowadzony');
+      }
+  } else {
+      if (!$this->hasType($type)) {
+          throw new AppException('Wybrany typ nie istnieje');
+      } else {
+          return $this->rules[$type];
+      }
+  }
+}
+```
+Return rules of selectedType or given type.
+
++ **typeHasRules(array $keys, ?string $type = null): bool**
+```
+public function typeHasRules(array $rules, ?string $type = null): bool
+{
+  if ($this->selectedType != null) {
+      $type = $this->rules[$this->selectedType];
+  } elseif ($type == null) {
+      throw new AppException('Typ reguły nie został wprowadzony');
+  } elseif (!$this->hasType($type)) {
+      throw new AppException('Wybrany typ nie istnieje');
+  } else {
+      $type = $this->rules[$type];
+  }
+
+  foreach ($rules as $rule) {
+      if (!array_key_exists($rule, $type)) {
+          return false;
+      }
+  }
+
+  return true;
+}
+```
+Check if type of rule has all given keys.
+
++ **getRule(string $name): array**
+```
+private function getRule(string $name): array
+{
+  if ($this->selectedType) {
+      return $this->getType()[$name]; // Name like a min | max
+  } else {
+      $typeName = strtok($name, '.');
+      $ruleName = substr($name, strpos($name, '.') + 1);
+
+      $type = $this->getType($typeName); // Name like a password.min | password.max
+
+      if ($this->typeHasRules([$ruleName], $typeName)) {
+          return $type[$ruleName];
+      } else {
+          throw new AppException('Wybrana reguła nie istnieje');
+      }
+  }
+}
+```
+Private method to return rule.
 
 #### How to create new rule
 1. Create new file in ./src/rules/ with name like a **NameRules.php**
@@ -166,8 +327,6 @@ class NameRules extends Rules
 ```
 'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
 ```
-
-# IN PROGRESS
 
 ### Controllers
 Controllers are designed to manage the entire application.
