@@ -18,14 +18,14 @@ abstract class Rules
     }
 
     // Podstawowe metody do tworzenia reguł oraz wiadomości
-    public function createRule(string $type, array $rules)
+    public function createRule(string $type, array $rules): void
     {
         foreach ($rules as $name => $value) {
             $this->rules[$type][$name]['value'] = $value;
         }
     }
 
-    public function createMessages(string $type, array $rules)
+    public function createMessages(string $type, array $rules): void
     {
         foreach ($rules as $name => $message) {
             if ($name == 'between') {
@@ -43,12 +43,12 @@ abstract class Rules
         return $this->getRule($name)['value'];
     }
 
-    public function message(?string $name = null)
+    public function message(?string $name = null): string
     {
         return $this->getRule($name)['message'];
     }
 
-    public function arrayValue(string $name, bool $uppercase = false)
+    public function arrayValue(string $name, bool $uppercase = false): string
     {
         $type = strtok($name, '.');
         $rule = substr($name, strpos($name, '.') + 1);
@@ -66,7 +66,7 @@ abstract class Rules
     }
 
     // ===== ===== ===== ===== =====
-    public function hasType(string $type)
+    public function hasType(string $type): bool
     {
         if (array_key_exists($type, $this->rules)) {
             return true;
@@ -75,7 +75,7 @@ abstract class Rules
         }
     }
 
-    public function selectType(string $type)
+    public function selectType(string $type): void
     {
         if (!$this->hasType($type)) {
             throw new AppException('Wybrany typ nie istnieje');
@@ -83,12 +83,12 @@ abstract class Rules
         $this->selectedType = $type;
     }
 
-    public function clearType()
+    public function clearType(): void
     {
         $this->selectedType = null;
     }
 
-    public function getType(?string $type = null)
+    public function getType(?string $type = null): array
     {
         if ($type === null) {
             if ($this->selectedType !== null) {
@@ -98,14 +98,14 @@ abstract class Rules
             }
         } else {
             if (!$this->hasType($type)) {
-                throw new AppException('Wybrany typ nie istnieje');
+                throw new AppException('Wybrany typ [' . $type . '] nie istnieje');
             } else {
                 return $this->rules[$type];
             }
         }
     }
 
-    public function typeHasRules(array $rules, ?string $type = null)
+    public function typeHasRules(array $rules, ?string $type = null): bool
     {
         if ($this->selectedType != null) {
             $type = $this->rules[$this->selectedType];
@@ -128,30 +128,21 @@ abstract class Rules
 
     // ===== ===== ===== ===== =====
 
-    private function getRule(string $name)
+    private function getRule(string $name): array
     {
         if ($this->selectedType) {
-            if (!array_key_exists($name, $this->rules[$this->selectedType])) {
-                throw new AppException('Wybrana reguła nie istnieje');
-            }
-
-            $message = $this->rules[$this->selectedType][$name];
+            return $this->getType()[$name]; // Name like a min | max
         } else {
-            $type = strtok($name, '.');
+            $typeName = strtok($name, '.');
+            $ruleName = substr($name, strpos($name, '.') + 1);
 
-            if (!$this->hasType($type)) {
-                throw new AppException('Wprowadzony typ reguły nie istnieje');
-            }
+            $type = $this->getType($typeName); // Name like a password.min | password.max
 
-            $rule = substr($name, strpos($name, '.') + 1);
-
-            if (!array_key_exists($rule, $this->rules[$type])) {
+            if ($this->typeHasRules([$ruleName], $typeName)) {
+                return $type[$ruleName];
+            } else {
                 throw new AppException('Wybrana reguła nie istnieje');
             }
-
-            $message = $this->rules[$type][$rule];
         }
-
-        return $message;
     }
 }

@@ -125,7 +125,7 @@ abstract class Controller extends Validator
         }
     }
 
-    protected function uploadFile($path, $FILE): boolval
+    protected function uploadFile($path, $FILE): bool
     {
         $target_dir = $path;
         $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
