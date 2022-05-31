@@ -50,7 +50,7 @@ abstract class Controller extends Validator
             $this->user = $this->userRepository->get((int) $id);
         }
 
-        $this->request = $request;	
+        $this->request = $request;
         $this->view = new View($this->user, self::$route);
     }
 
@@ -97,7 +97,7 @@ abstract class Controller extends Validator
 
     // ===== ===== ===== ===== =====
 
-    final protected function guest()
+    final protected function guest(): void
     {
         if ($this->user != null) {
             Session::set("error", "Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
@@ -105,7 +105,7 @@ abstract class Controller extends Validator
         }
     }
 
-    final protected function requireLogin()
+    final protected function requireLogin(): void
     {
         if ($this->user == null) {
             Session::set('lastPage', $this->request->queryString());
@@ -114,7 +114,7 @@ abstract class Controller extends Validator
         }
     }
 
-    final protected function requireAdmin()
+    final protected function requireAdmin(): void
     {
         $this->requireLogin();
         Session::clear('lastPage');
@@ -125,7 +125,7 @@ abstract class Controller extends Validator
         }
     }
 
-    protected function uploadFile($path, $FILE)
+    protected function uploadFile($path, $FILE): boolval
     {
         $target_dir = $path;
         $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
@@ -139,7 +139,7 @@ abstract class Controller extends Validator
         }
     }
 
-    protected function hash($param, $method = null)
+    protected function hash($param, $method = null): string
     {
         return hash($method ?? $this->hashMethod, $param);
     }

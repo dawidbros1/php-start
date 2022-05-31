@@ -20,21 +20,21 @@ class UserController extends Controller
         $this->rules = new UserRules();
     }
 
-    public function logoutAction()
+    public function logoutAction(): void
     {
         $this->user->logout();
         Session::set('success', "Nastąpiło wylogowanie z systemu");
         $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
     }
 
-    public function profileAction()
+    public function profileAction(): void
     {
         View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
         $this->view->render('user/profile');
 
     }
 
-    public function updateAction()
+    public function updateAction(): void
     {
         if ($this->request->isPost()) {
             $update = $this->request->postParam('update');
@@ -58,7 +58,7 @@ class UserController extends Controller
         $this->redirect(self::$route->get('user.profile'));
     }
 
-    private function updateUsername()
+    private function updateUsername(): void
     {
         if ($this->request->hasPostName('username')) {
             $data = ['username' => $this->request->postParam('username')];
@@ -71,7 +71,7 @@ class UserController extends Controller
         }
     }
 
-    private function updatePassword()
+    private function updatePassword(): void
     {
         $names = ['current_password', 'password', 'repeat_password'];
 
@@ -91,7 +91,7 @@ class UserController extends Controller
         }
     }
 
-    private function updateAvatar()
+    private function updateAvatar(): void
     {
         $path = self::$config->get('upload.path.avatar');
         $defaultAvatar = self::$config->get('default.path.avatar');

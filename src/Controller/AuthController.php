@@ -80,7 +80,7 @@ class AuthController extends Controller
         }
     }
 
-    public function forgotPasswordAction()
+    public function forgotPasswordAction(): void
     {
         View::set(['title' => "Przypomnienie hasła"]);
         if ($this->request->isPost() && $email = $this->request->postParam('email')) {
@@ -112,7 +112,7 @@ class AuthController extends Controller
         }
     }
 
-    public function resetPasswordAction()
+    public function resetPasswordAction(): void
     {
         View::set(['title' => "Reset hasła"]);
         $names = ['password', 'repeat_password', 'code'];
@@ -143,7 +143,7 @@ class AuthController extends Controller
         }
     }
 
-    private function checkCodeSession($code)
+    private function checkCodeSession($code): void
     {
         $names = [$code, "created:" . $code];
 
@@ -154,7 +154,7 @@ class AuthController extends Controller
                 $this->redirect(self::$route->get('auth.forgotPassword'));
             }
         } else {
-            Session::set('error', 'Nieprawiłowy kod resetu hasła');
+            Session::set('error', 'Nieprawidłowy kod resetu hasła');
             $this->redirect(self::$route->get('auth.forgotPassword'));
         }
     }
