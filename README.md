@@ -209,7 +209,7 @@ Check if exists given type.
 public function selectType(string $type): void
 {
   if (!$this->hasType($type)) {
-      throw new AppException('Wybrany typ nie istnieje');
+      throw new AppException('The selected type does not exist');
   }
   $this->selectedType = $type;
 }
@@ -233,11 +233,11 @@ public function getType(?string $type = null): array
       if ($this->selectedType !== null) {
           return $this->rules[$this->selectedType];
       } else {
-          throw new AppException('Typ reguły nie został wprowadzony');
+          throw new AppException('Rule type has not been entered');
       }
   } else {
       if (!$this->hasType($type)) {
-          throw new AppException('Wybrany typ nie istnieje');
+          throw new AppException('The selected type does not exist');
       } else {
           return $this->rules[$type];
       }
@@ -293,7 +293,7 @@ private function getRule(string $name): array
 ```
 Private method to return rule.
 
-#### How to create new rule
+### How to create new rule
 1. Create new file in ./src/rules/ with name like a **NameRules.php**
 2. Example rule file:
 ```
@@ -328,10 +328,10 @@ class NameRules extends Rules
 'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
 ```
 
-### Controllers
+## Controllers
 Controllers are designed to manage the entire application.
 
-#### Basic controllers
+### Basic controllers
 <details>
    <summary>Controller</summary>
    
@@ -767,7 +767,7 @@ private function updateUsername()
       if ($this->validate($data, $this->rules)) {
           $this->user->update($data);
           $this->userRepository->update($this->user, 'username');
-          Session::set('success', "Nazwa użytkownika została zmieniona");
+          Session::set('success', "The username has been changed");
       }
   }
 }
@@ -784,14 +784,14 @@ private function updatePassword()
       $data = $this->request->postParams($names);
 
       if (!$same = ($this->user->password == $this->hash($data['current_password']))) {
-          Session::set("error:current_password:same", "Podane hasło jest nieprawidłowe");
+          Session::set("error:current_password:same", "The password provided is incorrect");
       }
 
       if ($this->validate($data, $this->rules) && $same) {
           $data['password'] = $this->hash($data['password']);
           $this->user->update($data);
           $this->userRepository->update($this->user, 'password');
-          Session::set('success', 'Hasło zostało zaktualizowane');
+          Session::set('success', 'The password has been updated');
       }
   }
 }
@@ -816,7 +816,7 @@ private function updateAvatar(): void
 
               $this->user->update(['avatar' => $path . $file['name']]);
               $this->userRepository->update($this->user, 'avatar');
-              Session::set('success', 'Awatar został zaktualizowany');
+              Session::set('success', 'Avatar has been updated');
           }
       }
   }
@@ -885,8 +885,6 @@ public function contactAction()
           Session::set('error:reCAPTCHA:robot', "We don't let robots in");
       }
 
-      // ===== //
-
       $this->redirect(self::$route->get('contact'));
   }
 
@@ -899,7 +897,7 @@ public function contactAction()
 </details>
 
 
-#### How to create new controller
+### How to create new controller
 1. Create new file in src/controller/ with name like a **NameController.php**
 2. Example controller file:
  ```
@@ -929,7 +927,7 @@ class NameController extends Controller
 }
 ```
 
-### Validator
+## Validator
 Validator is use to validate data given by user.
 
 We can validate data with the following rules: 
@@ -942,7 +940,7 @@ We can also validate images with the following rules:
 1. **maxSize** to limited max size of image
 2. **types** to check if sent image have extension like a (.png, .jpg etc.)
 
-#### How validate data ( in NameController )
+### How validate data ( in NameController )
 ```
 public function methodOneAction()
 {
@@ -959,9 +957,9 @@ public function methodOneAction()
 }
 ```
 
-### Repositories
+## Repositories
 ...
-#### How to create new repository
+### How to create new repository
 1. Create new file in src/repository/ with name like a **NameRepository.php**
 2. Example repository file:
 ```
@@ -982,9 +980,9 @@ class NameRepository extends Repository
 }
 ```
 
-### Routing
-#### How create new routing
-Register a new group in `./routes/routes.php`
+## Routing
+### How create new routing
+Register a new group in `routes/routes.php`
 ```
 $route->group('name', ['one', 'two', 'three']);
 ```
@@ -994,7 +992,7 @@ example:
 $route->group('user', ['logout', 'profile', 'update']);
 ```
 
-#### How use created routing
+### How use created routing
 Inside of method in NameController
 ```
 $this->redirect(self::$route->get('name.action'), ['param' => $value, 'param2' => $value2]);
@@ -1004,12 +1002,12 @@ example:
 $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
 ```
 
-### Helpers
-#### Session
-#### Request
+## Helpers
+### Session
+### Request
 
-### Component
-### View
+## Component
+## View
 
 
 
