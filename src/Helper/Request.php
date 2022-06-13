@@ -20,7 +20,6 @@ class Request
     }
 
     // === GENERAL ===
-
     public function param(string $name, $default = null)
     {
         if ($this->isPost()) {
@@ -52,13 +51,13 @@ class Request
         return $output;
     }
 
-    public function hasPostName(string $name)
+    public function hasPostName(string $name): bool
     {
         if (!isset($this->post[$name])) {return false;}
         return true;
     }
 
-    public function hasPostNames(array $names)
+    public function hasPostNames(array $names): bool
     {
         foreach ($names as $name) {
             if (!isset($this->post[$name])) {
@@ -101,6 +100,7 @@ class Request
     {
         return $this->server['QUERY_STRING'];
     }
+    
     // === FILES ===
     public function file(string $name, $default = null)
     {
