@@ -1075,25 +1075,23 @@ public function getEmails(): array
 Return array of emails from user table.  
 </details>
 
-===
-
 <details>
    <summary>UserRepository</summary>
    
 + get($param, $type = "id"): ?User
 ```
-public function get($param, $column = "id"): ?User
+public function get($value, $column = "id"): ?User
 {
   $user = null;
   $stmt = $this->pdo->prepare("SELECT * FROM users WHERE $column=:$column");
-  $stmt->execute([$column => $param]);
+  $stmt->execute([$column => $value]);
   $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if ($data) {$user = new User($data);}
   return $user;
 }
 ```
-Return user by param(value) and type(id | email).
+Return user by value and column.
    
 + update(User $user, string $property): void
 ```
@@ -1107,7 +1105,7 @@ public function update(User $user, string $property): void
   $stmt->execute($data);
 }
 ```
-Return id of user by ($email and $password) data.
+Update user data.
    
 </details>
 
