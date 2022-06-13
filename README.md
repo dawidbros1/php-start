@@ -1237,6 +1237,136 @@ public static function clearArray(array $names): void
 Method clear value of session by input names.
 
 ### Request
++ **param(string $name, $default = null)**
+```
+public function param(string $name, $default = null)
+{
+  if ($this->isPost()) {
+      return $this->postParam($name, $default);
+  } else {
+      return $this->getParam($name, $default);
+  }
+}
+```
+Method return a value regardless of the method type.
+
++ **hasPost(): bool**
+```
+public function hasPost(): bool
+{
+  return !empty($this->post);
+}
+```
+Method check if exists any post params.
+
++ **postParam(string $name, $default = null)**
+```
+public function postParam(string $name, $default = null)
+{
+  return $this->post[$name] ?? $default;
+}
+```
+Method return post value of request.
+
++ **postParams(array $names)**
+```
+public function postParams(array $names)
+{
+  $output = [];
+
+  foreach ($names as $name) {
+      $output[$name] = $this->postParam($name);
+  }
+
+  return $output;
+}
+```
+Method return post values of request as array.
+
++ **hasPostName(string $name): bool**
+```
+public function hasPostName(string $name): bool
+{
+  if (!isset($this->post[$name])) {return false;}
+  return true;
+}
+```
+Method check if exists post parameter with input name.
+
++ hasPostNames(array $names): bool
+```
+public function hasPostNames(array $names): bool
+{
+  foreach ($names as $name) {
+      if (!isset($this->post[$name])) {
+          return false;
+      }
+  }
+
+  return true;
+}
+```
+Method check if exists post parameters with input names.
+
++ **getParam(string $name, $default = null)**
+```
+public function getParam(string $name, $default = null)
+{
+  return $this->get[$name] ?? $default;
+}
+```
+Method return get value of request.
+
++ **getParams(array $names)**
+```
+public function getParams(array $names)
+{
+  $output = [];
+
+  foreach ($names as $name) {
+      $output[$name] = $this->getParam($name);
+  }
+
+  return $output;
+}
+```
+Method return get values of request.
+
++ **isPost(): bool**
+```
+public function isPost(): bool
+{
+  return $this->server['REQUEST_METHOD'] === 'POST';
+}
+```
+Method check if request method is post.
+
++ **isGet(): bool**
+```
+public function isGet(): bool
+{
+  return $this->server['REQUEST_METHOD'] === 'GET';
+}
+```
+Method check if request method is get.
+
++ **queryString(): string**
+```
+public function queryString(): string
+{
+  return $this->server['QUERY_STRING'];
+}
+```
+Method return request parameters as string.
+
++ **file(string $name, $default = null)**
+```
+public function file(string $name, $default = null)
+{
+  return $this->files[$name] ?? $default;
+}
+```
+Method check if is sent file with input name.
 
 ## Component
 ## View
