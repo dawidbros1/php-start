@@ -335,7 +335,7 @@ Controllers are designed to manage the entire application.
 <details>
    <summary>Controller</summary>
    
-  + initConfiguration(Config $config, Route $route): void
++ **initConfiguration(Config $config, Route $route): void**
 ```
 public static function initConfiguration(Config $config, Route $route): void
 {
@@ -345,7 +345,7 @@ public static function initConfiguration(Config $config, Route $route): void
 ```
 Initialize properties such as config and route.
 
-+ __construct(Request $request)
++ **__construct(Request $request)**
 ```
 public function __construct(Request $request)
 {
@@ -368,7 +368,7 @@ public function __construct(Request $request)
 }
 ```
 
-+ initConfiguration(Config $config, Route $route): void
++ **initConfiguration(Config $config, Route $route): void**
 ```
 public static function initConfiguration(Config $config, Route $route): void
 {
@@ -378,7 +378,7 @@ public static function initConfiguration(Config $config, Route $route): void
 ```
 Initialize properties such as config and route.
 
-+ __construct(Request $request)
++ **__construct(Request $request)**
 ```
 public function __construct(Request $request)
 {
@@ -404,7 +404,7 @@ Check connection with database. Initialize configuration in repository and mail.
 Get user if he is logged. Assigns an request class object to a property.
 Create object of view class and set to a property.
 
-+ run(): void
++ **run(): void**
 ```
 public function run(): void
 {
@@ -423,7 +423,7 @@ public function run(): void
 ```
 If given action exists run it else redirect to homePage with error message.
 
-+ redirect(string $to, array $params = []): void
++ **redirect(string $to, array $params = []): void**
 ```
 protected function redirect(string $to, array $params = []): void
 {
@@ -448,7 +448,7 @@ protected function redirect(string $to, array $params = []): void
 ```
 Redirect user to selected page with parameters.
 
-+ action(): string
++ **action(): string**
 ```
 final private function action(): string
 {
@@ -457,7 +457,7 @@ final private function action(): string
  ```
 Return action param from request.
 
-+ guest(): void
++ **guest(): void**
 ```
 final protected function guest(): void
 {
@@ -469,7 +469,7 @@ final protected function guest(): void
  ```
 Method check if user is not logged in. Logged user is redirect to homePage with error message.
 
-+ requireLogin(): void
++ **requireLogin(): void**
 ```
 final protected function requireLogin(): void
 {
@@ -482,7 +482,7 @@ final protected function requireLogin(): void
 ```
 Method check if user is logged in. Guest is redirect to login page with error message.
 
-+ requireAdmin()
++ **requireAdmin()**
 ```
 final protected function requireAdmin(): void
 {
@@ -498,7 +498,7 @@ final protected function requireAdmin(): void
 Method check if user is admin. Guest is redirect to login page with error message.
 User which is not admin is redirect to homePage with error message.
 
-+ uploadFile($path, $FILE): boolval
++ **uploadFile($path, $FILE): bool**
 ```
 protected function uploadFile($path, $FILE): boolval
 {
@@ -516,7 +516,7 @@ protected function uploadFile($path, $FILE): boolval
 ```
 Method upload file on server.
 
-+ hash($param, $method = null): string
++ **hash($param, $method = null): string**
 ```
 protected function hash($param, $method = null): string
 {
@@ -526,7 +526,7 @@ protected function hash($param, $method = null): string
 Method return hash of input param.
 If hash method isn't sent, selected is default hash method from config.
 
-+ hashFile($file)
++ **hashFile($file)**
 ```
 protected function hashFile($file)
 {
@@ -543,7 +543,7 @@ Method create unique filename.
 <details>
    <summary>AuthController</summary>
    
-+ registerAction(): void
++ **registerAction(): void**
 ```
 public function registerAction(): void
 {
@@ -575,7 +575,7 @@ public function registerAction(): void
 <b>GET: </b> Show register form. <br>
 <b>POST: </b> Validate data given by user. If data is validated, user is added to database.
 
-+ loginAction(): void
++ **loginAction(): void**
 ```
 public function loginAction(): void
 {
@@ -607,7 +607,7 @@ public function loginAction(): void
 <b>GET: </b> Show login form. <br>
 <b>POST: </b>Action check if exist user with appropriate e-mail address and password.
 
-+ forgotPasswordAction(): void
++ **forgotPasswordAction(): void**
 ```
 public function forgotPasswordAction()
 {
@@ -645,7 +645,7 @@ public function forgotPasswordAction()
 <b>POST: </b> Send a message on address-email given from user with special code which is used to user
 authorize to reset password.
 
-+ resetPasswordAction(): void
++ **resetPasswordAction(): void**
 ```
 public function resetPasswordAction()
 {
@@ -681,7 +681,7 @@ public function resetPasswordAction()
 <b>GET: </b> Show reset password form. <br>
 <b>POST: </b> Action check if code is sent and active, next set new password given by user.
    
-+ checkCodeSession(): void   
++ **checkCodeSession(): void**   
 ```
 private function checkCodeSession($code): void
 {
@@ -703,11 +703,10 @@ Private method to check session code.
    
 </details>
 
-
 <details>
    <summary>UserController</summary>
 
-+ logoutAction()
++ **logoutAction()**
 ```
 public function logoutAction()
 {
@@ -718,7 +717,7 @@ public function logoutAction()
 ```
 Logout user, clear session data.
 
-+ profileAction()
++ **profileAction()**
 ```
 public function profileAction()
 {
@@ -729,7 +728,7 @@ public function profileAction()
 ```
 Show user profile.
    
-+ updateAction()
++ **updateAction()**
 ```
 public function updateAction()
 {
@@ -757,7 +756,7 @@ public function updateAction()
 ```
 <b>POST: </b> Select method which data will be updated by post param(update), next redirect to user profile.
    
-+ updateUsername()
++ **updateUsername()**
 ```
 private function updateUsername()
 {
@@ -774,7 +773,7 @@ private function updateUsername()
 ```
 <b>POST: </b> Validate username given by user and set new username.
 
-+ updatePassword()
++ **updatePassword()**
 ```
 private function updatePassword()
 {
@@ -798,7 +797,7 @@ private function updatePassword()
 ```
 <b>POST: </b> Validate data given by user and set new password.
 
-+ updateAvatar()
++ **updateAvatar()**
 ```
 private function updateAvatar(): void
 {
@@ -828,7 +827,7 @@ private function updateAvatar(): void
 <details>
    <summary>GeneralController</summary>
 
-+ homeAction()
++ **homeAction()**
 ```
 public function homeAction()
 {
@@ -838,7 +837,7 @@ public function homeAction()
 ```
 Show home page.
 
-+ policyAction()
++ **policyAction()**
 ```
 public function policyAction()
 {
@@ -848,7 +847,7 @@ public function policyAction()
 ```
 Show policy page.
 
-+ regulationsAction()
++ **regulationsAction()**
 ```
 public function regulationsAction()
 {
@@ -858,7 +857,7 @@ public function regulationsAction()
 ```
 Show regulations page.
    
-+ contactAction()
++ **contactAction()**
 ```
 public function contactAction()
 {
@@ -964,7 +963,7 @@ Repositories are a collection of methods to communicate with database.
 <details>
    <summary>Repository</summary>
    
-  + initConfiguration($config): void
++ **initConfiguration($config): void**
 ```
 public static function initConfiguration($config): void
 {
@@ -973,7 +972,7 @@ public static function initConfiguration($config): void
 ```
 Initialize properties such as config.
 
-+ __construct()
++ **__construct()**
 ```
 public function __construct()
 {
@@ -987,7 +986,7 @@ public function __construct()
 ```
 Config data are validate and next is created connection to database.
    
-+ createConnection(array $config): void
++ **createConnection(array $config): void**
 ```
 private function createConnection(array $config): void
 {
@@ -999,7 +998,7 @@ private function createConnection(array $config): void
 ```
 Create  connection to database.
    
-+ validateConfig(array $config): void
++ **validateConfig(array $config): void**
 ```
 private function validateConfig(array $config): void
 {
@@ -1019,7 +1018,7 @@ Validate config data.
 <details>
    <summary>AuthRepository</summary>
    
-+ register(User $user): void
++ **register(User $user): void**
 ```
 public function register(User $user): void
 {
@@ -1043,7 +1042,7 @@ public function register(User $user): void
 ```
 Add new user to database.
    
-+ login(string $email, string $password): ?int
++ **login(string $email, string $password): ?int**
 ```
 public function login(string $email, string $password): ?int
 {
@@ -1062,7 +1061,7 @@ public function login(string $email, string $password): ?int
 ```
 Return id user with ($email | $password) data.
    
-+ getEmails(): array
++ **getEmails(): array**
 ```
 public function getEmails(): array
 {
@@ -1078,7 +1077,7 @@ Return array of emails from user table.
 <details>
    <summary>UserRepository</summary>
    
-+ get($param, $type = "id"): ?User
++ **get($param, $type = "id"): ?User**
 ```
 public function get($value, $column = "id"): ?User
 {
@@ -1093,7 +1092,7 @@ public function get($value, $column = "id"): ?User
 ```
 Return user by value and column.
    
-+ update(User $user, string $property): void
++ **update(User $user, string $property): void**
 ```
 public function update(User $user, string $property): void
 {
