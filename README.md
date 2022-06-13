@@ -1161,6 +1161,81 @@ $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]
 
 ## Helpers
 ### Session
++ **has($name): bool**
+```
+public static function has($name): bool
+{
+  if (isset($_SESSION[$name]) && !empty($_SESSION[$name])) {return true;} else {return false;}
+}
+```
+Method check if exists session with input name.
+
++ **hasArray(array $names): bool**
+```
+public static function hasArray(array $names): bool
+{
+  foreach ($names as $name) {
+      if (!Session::has($name)) {return false;}
+  }
+
+  return true;
+}
+```
+Method check if exists sessions with input names.
+
++ **get($name)**
+```
+public static function get($name)
+{
+  if (Session::has($name) == true) {
+      return $_SESSION[$name];
+  } else {
+      return null;
+  }
+}
+```
+Method return value of session by input name.
+
++ **getNextClear($name)**
+```
+public static function getNextClear($name)
+{
+  $value = Session::get($name);
+  Session::clear($name);
+  return $value;
+}
+```
+Method return value of session by input name and next unset session;
+
++ **set($name, $value): void**
+```
+public static function set($name, $value): void
+{
+  $_SESSION[$name] = $value;
+}
+```
+Method set value to name of session.
+
++ **clear($name): void**
+```
+public static function clear($name): void
+{
+  unset($_SESSION[$name]);
+}
+```
+Method unset session by input name.
+
++ **clearArray(array $names): void**
+```
+public static function clearArray(array $names): void
+{
+  foreach ($names as $name) {
+      Session::clear($name);
+  }
+}
+```
+Method clear value of session by input names.
+
 ### Request
 
 ## Component
