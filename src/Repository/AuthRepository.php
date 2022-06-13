@@ -29,7 +29,7 @@ class AuthRepository extends Repository
         }
     }
 
-    public function login(string $email, string $password)
+    public function login(string $email, string $password): ?int
     {
         $id = null;
         $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email=:email AND password=:password");
@@ -40,11 +40,11 @@ class AuthRepository extends Repository
 
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($data) {$id = $data['id'];}
+        if ($data) {$id = (int) $data['id'];}
         return $id;
     }
 
-    public function getEmails()
+    public function getEmails(): array
     {
         $stmt = $this->pdo->prepare("SELECT email FROM users");
         $stmt->execute();
