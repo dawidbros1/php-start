@@ -958,7 +958,159 @@ public function methodOneAction()
 ```
 
 ## Repositories
-...
+Repositories are a collection of methods to communicate with database.
+
+### Basic repositories
+<details>
+   <summary>Repository</summary>
+   
+  + initConfiguration($config): void
+```
+public static function initConfiguration($config): void
+{
+  self::$config = $config;
+}
+```
+Initialize properties such as config.
+
++ __construct()
+```
+public function __construct()
+{
+  try {
+      $this->validateConfig(self::$config);
+      $this->createConnection(self::$config);
+  } catch (PDOException $e) {
+      throw new StorageException('Connection error');
+  }
+}
+```
+Config data are validate and next is created connection to database.
+   
++ createConnection(array $config): void
+```
+private function createConnection(array $config): void
+{
+  $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
+  $this->pdo = new PDO($dsn, $config['user'], $config['password'], [
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+  ]);
+}
+```
+Create  connection to database.
+   
++ validateConfig(array $config): void
+```
+private function validateConfig(array $config): void
+{
+  if (
+      empty($config['database']) ||
+      empty($config['host']) ||
+      empty($config['user']) ||
+      !isset($config['password'])
+  ) {
+      throw new ConfigurationException('Storage configuration error');
+  }
+}
+```
+Validate config data.   
+</details>
+
+<details>
+   <summary>AuthRepository</summary>
+   
++ register(User $user): void
+```
+public function register(User $user): void
+{
+  try {
+      $data = [
+          'username' => $user->username,
+          'email' => $user->email,
+          'password' => $user->password,
+          'avatar' => $user->avatar,
+          'role' => "user",
+          'created' => date('Y-m-d H:i:s'),
+      ];
+
+      $sql = "INSERT INTO users (username, email, password, avatar, role, created) VALUES (:username, :email, :password, :avatar, :role, :created)";
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute($data);
+  } catch (Throwable $e) {
+      throw new StorageException('Failed to create a new account', 400, $e);
+  }
+}
+```
+Add new user to database.
+   
++ login(string $email, string $password): ?int
+```
+public function login(string $email, string $password): ?int
+{
+  $id = null;
+  $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email=:email AND password=:password");
+  $stmt->execute([
+      'email' => $email,
+      'password' => $password,
+  ]);
+
+  $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if ($data) {$id = (int) $data['id'];}
+  return $id;
+}
+```
+Return id user with ($email | $password) data.
+   
++ getEmails(): array
+```
+public function getEmails(): array
+{
+  $stmt = $this->pdo->prepare("SELECT email FROM users");
+  $stmt->execute();
+  $emails = $stmt->fetchAll(PDO::FETCH_COLUMN, 'email');
+  return $emails;
+}
+```
+Return array of emails from user table.  
+</details>
+
+===
+
+<details>
+   <summary>UserRepository</summary>
+   
++ get($param, $type = "id"): ?User
+```
+public function get($param, $column = "id"): ?User
+{
+  $user = null;
+  $stmt = $this->pdo->prepare("SELECT * FROM users WHERE $column=:$column");
+  $stmt->execute([$column => $param]);
+  $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if ($data) {$user = new User($data);}
+  return $user;
+}
+```
+Return user by param(value) and type(id | email).
+   
++ update(User $user, string $property): void
+```
+public function update(User $user, string $property): void
+{
+  $user->escape();
+  $data = $user->getArray(['id', $property]);
+  $sql = "UPDATE users SET $property=:$property WHERE id=:id";
+  $stmt = $this->pdo->prepare($sql);
+
+  $stmt->execute($data);
+}
+```
+Return id of user by ($email and $password) data.
+   
+</details>
+
 ### How to create new repository
 1. Create new file in src/repository/ with name like a **NameRepository.php**
 2. Example repository file:
@@ -969,14 +1121,22 @@ declare (strict_types = 1);
 
 namespace App\Repository;
 
-use App\Model\Name;
+use App\Model\Product;
 use App\Repository\Repository;
 use PDO;
 
-class NameRepository extends Repository
+class ProductRepository extends Repository
 {
-    public function methodOne( ... ) { ... }
-    public function methodTwo( ... ) { ... }
+   public function getById($id): Product
+    {
+        $product = null;
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE $id=:$id");
+        $stmt->execute(["id" => $id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data) {$product = new Product($data);}
+        return $user;
+    }
 }
 ```
 
