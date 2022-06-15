@@ -54,8 +54,7 @@ class Validator
         foreach ($types as $type) {
             if (!$rules->hasType($type)) {continue;}
 
-            $rules->selectType($type);
-            $between = (bool) $rules->typeHasRules(['min', 'max']);
+            $rules->setDefaultType($type);
             $input = $data[$type];
 
             foreach (array_keys($rules->getType()) as $rule) {
@@ -63,26 +62,26 @@ class Validator
                 $message = $rules->message($rule);
 
                 // ================================================
-                if (($rule == "min" || $rule == "max") && $between) {
-                    $min = $rules->value('min');
-                    $max = $rules->value('max');
+                if ($rule == "between") {
+                    $min = $rules->value($rule)['min'];
+                    $max = $rules->value($rule)['max'];
 
                     if ($this->strlenBetween($input, $min - 1, $max + 1) == false) {
-                        Session::set("error:$type:between", $message);
+                        Session::set("error:$type:$rule", $message);
                         $ok = false;
                     }
 
                     $between = false;
                 }
                 // ================================================
-                else if ($rule == "max" && $between == false) {
+                else if ($rule == "max") {
                     if ($this->strlenMax($input, $value) == false) {
                         Session::set("error:$type:$rule", $message);
                         $ok = false;
                     }
                 }
                 // ================================================
-                else if ($rule == "min" && $between == false) {
+                else if ($rule == "min") {
                     if ($this->strlenMin($input, $value) == false) {
                         Session::set("error:$type:$rule", $message);
                         $ok = false;
@@ -139,7 +138,7 @@ class Validator
             return 0;
         }
 
-        $rules->selectType($type);
+        $rules->setDefaultType($type);
 
         if ($rules->typeHasRules(['maxSize'])) {
             if (($FILE["size"] >= $rules->value('maxSize')) && $uploadOk) {
