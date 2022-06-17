@@ -37,21 +37,11 @@ class UserController extends Controller
     public function updateAction(): void
     {
         if ($this->request->isPost()) {
-            $update = $this->request->postParam('update');
+            $toUpdate = $this->request->postParam('update');
 
-            switch ($update) {
-                case 'username':{
-                        $this->updateUsername();
-                        break;
-                    }
-                case 'password':{
-                        $this->updatePassword();
-                        break;
-                    }
-                case 'avatar':{
-                        $this->updateAvatar();
-                        break;
-                    }
+            if (in_array($toUpdate, ['username', 'password', 'avatar'])) {
+                $action = "update" . ucfirst($toUpdate);
+                $this->$action();
             }
         }
 
