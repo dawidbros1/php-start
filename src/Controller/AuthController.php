@@ -120,7 +120,7 @@ class AuthController extends Controller
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
             $code = $data['code'];
-            $this->checkCodeSession($data['code']);
+            $this->checkCodeToResetPassword($data['code']);
 
             if ($this->validate($data, $this->rules)) {
                 $user = $this->userRepository->get(Session::get($code), 'email');
@@ -135,7 +135,7 @@ class AuthController extends Controller
         }
 
         if ($this->request->isGet() && $code = $this->request->getParam('code')) {
-            $this->checkCodeSession($code);
+            $this->checkCodeToResetPassword($code);
             $this->view->render('auth/resetPassword', ['email' => Session::get($code), 'code' => $code]);
         } else {
             Session::set('error', 'Kod resetu hasła nie został podany');
@@ -143,7 +143,7 @@ class AuthController extends Controller
         }
     }
 
-    private function checkCodeSession($code): void
+    private function checkCodeToResetPassword($code): void
     {
         $names = [$code, "created:" . $code];
 
