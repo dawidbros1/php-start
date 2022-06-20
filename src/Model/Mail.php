@@ -4,7 +4,9 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
-class Mail
+use App\Model\Model;
+
+class Mail extends Model
 {
     protected static $config = [];
 
@@ -28,8 +30,22 @@ class Mail
         return Mail::send(self::$config['email'], $data['subject'], $html, $headers);
     }
 
-    public static function forgotPassword(array $data)
+    public function forgotPassword($email, $link)
     {
+        $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+        $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
+        $hash = $this->hash($code, 'md5');
+
+        Session::set($hash, $email);
+        Session::set('created:' . $hash, time());
+
+        $data = [];
+        $data['email'] = $email;
+        $data['link'] = $link;
+        $data['subject'] = $_SERVER['HTTP_HOST'] . " - Reset hasła";
+        $data['username'] = $this->userRepository->get($email, 'email')->username;
+
+        // === /
         $headers = "From: " . strip_tags(self::$config['email']) . "\r\n";
         $headers .= "Reply-To: " . strip_tags(self::$config['email']) . "\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
@@ -47,10 +63,12 @@ class Mail
 
         $html = "<html><head></head><body>" . $message . "</body></html>";
 
-        return Mail::send($data['email'], $data['subject'], $html, $headers);
+        if ($this->send($data['email'], $data['subject'], $html, $headers)){
+            Session::set('success', "Link do zresetowania hasła został wysłany na podany adres email");
+        }
     }
 
-    public static function send($email, $subject, $html, $headers)
+    public function send($email, $subject, $html, $headers)
     {
         if (mail($email, $subject, $html, $headers)) {
             return true;

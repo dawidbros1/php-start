@@ -39,4 +39,10 @@ class Model
 
         }
     }
+
+    public function hash($param, $method = null): string
+    {
+        //! INIT DEFAULT METHOD FROM CONFIG IN FUTURE [sha256]
+        return hash($method ?? "sha256", $param);
+    }
 }

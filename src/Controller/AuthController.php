@@ -9,7 +9,6 @@ use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Auth;
 use App\Model\Mail;
-use App\Model\User;
 use App\Repository\AuthRepository;
 use App\Rules\AuthRules;
 use App\View;
@@ -24,6 +23,7 @@ class AuthController extends Controller
         $this->guest();
         $this->repository = new AuthRepository();
         $this->rules = new AuthRules();
+        $this->auth = new Auth();
     }
 
     public function registerAction(): void
@@ -33,17 +33,14 @@ class AuthController extends Controller
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
-            $emails = $this->repository->getEmails();
 
-            if ($this->validate($data, $this->rules) && !Auth::isBusyEmail($data['email'], $emails)) {
+            if ($this->validate($data, $this->rules) & !$this->auth->isBusyEmail($data['email'])) {
+
                 $data['password'] = $this->hash($data['password']);
                 $data['avatar'] = self::$config->get('default.path.avatar');
-                $user = new User($data);
-                $user->escape();
 
-                $this->repository->register($user);
-                Session::set('success', 'Konto zostało utworzone');
-                $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
+                $this->auth->register($data);
+                $this->redirect(self::$route->get('auth.login'), ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);
                 $this->redirect(self::$route->get('auth.register'), $data);
@@ -60,21 +57,20 @@ class AuthController extends Controller
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
+            $data['password'] = $this->hash($data['password']);
 
-            if ($id = $this->repository->login($data['email'], $this->hash($data['password']))) {
-                Session::set('user:id', $id);
-                $lastPage = Session::getNextClear('lastPage');
+            if ($this->auth->login($data)) {
                 $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
             } else {
-                if (in_array($data["email"], $this->repository->getEmails())) {
+                if ($this->auth->existsEmail($email)) {
                     Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
                 } else {
                     Session::set("error:email:null", "Podany adres email nie istnieje");
                 }
-
                 unset($data['password']);
                 $this->redirect(self::$route->get('auth.login'), $data);
             }
+
         } else {
             $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
         }
@@ -84,29 +80,13 @@ class AuthController extends Controller
     {
         View::set(['title' => "Przypomnienie hasła"]);
         if ($this->request->isPost() && $email = $this->request->postParam('email')) {
-            if (in_array($email, $this->repository->getEmails())) {
-                $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-                $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
-                $hash = $this->hash($code, 'md5');
-
-                Session::set($hash, $email);
-                Session::set('created:' . $hash, time());
-
-                $data = [];
-                $data['email'] = $email;
-                $data['link'] = $location . self::$route->get('auth.resetPassword') . "&code=$hash";
-                $data['subject'] = $_SERVER['HTTP_HOST'] . " - Reset hasła";
-                $data['username'] = $this->userRepository->get($email, 'email')->username;
-
-                if (Mail::forgotPassword($data)) {
-                    Session::set('success', "Link do zresetowania hasła został wysłany na podany adres email");
-                }
+            if ($this->auth->existsEmail($email)) {
+                $link = $location . self::$route->get('auth.resetPassword') . "&code=$hash";
+                $this->mail->forgotPassword($email, $link);
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
             }
-
             $this->redirect(self::$route->get('auth.forgotPassword'));
-
         } else {
             $this->view->render('auth/forgotPassword');
         }
@@ -120,14 +100,10 @@ class AuthController extends Controller
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
             $code = $data['code'];
-            $this->checkCodeToResetPassword($data['code']);
+            $this->checkCodeToResetPassword($code);
 
             if ($this->validate($data, $this->rules)) {
-                $user = $this->userRepository->get(Session::get($code), 'email');
-                $user->password = $this->hash($data['password']);
-                $this->userRepository->update($user, 'password');
-                Session::clearArray([$code, "created:" . $code]);
-                Session::set('success', 'Hasło do konta zostało zmienione');
+                $this->auth->resetPassword($code);
                 $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
             } else {
                 $this->redirect(self::$route->get('auth.resetPassword'), ['code' => $code]);
@@ -157,5 +133,10 @@ class AuthController extends Controller
             Session::set('error', 'Nieprawidłowy kod resetu hasła');
             $this->redirect(self::$route->get('auth.forgotPassword'));
         }
+    }
+
+    private function existsEmail($email)
+    {
+        return in_array($email, $this->repository->getEmails());
     }
 }
