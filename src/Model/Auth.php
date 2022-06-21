@@ -43,13 +43,16 @@ class Auth extends Model
         return $id;
     }
 
-    public function resetPassword($code)
+    public function resetPassword($data, $code)
     {
-        $user = $this->userRepository->get(Session::get($code), 'email');
-        $user->password = $this->hash($data['password']);
-        $this->userRepository->update($user, 'password');
-        Session::clearArray([$code, "created:" . $code]);
-        Session::set('success', 'Hasło do konta zostało zmienione');
+        if ($status = $this->validate($data)) {
+            $user = $this->userRepository->get(Session::get($code), 'email');
+            $user->password = $this->hash($data['password']);
+            $this->userRepository->update($user, 'password');
+            Session::clearArray([$code, "created:" . $code]);
+            Session::set('success', 'Hasło do konta zostało zmienione');
+        }
+        return $status;
     }
 
     public function isBusyEmail($email)

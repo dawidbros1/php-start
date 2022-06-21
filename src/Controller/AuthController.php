@@ -93,8 +93,7 @@ class AuthController extends Controller
             $code = $data['code'];
             $this->checkCodeToResetPassword($code);
 
-            if ($this->validate($data, $this->rules)) {
-                $this->auth->resetPassword($code);
+            if ($this->auth->resetPassword($data, $code)) {
                 $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
             } else {
                 $this->redirect(self::$route->get('auth.resetPassword'), ['code' => $code]);

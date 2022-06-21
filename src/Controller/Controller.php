@@ -24,7 +24,6 @@ abstract class Controller extends Validator
     protected static $route = [];
 
     protected $userRepository;
-    protected $hashMethod;
     protected $request;
     protected $view;
     protected $user = null;
