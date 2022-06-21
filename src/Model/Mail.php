@@ -4,15 +4,16 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Helper\Session;
 use App\Model\Model;
 
 class Mail extends Model
 {
-    protected static $config = [];
+    protected $config = [];
 
-    public static function initConfiguration(array $config): void
+    public function __construct(array $config)
     {
-        self::$config = $config;
+        $this->config = $config;
     }
 
     public static function contact(array $data)
@@ -30,7 +31,7 @@ class Mail extends Model
         return Mail::send(self::$config['email'], $data['subject'], $html, $headers);
     }
 
-    public function forgotPassword($email, $link)
+    public function forgotPassword($email, $route, $username)
     {
         $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
         $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
@@ -41,13 +42,13 @@ class Mail extends Model
 
         $data = [];
         $data['email'] = $email;
-        $data['link'] = $link;
+        $data['link'] = $location . $route . "&code=$hash";
         $data['subject'] = $_SERVER['HTTP_HOST'] . " - Reset hasła";
-        $data['username'] = $this->userRepository->get($email, 'email')->username;
+        $data['username'] = $username;
 
         // === /
-        $headers = "From: " . strip_tags(self::$config['email']) . "\r\n";
-        $headers .= "Reply-To: " . strip_tags(self::$config['email']) . "\r\n";
+        $headers = "From: " . strip_tags($this->config['email']) . "\r\n";
+        $headers .= "Reply-To: " . strip_tags($this->config['email']) . "\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
@@ -63,7 +64,7 @@ class Mail extends Model
 
         $html = "<html><head></head><body>" . $message . "</body></html>";
 
-        if ($this->send($data['email'], $data['subject'], $html, $headers)){
+        if ($this->send($data['email'], $data['subject'], $html, $headers)) {
             Session::set('success', "Link do zresetowania hasła został wysłany na podany adres email");
         }
     }
