@@ -33,6 +33,8 @@ class Auth extends Model
 
     public function login(array $data)
     {
+        $data['password'] = $this->hash($data['password']);
+
         if ($id = $this->repository->login($data['email'], $data['password'])) {
             Session::set('user:id', $id);
             $lastPage = Session::getNextClear('lastPage');

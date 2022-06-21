@@ -49,7 +49,6 @@ class AuthController extends Controller
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
-            $data['password'] = $this->hash($data['password']);
 
             if ($this->auth->login($data)) {
                 $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
