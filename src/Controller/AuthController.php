@@ -9,7 +9,6 @@ use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Auth;
 use App\Model\Mail;
-use App\Repository\AuthRepository;
 use App\Rules\AuthRules;
 use App\View;
 
@@ -21,7 +20,6 @@ class AuthController extends Controller
     {
         parent::__construct($request);
         $this->guest();
-        $this->repository = new AuthRepository();
         $this->rules = new AuthRules();
         $this->auth = new Auth();
     }
@@ -81,8 +79,8 @@ class AuthController extends Controller
         View::set(['title' => "Przypomnienie hasła"]);
         if ($this->request->isPost() && $email = $this->request->postParam('email')) {
             if ($this->auth->existsEmail($email)) {
-                $link = $location . self::$route->get('auth.resetPassword') . "&code=$hash";
-                $this->mail->forgotPassword($email, $link);
+                $username = $this->userRepository->get($email, 'email')->username;
+                $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
             }
@@ -133,10 +131,5 @@ class AuthController extends Controller
             Session::set('error', 'Nieprawidłowy kod resetu hasła');
             $this->redirect(self::$route->get('auth.forgotPassword'));
         }
-    }
-
-    private function existsEmail($email)
-    {
-        return in_array($email, $this->repository->getEmails());
     }
 }
