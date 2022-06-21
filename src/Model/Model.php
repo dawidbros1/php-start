@@ -4,8 +4,21 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
-class Model
+use App\Validator\Validator;
+
+abstract class Model
 {
+    protected static $validator = null;
+    protected static $hashMethod = null;
+
+    public static function initConfiguration($hashMethod)
+    {
+        if (self::$validator != null) {
+            self::$validator = new Validator();
+        }
+        self::$hashMethod = $hashMethod;
+    }
+
     public function update($data)
     {
         foreach (array_keys($data) as $key) {
@@ -42,7 +55,6 @@ class Model
 
     public function hash($param, $method = null): string
     {
-        //! INIT DEFAULT METHOD FROM CONFIG IN FUTURE [sha256]
-        return hash($method ?? "sha256", $param);
+        return hash($method ?? self::$hashMethod, $param);
     }
 }
