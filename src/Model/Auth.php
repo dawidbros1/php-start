@@ -35,22 +35,7 @@ class Auth extends Model
         return $id;
     }
 
-    public function forgotPassword($email)
-    {
-        $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-        $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
-        $hash = $this->hash($code, 'md5');
-
-        Session::set($hash, $email);
-        Session::set('created:' . $hash, time());
-
-        // === //
-
-        $data = [];
-        $data['email'] = $email;
-    }
-
-    public function resetPasswrod($code)
+    public function resetPassword($code)
     {
         $user = $this->userRepository->get(Session::get($code), 'email');
         $user->password = $this->hash($data['password']);
