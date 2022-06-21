@@ -10,6 +10,7 @@ use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Config;
 use App\Model\Mail;
+use App\Model\Model;
 use App\Model\Route;
 use App\Model\User;
 use App\Repository\Repository;
@@ -41,12 +42,10 @@ abstract class Controller extends Validator
             throw new ConfigurationException('Configuration error');
         }
 
+        Model::initConfiguration(self::$config->get('hash.method'));
         Repository::initConfiguration(self::$config->get('db'));
-        Mail::initConfiguration(self::$config->get('mail'));
 
-        $this->mail = new Mail();
-
-        $this->hashMethod = self::$config->get('hash.method');
+        $this->mail = new Mail(self::$config->get('mail'));
         $this->userRepository = new UserRepository();
 
         if ($id = Session::get('user:id')) {
