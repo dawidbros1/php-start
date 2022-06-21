@@ -9,7 +9,6 @@ use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Auth;
 use App\Model\Mail;
-use App\Rules\AuthRules;
 use App\View;
 
 class AuthController extends Controller
@@ -20,7 +19,6 @@ class AuthController extends Controller
     {
         parent::__construct($request);
         $this->guest();
-        $this->rules = new AuthRules();
         $this->auth = new Auth();
     }
 
@@ -31,13 +29,9 @@ class AuthController extends Controller
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
+            $data['avatar'] = self::$config->get('default.path.avatar');
 
-            if ($this->validate($data, $this->rules) & !$this->auth->isBusyEmail($data['email'])) {
-
-                $data['password'] = $this->hash($data['password']);
-                $data['avatar'] = self::$config->get('default.path.avatar');
-
-                $this->auth->register($data);
+            if ($this->auth->register($data)) {
                 $this->redirect(self::$route->get('auth.login'), ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);

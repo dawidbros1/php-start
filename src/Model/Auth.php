@@ -8,21 +8,27 @@ use App\Helper\Session;
 use App\Model\Model;
 use App\Repository\AuthRepository;
 use App\Repository\UserRepository;
+use App\Rules\AuthRules;
 
 class Auth extends Model
 {
     public function __construct()
     {
         $this->repository = new AuthRepository();
+        $this->rules = new AuthRules();
     }
 
     public function register(array $data)
     {
-        $user = new User($data);
-        $user->escape();
-        $this->repository->register($user);
-        Session::set('success', 'Konto zostało utworzone');
+        if ($status = ($this->validate($data) & !$this->isBusyEmail($data['email']))) {
+            $data['password'] = $this->hash($data['password']);
+            $user = new User($data);
+            $user->escape();
+            $this->repository->register($user);
+            Session::set('success', 'Konto zostało utworzone');
+        }
 
+        return $status;
     }
 
     public function login(array $data)

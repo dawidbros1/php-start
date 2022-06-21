@@ -10,13 +10,17 @@ abstract class Model
 {
     protected static $validator = null;
     protected static $hashMethod = null;
+    protected $rules;
 
     public static function initConfiguration($hashMethod)
     {
-        if (self::$validator != null) {
-            self::$validator = new Validator();
-        }
+        self::$validator = new Validator();
         self::$hashMethod = $hashMethod;
+    }
+
+    protected function validate($data)
+    {
+        return self::$validator->validate($data, $this->rules);
     }
 
     public function update($data)
