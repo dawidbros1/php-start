@@ -126,31 +126,4 @@ abstract class Controller extends Validator
             $this->redirect(self::$route->get('home'));
         }
     }
-
-    protected function uploadFile($path, $FILE): bool
-    {
-        $target_dir = $path;
-        $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
-        $target_file = $target_dir . basename($FILE["name"]);
-
-        if (move_uploaded_file($FILE["tmp_name"], $target_file)) {
-            return true;
-        } else {
-            Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
-            return false;
-        }
-    }
-
-    protected function hash($param, $method = null): string
-    {
-        return hash($method ?? $this->hashMethod, $param);
-    }
-
-    protected function hashFile($file)
-    {
-        $type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $name = $this->hash(date('Y-m-d H:i:s') . "_" . $file['name']);
-        $file['name'] = $name . '.' . $type;
-        return $file;
-    }
 }
