@@ -55,7 +55,7 @@ abstract class Model
         $properties = get_object_vars($this);
 
         foreach ($properties as $key => $value) {
-            if ($key === "rules" || $key == "repository") {
+            if ($key === "rules" || $key === "repository") {
                 continue;
             }
 
