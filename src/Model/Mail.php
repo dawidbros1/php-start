@@ -16,7 +16,7 @@ class Mail extends Model
         $this->config = $config;
     }
 
-    public static function contact(array $data)
+    public function contact(array $data)
     {
         $headers = "From: " . strip_tags($data['from']) . "\r\n";
         $headers .= "Reply-To: " . strip_tags($data['from']) . "\r\n";
@@ -28,7 +28,9 @@ class Mail extends Model
 
         $html = "<html> <head> </head> <body> <p>Imię i nazwisko: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
 
-        return Mail::send(self::$config['email'], $data['subject'], $html, $headers);
+        if ($this->send($this->config['email'], $data['subject'], $html, $headers)) {
+            Session::set('success', "Wiadomość została wysłana");
+        }
     }
 
     public function forgotPassword($email, $route, $username)
@@ -69,7 +71,7 @@ class Mail extends Model
         }
     }
 
-    public function send($email, $subject, $html, $headers)
+    private function send($email, $subject, $html, $headers)
     {
         if (mail($email, $subject, $html, $headers)) {
             return true;

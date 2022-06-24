@@ -46,9 +46,7 @@ class GeneralController extends Controller
             );
 
             if ($response != null && $response->success) {
-                if (Mail::contact($data)) {
-                    Session::set('success', "Wiadomość została wysłana");
-                }
+                $this->mail->contact($data);
             } else {
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }
