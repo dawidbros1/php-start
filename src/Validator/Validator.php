@@ -38,8 +38,6 @@ class Validator
         return true;
     }
 
-    // Ogólna klasa VALIDATORA
-
     public function validate(array $data, $rules)
     {
         $types = array_keys($data);
@@ -54,67 +52,44 @@ class Validator
         foreach ($types as $type) {
             if (!$rules->hasType($type)) {continue;}
 
-            $rules->selectType($type);
-            $between = (bool) $rules->typeHasKeys(['min', 'max']);
+            $rules->setDefaultType($type);
             $input = $data[$type];
 
             foreach (array_keys($rules->getType()) as $rule) {
                 $value = $rules->value($rule);
                 $message = $rules->message($rule);
 
-                // ================================================
-                if (($rule == "min" || $rule == "max") && $between) {
-                    $min = $rules->value('min');
-                    $max = $rules->value('max');
+                if ($rule == "between") {
+                    $min = $rules->value($rule)['min'];
+                    $max = $rules->value($rule)['max'];
 
                     if ($this->strlenBetween($input, $min - 1, $max + 1) == false) {
-                        Session::set("error:$type:between", $message);
-                        $ok = false;
-                    }
-
-                    $between = false;
-                }
-                // ================================================
-                else if ($rule == "max" && $between == false) {
-                    if ($this->strlenMax($input, $value) == false) {
-                        Session::set("error:$type:$rule", $message);
-                        $ok = false;
+                        $ok = $this->setError($type, $rule, $message);
                     }
                 }
                 // ================================================
-                else if ($rule == "min" && $between == false) {
-                    if ($this->strlenMin($input, $value) == false) {
-                        Session::set("error:$type:$rule", $message);
-                        $ok = false;
-                    }
+                else if ($rule == "max" && ($this->strlenMax($input, $value) == false)) {
+                    $ok = $this->setError($type, $rule, $message);
                 }
                 // ================================================
-                else if ($rule == "validate" && $value == true) {
-                    if (!filter_var($input, FILTER_VALIDATE_EMAIL)) {
-                        Session::set("error:$type:$rule", $message);
-                        $ok = false;
-                    }
+                else if ($rule == "min" && ($this->strlenMin($input, $value) == false)) {
+                    $ok = $this->setError($type, $rule, $message);
                 }
                 // ================================================
-                else if ($rule == "sanitize" && $value == true) {
-                    if ($input != filter_var($input, FILTER_SANITIZE_EMAIL)) {
-                        Session::set("error:$type:$rule", $message);
-                        $ok = false;
-                    }
+                else if ($rule == "validate" && $value && (!filter_var($input, FILTER_VALIDATE_EMAIL))) {
+                    $ok = $this->setError($type, $rule, $message);
                 }
                 // ================================================
-                else if ($rule == "require" && $value == true) {
-                    if (empty($input)) {
-                        Session::set("error:$type:$rule", $message);
-                        $ok = false;
-                    }
+                else if ($rule == "sanitize" && $value && ($input != filter_var($input, FILTER_SANITIZE_EMAIL))) {
+                    $ok = $this->setError($type, $rule, $message);
                 }
                 // ================================================
-                else if ($rule == "specialCharacters" && $value == true) {
-                    if (preg_match('/[\'^£$%&*()}{@#~"?><>,|=_+¬-]/', $input)) {
-                        Session::set("error:$type:$rule", $message);
-                        $ok = false;
-                    }
+                else if ($rule == "require" && $value && (empty($input))) {
+                    $ok = $this->setError($type, $rule, $message);
+                }
+                // ================================================
+                else if ($rule == "specialCharacters" && !$value && (preg_match('/[\'^£$%&*()}{@#~"?><>,|=_+¬-]/', $input))) {
+                    $ok = $this->setError($type, $rule, $message);
                 }
                 // ================================================
             }
@@ -139,16 +114,16 @@ class Validator
             return 0;
         }
 
-        $rules->selectType($type);
+        $rules->setDefaultType($type);
 
-        if ($rules->typeHasKeys(['maxSize'])) {
+        if ($rules->typeHasRules(['maxSize'])) {
             if (($FILE["size"] >= $rules->value('maxSize')) && $uploadOk) {
                 Session::set('error:file:maxSize', $rules->message('maxSize'));
                 $uploadOk = 0;
             }
         }
 
-        if ($rules->typeHasKeys(['types'])) {
+        if ($rules->typeHasRules(['types'])) {
             $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
 
             if (!in_array($type, $rules->value('types'))) {
@@ -158,5 +133,11 @@ class Validator
         }
 
         return $uploadOk;
+    }
+
+    private function setError($type, $rule, $message)
+    {
+        Session::set("error:$type:$rule", $message);
+        return false;
     }
 }

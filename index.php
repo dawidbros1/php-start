@@ -16,10 +16,7 @@ require_once 'recaptchalib.php';
 $config = require_once 'config/config.php';
 $route = require_once 'routes/routes.php';
 
-use App\Controller\AuthController;
 use App\Controller\Controller;
-use App\Controller\GeneralController;
-use App\Controller\UserController;
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
 use App\Helper\Request;
@@ -28,13 +25,9 @@ $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 
 try {
     Controller::initConfiguration($config, $route);
-
     $type = $request->getParam('type', 'general');
-
-    if ($type == "auth") {(new AuthController($request))->run();} //
-    else if ($type == "user") {(new UserController($request))->run();} //
-    else if ($type == "general") {(new GeneralController($request))->run();} //
-    else {(new GeneralController($request))->run();} //
+    $controller = "\App\Controller\\" . ucfirst($type) . "Controller";
+    (new $controller($request))->run();
 
 } catch (ConfigurationException $e) {
     echo '<h1>Wystąpił błąd w aplikacji</h1>';

@@ -19,7 +19,7 @@ class UserRules extends AuthRules
 
     public function rules()
     {
-        $this->createRules('avatar', [
+        $this->createRule('avatar', [
             'maxSize' => 512 * 512,
             'types' => ['jpg', 'png', 'jpeg', 'gif'],
         ]);

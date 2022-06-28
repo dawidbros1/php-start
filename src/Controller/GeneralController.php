@@ -10,27 +10,27 @@ use App\View;
 
 class GeneralController extends Controller
 {
-    public function homeAction()
+    public function homeAction(): void
     {
         View::set(['title' => "Strona główna"]);
         $this->view->render('general/home');
     }
 
-    public function policyAction()
+    public function policyAction(): void
     {
         View::set(['title' => "Polityka prywatności"]);
         $this->view->render('general/policy');
     }
 
-    public function regulationsAction()
+    public function regulationsAction(): void
     {
         View::set(['title' => "Regulamin"]);
         $this->view->render('general/regulations');
     }
 
-    public function contactAction()
+    public function contactAction(): void
     {
-        View::set(['title' => "Rejestracja", 'style' => "contact"]);
+        View::set(['title' => "Strona kontaktowa", 'style' => "contact"]);
         $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
@@ -46,9 +46,7 @@ class GeneralController extends Controller
             );
 
             if ($response != null && $response->success) {
-                if (Mail::contact($data)) {
-                    Session::set('success', "Wiadomość została wysłana");
-                }
+                $this->mail->contact($data);
             } else {
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }

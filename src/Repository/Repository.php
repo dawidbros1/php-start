@@ -15,11 +15,11 @@ abstract class Repository
     protected static $config;
     protected static $user_id;
 
-    public static function initConfiguration($config)
+    public static function initConfiguration($config): void
     {
         self::$config = $config;
     }
-    
+
     public function __construct()
     {
         try {
@@ -48,14 +48,5 @@ abstract class Repository
         ) {
             throw new ConfigurationException('Storage configuration error');
         }
-    }
-
-    protected function quoteAll(array $data)
-    {
-        foreach ($data as $key => $value) {
-            $data[$key] = $this->pdo->quote($value);
-        }
-
-        return $data;
     }
 }

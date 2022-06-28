@@ -17,21 +17,6 @@ The project is a complete file package to create applications in PHP technology.
 5. Configure your `./config/config.php` file
 6. Import tables from file `./sql/database.sql` to your database
 
-## Routes
-| Method | URI ( ./? ) | Action | Name |
-| --- | --- | --- | --- |
-| GET | action=home | src/Controller/GeneralController@homeAction | home |
-| GET | action=regulations | src/Controller/GeneralController@policyAction | regulations |
-| GET | action=policy | src/Controller/GeneralController@regulationsAction | pollicy |
-| GET\|POST | action=contact| src/Controller/GeneralController@contactAction | contact |
-| GET\|POST | type=auth&action=register | src/Controller/AuthController@registerAction | auth.register |
-| GET\|POST | type=auth&action=login | src/Controller/AuthController@loginAction | auth.login |
-| GET\|POST | type=auth&action=forgotPassword | src/Controller/AuthController@forgotPasswordAction | auth.forgotPassword |
-| GET\|POST | type=auth&action=resetPassword&code=... | src/Controller/AuthController@resetPasswordAction | auth.resetPassword |
-| ANY | type=user&action=logout | src/Controller/UserController@logoutAction | user.logout |
-| GET | type=user&action=profile | src/Controller/UserController@profileAction | user.profile |
-| POST | type=user&action=update&update=... | src/Controller/UserController@updateAction | user.update |
-
 ## Tree directory
    - [composer.json](composer.json)
    - [composer.lock](composer.lock)
@@ -120,12 +105,136 @@ The project is a complete file package to create applications in PHP technology.
      - __images__
        - __avatar__
 
-# IN PROGRESS
+## Table of contents
+- [Routing](#routing)
+  - [How create new routing](#how-create-new-routing)
+  - [How use routing](#how-use-routing)
+- [Routes](#routes)
+- [Rules](#rules)
+  - [How to create new rule](#how-to-create-new-rule)
+  - [Available methods](#available-methods)
+  - [How use getType() and getRule()](#how-use-gettype-and-getrule)
+- [Controllers](#controllers)
+  - [Controller](#controller)
+  - [AuthController](#authcontroller)
+  - [UserController](#usercontroller)
+  - [GeneralController](#generalcontroller)
+  - [How to create new controller](#how-to-create-new-controller)
+- [Models](#models)
+  - [Model](#model)
+  - [Auth](#auth)
+  - [User](#user)
+- [Repositories](#repositories)
+  - [Repository](#repository)
+  - [AuthRepository](#authrepository)
+  - [UserRepository](#userrepository)
+  - [How to create new repository](#how-to-create-new-repository)
+- [Validator](#validator)
+  - [Available methods to validate data](#available-methods-to-validate-data)
+  - [Available methods to validate images](#available-methods-to-validate-images)
+  - [How validate data](#how-validate-data)
+- [Helpers](#helpers)
+  - [Session](#session)
+  - [Request](#request)
+- [Components](#component)
+- [View](#view)
+
+## Routing
+### How create new routing
+Register a new group in `routes/routes.php`
+```
+$route->group('', ['home', 'policy', 'contact', 'regulations']);
+$route->group('auth', ['register', 'login', 'forgotPassword', 'resetPassword']);
+$route->group('user', ['logout', 'profile', 'update']);
+```
+
+### How use routing
+```
+$this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
+```
+
+## Routes
+| Method | URI ( ./? ) | Action | Name |
+| --- | --- | --- | --- |
+| GET | action=home | src/Controller/GeneralController@homeAction | home |
+| GET | action=regulations | src/Controller/GeneralController@policyAction | regulations |
+| GET | action=policy | src/Controller/GeneralController@regulationsAction | pollicy |
+| GET\|POST | action=contact| src/Controller/GeneralController@contactAction | contact |
+| GET\|POST | type=auth&action=register | src/Controller/AuthController@registerAction | auth.register |
+| GET\|POST | type=auth&action=login | src/Controller/AuthController@loginAction | auth.login |
+| GET\|POST | type=auth&action=forgotPassword | src/Controller/AuthController@forgotPasswordAction | auth.forgotPassword |
+| GET\|POST | type=auth&action=resetPassword&code=... | src/Controller/AuthController@resetPasswordAction | auth.resetPassword |
+| ANY | type=user&action=logout | src/Controller/UserController@logoutAction | user.logout |
+| GET | type=user&action=profile | src/Controller/UserController@profileAction | user.profile |
+| POST | type=user&action=update&update=... | src/Controller/UserController@updateAction | user.update |
 
 ## Rules
-Class `src/model/rules` is created to define validate rules.
+Class `src/model/rules` is created to define validate rules. We can create new rule with method `createRule()`, and next add error message to rule with method `createMessages()`.
 
-+ **createRules(string $type, array $rules): void**
+### How to create new rule
+1. Create new file in `src/rules/` with name like a **NameRules.php**
+2. Example rule file:
+```
+<?php
+
+declare (strict_types = 1);
+
+namespace App\Rules;
+
+use App\Model\Rules;
+
+class UserRules extends Rules
+{
+    public function rules()
+    {
+        $this->createRule('username', ['min' => 3, "max" => 16, 'specialCharacters' => false]);
+    }
+
+    public function messages()
+    {
+        $this->createMessages('username', [
+            'min' => "Username cannot contain less than". $this->value('username.min') "characters",
+            'max' => "Username cannot contain more than". $this->value('username.max') "characters",
+            'specialCharacters' => "Username cannot contain special characters",
+        ]);
+    }
+}
+```
+
+`min` and `max` rules can be package in `between` rule like here:
+```
+class AuthRules extends Rules
+{
+    public function rules()
+    {
+        $this->createRule('username', ['between' => ['min' => 3, "max" => 16], 'specialCharacters' => false]);
+        $this->createRule('password', ['between' => ['min' => 6, 'max' => 36]]);
+    }
+
+    public function messages()
+    {
+        $this->createMessages('username', [
+            'between' => "Username should contain from " . $this->between('username.min') . " to " . $this->between('username.max') . " characters",
+            'specialCharacters' => "Username cannot contain special characters",
+        ]);
+
+        $this->createMessages('password', [
+            'between' => "Password should contain from " . $this->between('password.min') . " to " . $this->between('password.max') . " characters",
+        ]);
+
+        $this->createMessages('email', [
+            'sanitize' => "Email address contains illegal characters",
+            'validate' => "The email address is not valid",
+        ]);
+    }
+}
+```
+
+The structure of object in above example looks like this:
+![](readme_img/rules.png)
+
+### Available methods
+* **createRule(string $type, array $rules): void**
 ```
 public function createRule(string $type, array $rules): void
 {
@@ -134,43 +243,82 @@ public function createRule(string $type, array $rules): void
   }
 }
 ```
-Add rule to property rules.
-
-+ **createMessages(string $type, array $rules): void**
 ```
-public function createMessages(string $type, array $rules): void
+public function rules()
 {
-  foreach ($rules as $name => $message) {
-      if ($name == 'between') {
-          $this->rules[$type]['min']['message'] = $message;
-          $this->rules[$type]['max']['message'] = $message;
-      } else {
-          $this->rules[$type][$name]['message'] = $message;
-      }
-  }
+    $this->createRule('username', ['min' => 3, "max" => 16, 'specialCharacters' => false]);
 }
 ```
-Add error messages to rules of type.
 
-+ **value(?string $name = null)**
+* **value(?string $name = null)**
+It is a short function to return value of any rule.
 ```
 public function value(?string $name = null)
 {
   return $this->getRule($name)['value'];
 }
 ```
-Return value of rule.
+``` 
+$this->value(username.min) // return 3
+$this->value(username.max) // return 16
+```
+
+* **between(string $name)**
+It is a short function to return value of between rule.
+```
+public function between(string $name)
+{
+    $typeName = strtok($name, '.');
+    $limit = substr($name, strpos($name, '.') + 1);
+    return $this->getRule($typeName . ".between")['value'][$limit];
+}
+```
+```
+public function rules()
+{
+    $this->createRule('username', ['between' => ['min' => 3, "max" => 16]]);
+}
+
+$this->between(username.min) // return 3
+$this->between(username.min) // return 16
+```
  
-+ **message(?string $name = null: string): string**
+
+* **createMessages(string $type, array $rules): void**
+```
+public function createMessages(string $type, array $rules): void
+{
+  foreach ($rules as $name => $message) {
+    $this->rules[$type][$name]['message'] = $message;
+  }
+}
+```
+```
+public function messages()
+{
+    $this->createMessages('username', [
+        'min' => "Username cannot contain less than". $this->value('username.min') "characters",
+        'max' => "Username cannot contain more than". $this->value('username.max') "characters",
+        'specialCharacters' => "Username cannot contain special characters",
+    ]);
+}
+```
+
+* **message(?string $name = null: string): string**
+It is a short function to return error message of any rule.
 ```
 public function message(?string $name = null): string
 {
   return $this->getRule($name)['message'];
 }
 ```
-Return messages of rule.
+```
+$this->message(username.min) // return "Username cannot contain less than 3 characters"
+$this->message(username.min) // return "Username cannot contain more than 16 characters"
+```
 
-+ **arrayValue(string $name, bool $uppercase = false): string**
+* **arrayValue(string $name, bool $uppercase = false): string**
+Method return array of value rules as string.
 ```
 public function arrayValue(string $name, bool $uppercase = false): string
 {
@@ -178,20 +326,38 @@ public function arrayValue(string $name, bool $uppercase = false): string
   $rule = substr($name, strpos($name, '.') + 1);
   $output = '';
 
+  if(!is_array($this->rules[$type][$rule]['value'])){
+      throw new AppException(`Value of [$name] is not an array);
+  }
+
   foreach ($this->rules[$type][$rule]['value'] as $value) {
       $output .= $value . ', ';
   }
 
-  if ($uppercase) {
-      $output = strtoupper($output);
-  }
+  if ($uppercase) { $output = strtoupper($output);}
   $output = substr($output, 0, -2);
   return $output;
 }
 ```
-Return array value of rules as string
- 
-+ **hasType(string $type): bool**
+```
+public function rules()
+{
+    $this->createRule('avatar', [
+        'types' => ['jpg', 'png', 'jpeg', 'gif'],
+    ]);
+}
+
+public function messages()
+{
+    $this->createMessages('avatar', [
+       'types' => "The uploaded file has an illegal extension. Allowed extensions are:". $this->arrayValue('avatar.types', true),
+    ]);
+}
+
+$this->arrayValue("avatar.types") // return "JPG, PNG, JPEG, GIF"
+```
+
+* **hasType(string $type): bool**
 ```
 public function hasType(string $type): bool
 {
@@ -202,60 +368,22 @@ public function hasType(string $type): bool
   }
 }
 ```
-Check if exists given type.
- 
-+ **selectType(string $type): void**
 ```
-public function selectType(string $type): void
-{
-  if (!$this->hasType($type)) {
-      throw new AppException('The selected type does not exist');
-  }
-  $this->selectedType = $type;
-}
+hasType("username") // true
+hasType("password") // true
+hasType("firstname") // false
 ```
-Set selectedType on given type
 
-+ **clearType(): void** 
-```
-public function clearType(): void
-{
-  $this->selectedType = null;
-}
-```
-Set selectedType on null
-
-+ **getType(): array**
-```
-public function getType(?string $type = null): array
-{
-  if ($type === null) {
-      if ($this->selectedType !== null) {
-          return $this->rules[$this->selectedType];
-      } else {
-          throw new AppException('Rule type has not been entered');
-      }
-  } else {
-      if (!$this->hasType($type)) {
-          throw new AppException('The selected type does not exist');
-      } else {
-          return $this->rules[$type];
-      }
-  }
-}
-```
-Return rules of selectedType or given type.
-
-+ **typeHasRules(array $keys, ?string $type = null): bool**
+* **typeHasRules(array $keys, ?string $type = null): bool**
 ```
 public function typeHasRules(array $rules, ?string $type = null): bool
 {
   if ($this->selectedType != null) {
       $type = $this->rules[$this->selectedType];
   } elseif ($type == null) {
-      throw new AppException('Typ reguły nie został wprowadzony');
+      throw new AppException('Rule type has not been entered');
   } elseif (!$this->hasType($type)) {
-      throw new AppException('Wybrany typ nie istnieje');
+      throw new AppException('Input type [' . $type . '] does not exists');
   } else {
       $type = $this->rules[$type];
   }
@@ -269,9 +397,55 @@ public function typeHasRules(array $rules, ?string $type = null): bool
   return true;
 }
 ```
-Check if type of rule has all given keys.
+```
+$this->typeHasRules(["min","max"], "username") // return true
+$this->typeHasRules(["require"], "username") // return false
+```
+* **setDefaultType(string $type): void**
+Method set defaultType. If defaultType is set, we don't need send rule type to methods like a value(), message();
+```
+public function setDefaultType(string $type): void
+{
+  if (!$this->hasType($type)) {
+      throw new AppException('The selected type does not exist');
+  }
+  $this->defaultType = $type;
+}
+```
+```
+$this->setDefaultType("username)
+$this->value("min") // return 3
+$this->message("min") // return "Username cannot contain less than 3 characters"
+```
+* **clearDefaultType(): void** 
+```
+public function clearDefaultType(): void
+{
+  $this->defaultType = null;
+}
+```
 
-+ **getRule(string $name): array**
+* **getType(): array**
+```
+public function getType(?string $type = null): array
+{
+  if ($type === null) {
+      if ($this->defaultType !== null) {
+          return $this->rules[$this->defaultType];
+      } else {
+          throw new AppException('Rule type has not been entered');
+      }
+  } else {
+      if (!$this->hasType($type)) {
+          throw new AppException('Input type [' . $type . '] does not exists');
+      } else {
+          return $this->rules[$type];
+      }
+  }
+}
+```
+
+* **getRule(string $name): array**
 ```
 private function getRule(string $name): array
 {
@@ -291,51 +465,28 @@ private function getRule(string $name): array
   }
 }
 ```
-Private method to return rule.
 
-### How to create new rule
-1. Create new file in ./src/rules/ with name like a **NameRules.php**
-2. Example rule file:
+#### How use getType() and getRule()
 ```
-<?php
-
-declare (strict_types = 1);
-
-namespace App\Rules;
-
-use App\Model\Rules;
-
-class NameRules extends Rules
-{
-    public function rules()
+username <-- type | getType("username") or getType() if defaultType === "username"
+{ 
+    min: <-- rule | getRule("username.min") or getRule("min") if defaultType === "username"
     {
-        $this->createRule('username', ['min' => 3, "max" => 16, 'specialCharacters' => false]);
-    }
+        value: 3
+        message: Username cannot contain less than 3 characters
+    },
 
-    public function messages()
+    max:
     {
-        $this->createMessages('username', [
-            'min' => "Username cannot contain less than". $this->value('username.min') "characters",
-            'max' => "Username cannot contain more than". $this->value('username.max') "characters",
-            'specialCharacters' => "Username cannot contain special characters",
-        ]);
+        value 16
+        message: Username cannot contain more than 16 characters
     }
 }
-```
-
-**Min** and **max** can be replace with **between** rule:
-```
-'between' => "Username should contain from". $this->value('username.min'). "to". $this->value('username.max'). "characters",
 ```
 
 ## Controllers
-Controllers are designed to manage the entire application.
-
-### Basic controllers
-<details>
-   <summary>Controller</summary>
-   
-+ **initConfiguration(Config $config, Route $route): void**
+### Controller
+* **initConfiguration(Config $config, Route $route): void**
 ```
 public static function initConfiguration(Config $config, Route $route): void
 {
@@ -343,68 +494,32 @@ public static function initConfiguration(Config $config, Route $route): void
   self::$route = $route;
 }
 ```
-Initialize properties such as config and route.
 
-+ **__construct(Request $request)**
+* **__construct(Request $request)**
 ```
 public function __construct(Request $request)
 {
-  if (empty(self::$config->get('db'))) {
-      throw new ConfigurationException('Configuration error');
-  }
+    if (empty(self::$config->get('db'))) {
+        throw new ConfigurationException('Configuration error');
+    }
 
-  Repository::initConfiguration(self::$config->get('db'));
-  Mail::initConfiguration(self::$config->get('mail'));
+    Model::initConfiguration(self::$config->get('hash.method'));
+    Repository::initConfiguration(self::$config->get('db'));
 
-  $this->hashMethod = self::$config->get('hash.method');
-  $this->userRepository = new UserRepository();
+    $this->mail = new Mail(self::$config->get('mail'));
+    $this->userRepository = new UserRepository();
 
-  if ($id = Session::get('user:id')) {
-      $this->user = $this->userRepository->get((int) $id);
-  }
+    if ($id = Session::get('user:id')) {
+        $this->user = $this->userRepository->get((int) $id);
+    }
 
-  $this->request = $request;
-  $this->view = new View($this->user, self::$route);
+    $this->request = $request;
+    $this->view = new View($this->user, self::$route);
 }
 ```
 
-+ **initConfiguration(Config $config, Route $route): void**
-```
-public static function initConfiguration(Config $config, Route $route): void
-{
-  self::$config = $config;
-  self::$route = $route;
-}
-```
-Initialize properties such as config and route.
-
-+ **__construct(Request $request)**
-```
-public function __construct(Request $request)
-{
-  if (empty(self::$config->get('db'))) {
-      throw new ConfigurationException('Configuration error');
-  }
-
-  Repository::initConfiguration(self::$config->get('db'));
-  Mail::initConfiguration(self::$config->get('mail'));
-
-  $this->hashMethod = self::$config->get('hash.method');
-  $this->userRepository = new UserRepository();
-
-  if ($id = Session::get('user:id')) {
-      $this->user = $this->userRepository->get((int) $id);
-  }
-
-  $this->request = $request;
-  $this->view = new View($this->user, self::$route);
-}
-```
-Check connection with database. Initialize configuration in repository and mail.
-Get user if he is logged. Assigns an request class object to a property.
-Create object of view class and set to a property.
-
-+ **run(): void**
+* **run(): void**
+Run selected action `$this->$action();`
 ```
 public function run(): void
 {
@@ -421,9 +536,13 @@ public function run(): void
   }
 }
 ```
-If given action exists run it else redirect to homePage with error message.
+In `index.php` we run method `run()`
+```
+(new $controller($request))->run();
+```
 
-+ **redirect(string $to, array $params = []): void**
+* **redirect(string $to, array $params = []): void**
+Method create output url with input parameters.
 ```
 protected function redirect(string $to, array $params = []): void
 {
@@ -446,18 +565,29 @@ protected function redirect(string $to, array $params = []): void
   exit();
 }
 ```
-Redirect user to selected page with parameters.
+example:
+```
+to: ?type=auth&action=register
+params:
+(
+    [username] => test
+    [email] => test@wp.pl
+)
 
-+ **action(): string**
+OUTPUT: ?type=auth&action=register&username=test&email=test%40wp.pl
+```
+
+* **action(): string**
+Return action parameter from request.
 ```
 final private function action(): string
 {
   return $this->request->getParam('action', "home");
 }
  ```
-Return action param from request.
 
-+ **guest(): void**
+* **guest(): void**
+Method check if user is not logged in.
 ```
 final protected function guest(): void
 {
@@ -467,9 +597,8 @@ final protected function guest(): void
   }
 }
  ```
-Method check if user is not logged in. Logged user is redirect to homePage with error message.
 
-+ **requireLogin(): void**
+* **requireLogin(): void**
 ```
 final protected function requireLogin(): void
 {
@@ -480,9 +609,8 @@ final protected function requireLogin(): void
   }
 }
 ```
-Method check if user is logged in. Guest is redirect to login page with error message.
 
-+ **requireAdmin()**
+* **requireAdmin()**
 ```
 final protected function requireAdmin(): void
 {
@@ -495,174 +623,97 @@ final protected function requireAdmin(): void
   }
 }
 ```
-Method check if user is admin. Guest is redirect to login page with error message.
-User which is not admin is redirect to homePage with error message.
 
-+ **uploadFile($path, $FILE): bool**
-```
-protected function uploadFile($path, $FILE): boolval
-{
-  $target_dir = $path;
-  $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
-  $target_file = $target_dir . basename($FILE["name"]);
-
-  if (move_uploaded_file($FILE["tmp_name"], $target_file)) {
-      return true;
-  } else {
-      Session::set('error', 'Sorry, there was a problem sending the file');
-      return false;
-  }
-}
-```
-Method upload file on server.
-
-+ **hash($param, $method = null): string**
-```
-protected function hash($param, $method = null): string
-{
-  return hash($method ?? $this->hashMethod, $param);
-}
-```
-Method return hash of input param.
-If hash method isn't sent, selected is default hash method from config.
-
-+ **hashFile($file)**
-```
-protected function hashFile($file)
-{
-  $type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-  $name = $this->hash(date('Y-m-d H:i:s') . "_" . $file['name']);
-  $file['name'] = $name . '.' . $type;
-  return $file;
-}
-```
-Method create unique filename.
-      
-</details>
-
-<details>
-   <summary>AuthController</summary>
-   
-+ **registerAction(): void**
+### AuthController
+* **registerAction(): void**
 ```
 public function registerAction(): void
 {
-  View::set(['title' => "Rejestracja"]);
-  $names = ['username', 'email', 'password', 'repeat_password'];
+    View::set(['title' => "Register"]);
+    $names = ['username', 'email', 'password', 'repeat_password'];
 
-  if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-      $data = $this->request->postParams($names);
-      $emails = $this->repository->getEmails();
+    if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+        $data = $this->request->postParams($names);
+        $data['avatar'] = self::$config->get('default.path.avatar');
 
-      if ($this->validate($data, $this->rules) && !Auth::isBusyEmail($data['email'], $emails)) {
-          $data['password'] = $this->hash($data['password']);
-          $data['avatar'] = self::$config->get('default.path.avatar');
-          $user = new User($data);
-          $user->escape();
-
-          $this->repository->register($user);
-          Session::set('success', 'Konto zostało utworzone');
-          $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
-      } else {
-          unset($data['password'], $data['repeat_password']);
-          $this->redirect(self::$route->get('auth.register'), $data);
-      }
-  } else {
-      $this->view->render('auth/register', $this->request->getParams(['username', 'email']));
-  }
+        if ($this->auth->register($data)) {
+            $this->redirect(self::$route->get('auth.login'), ['email' => $data['email']]);
+        } else {
+            unset($data['password'], $data['repeat_password']);
+            $this->redirect(self::$route->get('auth.register'), $data);
+        }
+    } else {
+        $this->view->render('auth/register', $this->request->getParams(['username', 'email']));
+    }
 }
 ```
-<b>GET: </b> Show register form. <br>
-<b>POST: </b> Validate data given by user. If data is validated, user is added to database.
+<div><b>GET: </b> Show register form. </div>
+<div><b>POST: </b> Validate given data and next add user to database. </div>
 
-+ **loginAction(): void**
+* **loginAction(): void**
 ```
 public function loginAction(): void
 {
-  View::set(['title' => "Logowanie"]);
-  $names = ['email', 'password'];
+    View::set(['title' => "Login"]);
+    $names = ['email', 'password'];
 
-  if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-      $data = $this->request->postParams($names);
+    if ($this->request->isPost() && $this->request->hasPostNames($names)) {
+        $data = $this->request->postParams($names);
 
-      if ($id = $this->repository->login($data['email'], $this->hash($data['password']))) {
-          Session::set('user:id', $id);
-          $lastPage = Session::getNextClear('lastPage');
-          $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
-      } else {
-          if (in_array($data["email"], $this->repository->getEmails())) {
-              Session::set("error:password:incorrect", "The entered password is incorrect");
-          } else {
-              Session::set("error:email:null", "The email address provided does not exist");
-          }
+        if ($this->auth->login($data)) {
+            $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
+        } else {
+            if ($this->auth->existsEmail($email)) {
+                Session::set("error:password:incorrect", "The entered password is incorrect");
+            } else {
+                Session::set("error:email:null", "The email address provided does not exist");
+            }
+            unset($data['password']);
+            $this->redirect(self::$route->get('auth.login'), $data);
+        }
 
-          unset($data['password']);
-          $this->redirect(self::$route->get('auth.login'), $data);
-      }
-  } else {
-      $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
-  }
+    } else {
+        $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
+    }
 }
 ```
-<b>GET: </b> Show login form. <br>
-<b>POST: </b>Action check if exist user with appropriate e-mail address and password.
+<div><b>GET: </b> Show login form. <br></div>
+<div><b>POST: </b> User will be logged in if exists record with pair of data (email, password) </div>
 
-+ **forgotPasswordAction(): void**
+* **forgotPasswordAction(): void**
 ```
-public function forgotPasswordAction()
+public function forgotPasswordAction(): void
 {
-  View::set(['title' => "Przypomnienie hasła"]);
-  if ($this->request->isPost() && $email = $this->request->postParam('email')) {
-      if (in_array($email, $this->repository->getEmails())) {
-          $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-          $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
-          $hash = $this->hash($code, 'md5');
-
-          Session::set($hash, $email);
-          Session::set('created:' . $hash, time());
-
-          $data = [];
-          $data['email'] = $email;
-          $data['link'] = $location . self::$route->get('auth.resetPassword') . "&code=$hash";
-          $data['subject'] = $_SERVER['HTTP_HOST'] . " - Reset hasła";
-          $data['username'] = $this->userRepository->get($email, 'email')->username;
-
-          if (Mail::forgotPassword($data)) {
-              Session::set('success', "A link to reset your password has been sent to the email address you provided");
-          }
-      } else {
-          Session::set("error:email:null", "The email address provided does not exist");
-      }
-
-      $this->redirect(self::$route->get('auth.forgotPassword'));
-
-  } else {
-      $this->view->render('auth/forgotPassword');
-  }
+    View::set(['title' => "Password reminder"]);
+    if ($this->request->isPost() && $email = $this->request->postParam('email')) {
+        if ($this->auth->existsEmail($email)) {
+            $username = $this->userRepository->get($email, 'email')->username;
+            $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
+        } else {
+            Session::set("error:email:null", "The email address provided does not exist");
+        }
+        $this->redirect(self::$route->get('auth.forgotPassword'));
+    } else {
+        $this->view->render('auth/forgotPassword');
+    }
 }
 ```
-<b>GET: </b> Show form to reset password. <br>
-<b>POST: </b> Send a message on address-email given from user with special code which is used to user
-authorize to reset password.
+<div><b>GET: </b> Show form to reset password. <br></div>
+<div><b>POST: </b> Message will be sent on given address-email with link to reset password. </div>
 
-+ **resetPasswordAction(): void**
+* **resetPasswordAction(): void**
 ```
 public function resetPasswordAction()
 {
-  View::set(['title' => "Reset hasła"]);
+  View::set(['title' => "Password reset"]);
   $names = ['password', 'repeat_password', 'code'];
 
   if ($this->request->isPost() && $this->request->hasPostNames($names)) {
       $data = $this->request->postParams($names);
       $code = $data['code'];
-      $this->checkCodeSession($data['code']);
+      $this->checkCodeToResetPassword($code);
 
-      if ($this->validate($data, $this->rules)) {
-          $user = $this->userRepository->get(Session::get($code), 'email');
-          $user->password = $this->hash($data['password']);
-          $this->userRepository->update($user, 'password');
-          Session::clearArray([$code, "created:" . $code]);
-          Session::set('success', 'Hasło do konta zostało zmienione');
+      if ($this->auth->resetPassword($data, $code)) {
           $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
       } else {
           $this->redirect(self::$route->get('auth.resetPassword'), ['code' => $code]);
@@ -670,20 +721,21 @@ public function resetPasswordAction()
   }
 
   if ($this->request->isGet() && $code = $this->request->getParam('code')) {
-      $this->checkCodeSession($code);
+      $this->checkCodeToResetPassword($code);
       $this->view->render('auth/resetPassword', ['email' => Session::get($code), 'code' => $code]);
   } else {
-      Session::set('error', 'Kod resetu hasła nie został podany');
+      Session::set('error', 'Password reset code has not been provided');
       $this->redirect(self::$route->get('auth.forgotPassword'));
   }
 }
 ```
-<b>GET: </b> Show reset password form. <br>
-<b>POST: </b> Action check if code is sent and active, next set new password given by user.
+<div><b>GET: </b> Show reset password form. <br></div>
+<div><b>POST: </b> Change user password. </div>
    
-+ **checkCodeSession(): void**   
+* **checkCodeToResetPassword(): void**   
+Private method to check session code.
 ```
-private function checkCodeSession($code): void
+private function checkCodeToResetPassword($code): void
 {
   $names = [$code, "created:" . $code];
 
@@ -699,135 +751,88 @@ private function checkCodeSession($code): void
   }
 }
 ```
-Private method to check session code.
-   
-</details>
 
-<details>
-   <summary>UserController</summary>
-
-+ **logoutAction()**
+### UserController
+* **logoutAction()**
+Logout user(clear session data).
 ```
-public function logoutAction()
+public function logoutAction(): void
 {
-  $this->user->logout();
-  Session::set('success', "Nastąpiło wylogowanie z systemu");
-  $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
+    $this->user->logout();
+    $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
 }
 ```
-Logout user, clear session data.
 
-+ **profileAction()**
+* **profileAction()**
 ```
 public function profileAction()
 {
-  View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
+  View::set(['title' => "User profile", 'style' => "profile"]);
   $this->view->render('user/profile');
-
 }
 ```
-Show user profile.
+
+* **updateAction()**
+```
+public function updateAction(): void
+{
+    if ($this->request->isPost()) {
+        $toUpdate = $this->request->postParam('update');
+
+        if (in_array($toUpdate, ['username', 'password', 'avatar'])) {
+            $action = "update" . ucfirst($toUpdate);
+            $this->$action();
+        }
+    }
+
+    $this->redirect(self::$route->get('user.profile'));
+}
+```
+<div><b>POST: </b> Select method by post param(update) which data will be updated.</div>
    
-+ **updateAction()**
+* **updateUsername()**
 ```
-public function updateAction()
+private function updateUsername(): void
 {
-  if ($this->request->isPost()) {
-      $update = $this->request->postParam('update');
-
-      switch ($update) {
-          case 'username':{
-                  $this->updateUsername();
-                  break;
-              }
-          case 'password':{
-                  $this->updatePassword();
-                  break;
-              }
-          case 'avatar':{
-                  $this->updateAvatar();
-                  break;
-              }
-      }
-  }
-
-  $this->redirect(self::$route->get('user.profile'));
+    if ($this->request->hasPostName('username')) {
+        $data = ['username' => $this->request->postParam('username')];
+        $this->user->updateUsername($data);
+    }
 }
 ```
-<b>POST: </b> Select method which data will be updated by post param(update), next redirect to user profile.
-   
-+ **updateUsername()**
-```
-private function updateUsername()
-{
-  if ($this->request->hasPostName('username')) {
-      $data = ['username' => $this->request->postParam('username')];
+<div><b>POST: </b> Change user username.</div>
 
-      if ($this->validate($data, $this->rules)) {
-          $this->user->update($data);
-          $this->userRepository->update($this->user, 'username');
-          Session::set('success', "The username has been changed");
-      }
-  }
+* **updatePassword()**
+```
+private function updatePassword(): void
+{
+    $names = ['current_password', 'password', 'repeat_password'];
+
+    if ($this->request->hasPostNames($names)) {
+        $data = $this->request->postParams($names);
+        $this->user->updatePassword($data);
+    }
 }
 ```
-<b>POST: </b> Validate username given by user and set new username.
+<div><b>POST: </b> Change user password.</div>
 
-+ **updatePassword()**
-```
-private function updatePassword()
-{
-  $names = ['current_password', 'password', 'repeat_password'];
-
-  if ($this->request->hasPostNames($names)) {
-      $data = $this->request->postParams($names);
-
-      if (!$same = ($this->user->password == $this->hash($data['current_password']))) {
-          Session::set("error:current_password:same", "The password provided is incorrect");
-      }
-
-      if ($this->validate($data, $this->rules) && $same) {
-          $data['password'] = $this->hash($data['password']);
-          $this->user->update($data);
-          $this->userRepository->update($this->user, 'password');
-          Session::set('success', 'The password has been updated');
-      }
-  }
-}
-```
-<b>POST: </b> Validate data given by user and set new password.
-
-+ **updateAvatar()**
+* **updateAvatar()**
 ```
 private function updateAvatar(): void
 {
-  $path = self::$config->get('upload.path.avatar');
-  $defaultAvatar = self::$config->get('default.path.avatar');
+    $path = self::$config->get('upload.path.avatar');
+    $defaultAvatar = self::$config->get('default.path.avatar');
 
-  if ($file = $this->request->file('avatar')) {
-      if ($this->validateImage($file, $this->rules, 'avatar')) {
-          $file = $this->hashFile($file);
-
-          if ($this->uploadFile($path, $file)) {
-              if ($this->user->avatar != $defaultAvatar) {
-                  $this->user->deleteAvatar();
-              }
-
-              $this->user->update(['avatar' => $path . $file['name']]);
-              $this->userRepository->update($this->user, 'avatar');
-              Session::set('success', 'Avatar has been updated');
-          }
-      }
-  }
+    if ($file = $this->request->file('avatar')) {
+        $this->user->updateAvatar($file, $path, $defaultAvatar);
+    }
 }
 ```
-<b>POST: </b> Validate image sent by user. If validate is ok, old avatar is deleted and new avatar is uploaded.
-</details>
+<div><b>POST: </b> Upload new image on server and delete old user avatar.</div>
 
-<details>
-   <summary>GeneralController</summary>
+### GeneralController
 
-+ **homeAction()**
+* **homeAction()**
 ```
 public function homeAction()
 {
@@ -835,9 +840,8 @@ public function homeAction()
   $this->view->render('general/home');
 }
 ```
-Show home page.
 
-+ **policyAction()**
+* **policyAction()**
 ```
 public function policyAction()
 {
@@ -845,9 +849,8 @@ public function policyAction()
   $this->view->render('general/policy');
 }
 ```
-Show policy page.
 
-+ **regulationsAction()**
+* **regulationsAction()**
 ```
 public function regulationsAction()
 {
@@ -855,9 +858,8 @@ public function regulationsAction()
   $this->view->render('general/regulations');
 }
 ```
-Show regulations page.
    
-+ **contactAction()**
+* **contactAction()**
 ```
 public function contactAction()
 {
@@ -877,9 +879,7 @@ public function contactAction()
       );
 
       if ($response != null && $response->success) {
-          if (Mail::contact($data)) {
-              Session::set('success', "Message was sent");
-          }
+           $this->mail->contact($data);
       } else {
           Session::set('error:reCAPTCHA:robot', "We don't let robots in");
       }
@@ -891,15 +891,13 @@ public function contactAction()
   $this->view->render('general/contact', ['path' => $path, 'sideKey' => self::$config->get('reCAPTCHA.key.side')]);
 }
 ```
-<b>GET: </b> Show contant form. <br>
-<b>POST: </b> Send message to website admin.
-</details>
-
+<div><b>GET: </b> Show contant form.</div>
+<div><b>POST: </b> Send message to website admin.</div>
 
 ### How to create new controller
 1. Create new file in src/controller/ with name like a **NameController.php**
 2. Example controller file:
- ```
+```
 <?php
 
 declare (strict_types = 1);
@@ -910,69 +908,396 @@ use App\Controller\Controller;
 use App\Helper\Request;
 use App\Helper\Session;
 use App\Repository\NameRepository;
-use App\Rules\NameRules;
+use App\Rules\UserRules;
 use App\View;
 
-class NameController extends Controller
+class UserController extends Controller
 {
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->requireLogin();
-        $this->rules = new NameRules(); // Here is object of rules to validate data
+        $this->rules = new UserRules(); // Here is object of rules to validate data
     }
-   
-   public function methodOneAction( ... ) { ... }
+}
+```
+## Models
+### Model
+* **initConfiguration($hashMethod)**
+```
+public static function initConfiguration($hashMethod)
+{
+    self::$validator = new Validator();
+    self::$hashMethod = $hashMethod;
 }
 ```
 
-## Validator
-Validator is use to validate data given by user.
-
-We can validate data with the following rules: 
-1. **min** and **max** for length of input string
-2. **validate** and **sanitize** for adress email
-3. **require** to check if the field is not empty
-4. **specialCharacters** to check if string have special characters
-
-We can also validate images with the following rules:
-1. **maxSize** to limited max size of image
-2. **types** to check if sent image have extension like a (.png, .jpg etc.)
-
-### How validate data ( in NameController )
+* **validate($data)**
+Return validated data status
 ```
-public function methodOneAction()
+protected function validate($data)
 {
-  if ($this->request->hasPostName('username')) {
-      $data = ['username' => $this->request->postParam('username')];
+    return self::$validator->validate($data, $this->rules);
+}
+```
 
-      if ($this->validate($data, $this->rules)) {
-         // ... OK ...
-      }
-      else {
-         // ... NOT OK ...
-      }
+* **validateImage($FILE, $type)**
+```
+protected function validateImage($FILE, $type)
+{
+    return self::$validator->validateImage($FILE, $this->rules, $type);
+}
+```
+
+* **update($data)**
+```
+public function update($data)
+{
+    foreach (array_keys($data) as $key) {
+        if (property_exists($this, $key)) {
+            $this->$key = $data[$key];
+        }
+    }
+}
+```
+
+* **getArray($array)**
+Return selected data from model
+```
+public function getArray($array)
+{
+    $properties = get_object_vars($this);
+
+    foreach ($properties as $key => $value) {
+        if (!in_array($key, $array)) {
+            unset($properties[$key]);
+        }
+    }
+
+    return $properties;
+}
+```
+
+* **escape()**
+Escaping (htmlentities) data (properties) in model
+```
+public function escape()
+{
+    $properties = get_object_vars($this);
+
+    foreach ($properties as $key => $value) {
+        if ($key === "rules" || $key === "repository") {
+            continue;
+        }
+
+        if ($value != null) {
+            $this->$key = htmlentities($value);
+        }
+    }
+}
+```
+
+* **uploadFile($path, $FILE): bool**
+Method upload file on server.
+```
+protected function uploadFile($path, $FILE): bool
+{
+  $target_dir = $path;
+  $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
+  $target_file = $target_dir . basename($FILE["name"]);
+
+  if (move_uploaded_file($FILE["tmp_name"], $target_file)) {
+      return true;
+  } else {
+      Session::set('error', 'Sorry, there was a problem sending the file');
+      return false;
   }
+}
+```
+example: 
+```
+HTML: <input type = "file" name = "avatar">
+
+if ($file = $this->request->file('avatar')) {
+    if ($this->validateImage($file, $this->rules, 'avatar')) {
+        $file = $this->hashFile($file);
+        if ($this->uploadFile($path, $file)) {
+            FILE WAS UPLOADED ...
+        }
+    }
+}
+```
+
+* **hash($param, $method = null): string**
+Method return hash of input parameter by selected hash method or default from config.
+```
+protected function hash($param, $method = null): string
+{
+  return hash($method ?? $this->hashMethod, $param);
+}
+```
+
+* **hashFile($file)**
+Method return $file object with unique filename.
+```
+protected function hashFile($file)
+{
+  $type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+  $name = $this->hash(date('Y-m-d H:i:s') . "_" . $file['name']);
+  $file['name'] = $name . '.' . $type;
+  return $file;
+}
+```
+
+### Auth
+* **__construct()**
+```
+public function __construct()
+{
+    $this->repository = new AuthRepository();
+    $this->rules = new AuthRules();
+}
+```
+
+* **register(array $data)**
+```
+public function register(array $data)
+{
+    if ($status = ($this->validate($data) & !$this->isBusyEmail($data['email']))) {
+        $data['password'] = $this->hash($data['password']);
+        $user = new User($data);
+        $user->escape();
+        $this->repository->register($user);
+        Session::set('success', 'The account has been created');
+    }
+
+    return $status;
+}
+```
+
+* **login(array $data)**
+```
+public function login(array $data)
+{
+    $data['password'] = $this->hash($data['password']);
+
+    if ($id = $this->repository->login($data['email'], $data['password'])) {
+        Session::set('user:id', $id);
+        $lastPage = Session::getNextClear('lastPage');
+    }
+
+    return $id;
+}
+```
+
+* **resetPassword($data, $code)**
+```
+public function resetPassword($data, $code)
+{
+    if ($status = $this->validate($data)) {
+        $user = $this->userRepository->get(Session::get($code), 'email');
+        $user->password = $this->hash($data['password']);
+        $this->userRepository->update($user, 'password');
+        Session::clearArray([$code, "created:" . $code]);
+        Session::set('success', 'The account password has been changed');
+    }
+    return $status;
+}
+```
+
+* **isBusyEmail($email)**
+```
+public function isBusyEmail($email)
+{
+    if ($this->existsEmail($email)) {
+        Session::set("error:email:unique", "The given e-mail address is taken");
+        return true;
+    }
+    return false;
+}
+```
+
+* **existsEmail($email)**
+```
+public function existsEmail($email)
+{
+    return in_array($email, $this->repository->getEmails());
+}
+```
+
+### User
+* **__construct($data)**
+```
+public function __construct($data)
+{
+    $this->id = $data['id'] ?? null;
+    $this->username = $data['username'];
+    $this->email = $data['email'];
+    $this->password = $data['password'];
+    $this->avatar = $data['avatar'];
+    $this->role = $data['role'] ?? null;
+    $this->created = $data['created'] ?? null;
+
+    $this->rules = new UserRules();
+    $this->repository = new UserRepository();
+}
+```
+* **logout()**
+```
+public function logout()
+{
+    Session::clear('user:id');
+    Session::set('success', "You have been logged out of the system");
+}
+```
+
+* **updateUsername($data)**
+```
+public function updateUsername($data)
+{
+    if ($this->validate($data)) {
+        $this->update($data);
+        $this->repository->update($this, 'username');
+        Session::set('success', "The username has been changed");
+    }
+}
+```
+
+* **updatePassword($data)**
+```
+public function updatePassword($data)
+{
+    if (!$same = ($this->password == $this->hash($data['current_password']))) {
+        Session::set("error:current_password:same", "The password provided is incorrect");
+    }
+
+    if ($this->validate($data) && $same) {
+        $data['password'] = $this->hash($data['password']);
+        $this->update($data);
+        $this->repository->update($this, 'password');
+        Session::set('success', 'The password has been updated');
+    }
+}
+```
+
+* **updateAvatar($file, $path, $defaultAvatar)**
+```
+public function updateAvatar($file, $path, $defaultAvatar)
+{
+    if ($this->validateImage($file, 'avatar')) {
+        $file = $this->hashFile($file);
+
+        if ($this->uploadFile($path, $file)) {
+            if ($this->avatar != $defaultAvatar) {
+                $this->deleteAvatar();
+            }
+
+            $this->update(['avatar' => $path . $file['name']]);
+            $this->repository->update($this, 'avatar');
+            Session::set('success', 'The avatar has been updated');
+        }
+    }
+}
+```
+
+* **isAdmin()**
+```
+public function isAdmin()
+{
+    return (bool) ($this->role === "admin");
+}
+```
+
+* **deleteAvatar()**
+```
+public function deleteAvatar()
+{
+    if (file_exists($this->avatar)) {
+        unlink($this->avatar);
+    }
+}
+```
+
+### Mail
+* **contact(array $data)**
+```
+public function contact(array $data)
+{
+    $headers = "From: " . strip_tags($data['from']) . "\r\n";
+    $headers .= "Reply-To: " . strip_tags($data['from']) . "\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+    $data['name'] = htmlentities($data['name']);
+    $data['message'] = htmlentities($data['message']);
+
+    $html = "<html> <head> </head> <body> <p>Imię i nazwisko: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
+
+    if ($this->send($this->config['email'], $data['subject'], $html, $headers)) {
+        Session::set('success', "Message was sent");
+    }
+}
+```
+
+* **forgotPassword($email, $route, $username)**
+```
+public function forgotPassword($email, $route, $username)
+{
+    $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+    $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
+    $hash = $this->hash($code, 'md5');
+
+    Session::set($hash, $email);
+    Session::set('created:' . $hash, time());
+
+    $data = [];
+    $data['email'] = $email;
+    $data['link'] = $location . $route . "&code=$hash";
+    $data['subject'] = $_SERVER['HTTP_HOST'] . " - Password reset";
+    $data['username'] = $username;
+
+    // === /
+    $headers = "From: " . strip_tags($this->config['email']) . "\r\n";
+    $headers .= "Reply-To: " . strip_tags($this->config['email']) . "\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+    $message = "...";
+    $html = "<html><head></head><body>" . $message . "</body></html>";
+
+    if ($this->send($data['email'], $data['subject'], $html, $headers)) {
+        Session::set('success', "A link to reset your password has been sent to the email address you provided");
+    }
+}
+```
+
+* **send($email, $subject, $html, $headers)**
+```
+private function send($email, $subject, $html, $headers)
+{
+    if (mail($email, $subject, $html, $headers)) {
+        return true;
+    } else {
+        Session::set('error', "Wystąpił problem podczas wysyłania wiadomości, prosimy spróbować później");
+        return false;
+    }
 }
 ```
 
 ## Repositories
 Repositories are a collection of methods to communicate with database.
-
-### Basic repositories
-<details>
-   <summary>Repository</summary>
+### Repository
    
-+ **initConfiguration($config): void**
+* **initConfiguration($config): void**
 ```
 public static function initConfiguration($config): void
 {
   self::$config = $config;
 }
 ```
-Initialize properties such as config.
 
-+ **__construct()**
+* **__construct()**
+Validate config data and next create connection to database.
 ```
 public function __construct()
 {
@@ -984,21 +1309,8 @@ public function __construct()
   }
 }
 ```
-Config data are validate and next is created connection to database.
    
-+ **createConnection(array $config): void**
-```
-private function createConnection(array $config): void
-{
-  $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
-  $this->pdo = new PDO($dsn, $config['user'], $config['password'], [
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-  ]);
-}
-```
-Create  connection to database.
-   
-+ **validateConfig(array $config): void**
+* **validateConfig(array $config): void**
 ```
 private function validateConfig(array $config): void
 {
@@ -1011,14 +1323,21 @@ private function validateConfig(array $config): void
       throw new ConfigurationException('Storage configuration error');
   }
 }
-```
-Validate config data.   
-</details>
+``` 
 
-<details>
-   <summary>AuthRepository</summary>
-   
-+ **register(User $user): void**
+* **createConnection(array $config): void**
+```
+private function createConnection(array $config): void
+{
+  $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
+  $this->pdo = new PDO($dsn, $config['user'], $config['password'], [
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+  ]);
+}
+```
+### AuthRepository
+* **register(User $user): void**
+Add new user to database.
 ```
 public function register(User $user): void
 {
@@ -1040,9 +1359,9 @@ public function register(User $user): void
   }
 }
 ```
-Add new user to database.
-   
-+ **login(string $email, string $password): ?int**
+
+* **login(string $email, string $password): ?int**
+Return id of user with ($email | $password) data.
 ```
 public function login(string $email, string $password): ?int
 {
@@ -1059,9 +1378,9 @@ public function login(string $email, string $password): ?int
   return $id;
 }
 ```
-Return id user with ($email | $password) data.
-   
-+ **getEmails(): array**
+
+* **getEmails(): array**
+Return array of emails from user table. 
 ```
 public function getEmails(): array
 {
@@ -1070,13 +1389,9 @@ public function getEmails(): array
   $emails = $stmt->fetchAll(PDO::FETCH_COLUMN, 'email');
   return $emails;
 }
-```
-Return array of emails from user table.  
-</details>
+``` 
 
-<details>
-   <summary>UserRepository</summary>
-   
+### UserRepository
 + **get($param, $type = "id"): ?User**
 ```
 public function get($value, $column = "id"): ?User
@@ -1105,8 +1420,6 @@ public function update(User $user, string $property): void
 }
 ```
 Update user data.
-   
-</details>
 
 ### How to create new repository
 1. Create new file in src/repository/ with name like a **NameRepository.php**
@@ -1137,26 +1450,94 @@ class ProductRepository extends Repository
 }
 ```
 
-## Routing
-### How create new routing
-Register a new group in `routes/routes.php`
+## Validator
+Validator is use to validate data given by user.
+### Available methods to validate data
+* `between` for length of input string
 ```
-$route->group('name', ['one', 'two', 'three']);
+if ($rule == "between") {
+    $min = $rules->value($rule)['min'];
+    $max = $rules->value($rule)['max'];
+
+    if ($this->strlenBetween($input, $min - 1, $max + 1) == false) {
+        $ok = $this->setError($type, $rule, $message);
+    }
+}
 ```
 
-example:
+* `min` and `max` for length of input string
 ```
-$route->group('user', ['logout', 'profile', 'update']);
+else if ($rule == "max" && ($this->strlenMax($input, $value) == false)) {
+    $ok = $this->setError($type, $rule, $message);
+}
+else if ($rule == "min" && ($this->strlenMin($input, $value) == false)) {
+    $ok = $this->setError($type, $rule, $message);
+}
 ```
 
-### How use created routing
-Inside of method in NameController
+* `validate` and `sanitize` for adress email
 ```
-$this->redirect(self::$route->get('name.action'), ['param' => $value, 'param2' => $value2]);
+else if ($rule == "validate" && $value && (!filter_var($input, FILTER_VALIDATE_EMAIL))) {
+    $ok = $this->setError($type, $rule, $message);
+}
+else if ($rule == "sanitize" && $value && ($input != filter_var($input, FILTER_SANITIZE_EMAIL))) {
+    $ok = $this->setError($type, $rule, $message);
+}
 ```
-example: 
+
+* `require` to check if the field is not empty
 ```
-$this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
+else if ($rule == "require" && $value && (empty($input))) {
+    $ok = $this->setError($type, $rule, $message);
+}
+```
+
+* `specialCharacters` to check if string have special characters
+```
+else if ($rule == "specialCharacters" && !$value && (preg_match('/[\'^£$%&*()}{@#~"?><>,|=_+¬-]/', $input))) {
+    $ok = $this->setError($type, $rule, $message);
+}
+```
+
+### Available methods to validate images
+* `maxSize` to limited max size of image
+```
+if ($rules->typeHasRules(['maxSize'])) {
+    if (($FILE["size"] >= $rules->value('maxSize')) && $uploadOk) {
+        Session::set('error:file:maxSize', $rules->message('maxSize'));
+        $uploadOk = 0;
+    }
+}
+```
+
+* `types` to check if sent image have extension like a (.png, .jpg etc.)
+```
+if ($rules->typeHasRules(['types'])) {
+    $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
+
+    if (!in_array($type, $rules->value('types'))) {
+        Session::set('error:file:types', $rules->message('types'));
+        $uploadOk = 0;
+    }
+}
+```
+
+### How validate data
+Create object of rules in constructor inside model
+```
+public function __construct($data)
+{
+    $this->rules = new UserRules();
+}
+```
+Use `validate()` in method
+```
+public function updateSomething($data)
+{
+    if ($this->validate($data)) {
+        // Validate is OK
+    }
+}
 ```
 
 ## Helpers
@@ -1237,140 +1618,240 @@ public static function clearArray(array $names): void
 Method clear value of session by input names.
 
 ### Request
-+ **param(string $name, $default = null)**
+* **param(string $name, $default = null)**: Method return a value regardless of the method type.
 ```
 public function param(string $name, $default = null)
 {
-  if ($this->isPost()) {
-      return $this->postParam($name, $default);
-  } else {
-      return $this->getParam($name, $default);
-  }
+    if ($this->isPost()) {
+        return $this->postParam($name, $default);
+    } else {
+        return $this->getParam($name, $default);
+    }
 }
 ```
-Method return a value regardless of the method type.
 
-+ **hasPost(): bool**
+* **hasPost(): bool**: Method check if exists any post params.
 ```
 public function hasPost(): bool
 {
-  return !empty($this->post);
+    return !empty($this->post);
 }
 ```
-Method check if exists any post params.
 
-+ **postParam(string $name, $default = null)**
+* **postParam(string $name, $default = null)**: Method return post value of request.
 ```
 public function postParam(string $name, $default = null)
 {
-  return $this->post[$name] ?? $default;
+    return $this->post[$name] ?? $default;
 }
 ```
-Method return post value of request.
 
-+ **postParams(array $names)**
+* **postParams(array $names)**: Method return post values of request as array.
 ```
 public function postParams(array $names)
 {
-  $output = [];
+    $output = [];
 
-  foreach ($names as $name) {
-      $output[$name] = $this->postParam($name);
-  }
+    foreach ($names as $name) {
+        $output[$name] = $this->postParam($name);
+    }
 
-  return $output;
+    return $output;
 }
 ```
-Method return post values of request as array.
 
-+ **hasPostName(string $name): bool**
+* **hasPostName(string $name): bool**: Method check if exists post parameter with input name.
 ```
 public function hasPostName(string $name): bool
 {
-  if (!isset($this->post[$name])) {return false;}
-  return true;
+    if (!isset($this->post[$name])) {return false;}
+    return true;
 }
 ```
-Method check if exists post parameter with input name.
 
-+ hasPostNames(array $names): bool
+* **hasPostNames(array $names): bool**: Method check if exists post parameters with input names.
 ```
 public function hasPostNames(array $names): bool
 {
-  foreach ($names as $name) {
-      if (!isset($this->post[$name])) {
-          return false;
-      }
-  }
+    foreach ($names as $name) {
+        if (!isset($this->post[$name])) {
+            return false;
+        }
+    }
 
-  return true;
+    return true;
 }
 ```
-Method check if exists post parameters with input names.
 
-+ **getParam(string $name, $default = null)**
+* **getParam(string $name, $default = null)**: Method return get value of request.
 ```
 public function getParam(string $name, $default = null)
 {
-  return $this->get[$name] ?? $default;
+    return $this->get[$name] ?? $default;
 }
 ```
-Method return get value of request.
 
-+ **getParams(array $names)**
+* **getParams(array $names)**: Method return get values of request.
 ```
 public function getParams(array $names)
 {
-  $output = [];
+    $output = [];
 
-  foreach ($names as $name) {
-      $output[$name] = $this->getParam($name);
-  }
+    foreach ($names as $name) {
+        $output[$name] = $this->getParam($name);
+    }
 
-  return $output;
+    return $output;
 }
 ```
-Method return get values of request.
 
-+ **isPost(): bool**
+* **isPost(): bool**: Method check if request method is post.
 ```
 public function isPost(): bool
 {
-  return $this->server['REQUEST_METHOD'] === 'POST';
+    return $this->server['REQUEST_METHOD'] === 'POST';
 }
 ```
-Method check if request method is post.
 
-+ **isGet(): bool**
+* **isGet(): bool**: Method check if request method is get.
 ```
 public function isGet(): bool
 {
-  return $this->server['REQUEST_METHOD'] === 'GET';
+    return $this->server['REQUEST_METHOD'] === 'GET';
 }
 ```
-Method check if request method is get.
 
-+ **queryString(): string**
+* **queryString(): string**: Method return request parameters as string.
 ```
 public function queryString(): string
 {
-  return $this->server['QUERY_STRING'];
+    return $this->server['QUERY_STRING'];
 }
 ```
-Method return request parameters as string.
 
-+ **file(string $name, $default = null)**
+* **file(string $name, $default = null)**: Method check if is sent file with input name.
 ```
 public function file(string $name, $default = null)
 {
-  return $this->files[$name] ?? $default;
+    return $this->files[$name] ?? $default;
 }
 ```
-Method check if is sent file with input name.
 
 ## Component
+```
+class Component
+{
+    private static $default_path = "/../templates/component/";
+
+    public static function render(string $path, array $params = []): void
+    {
+        $path = __DIR__ . self::$default_path . str_replace(".", "/", $path) . ".php";
+
+        if (!file_exists($path)) {
+            throw new AppException("Podana ścieżka do komponentu [ $path ] nie istnieje");
+        }
+
+        if (array_key_exists('description', $params)) {
+            $params['label'] = $params['description'];
+            $params['placeholder'] = $params['description'];
+            unset($params['description']);
+        }
+
+        include $path;
+    }
+}
+```
+
+example component file `templates/component/folder/welcome.php`
+```
+<div>Welcome: <?=$params['name']?></div>
+```
+
+use component in view:
+```
+<?php
+use App\Component;
+
+<?php Component::render('folder.welcome', ['name' => "Adam"])?>
+?>
+```
+
+Output:
+```
+Welcome: Adam
+```
+
 ## View
+* **set($data)** `Method set title and styles for page`
+```
+public static function set($data)
+{
+    if (array_key_exists('style', $data)) {
+        self::$style = $data['style'] ?? null;
+    }
 
+    if (array_key_exists('title', $data)) {
+        self::$title = $data['title'] ?? null;
+    }
+}
+```
 
+* **__construct($user, $route)**
+```
+public function __construct($user, $route)
+{
+    $this->user = $user;
+    $this->route = $route;
+}
+```
 
+* **render(string $page, array $params = []): void**
+```
+public function render(string $page, array $params = []): void
+{
+    $user = $this->user;
+    $route = $this->route;
+    $style = self::$style;
+    $title = self::$title;
+    require_once 'templates/layout/main.php';
+}
+```
 
+```
+<div class="content">
+    <?php require_once "templates/messages.php";?>
+    <?php require_once "templates/$page.php";?>
+</div>
+```
+
+* **escape(array $params): array**
+```
+private function escape(array $params): array
+{
+    $clearParams = [];
+    foreach ($params as $key => $param) {
+
+        if (gettype($params === "object")) {
+            $clearParams[$key] = $param;
+            continue;
+        }
+
+        switch (true) {
+            case is_array($param):
+                $clearParams[$key] = $this->escape($param);
+                break;
+            case is_int($param):
+                $clearParams[$key] = $param;
+                break;
+            case $param:
+                $clearParams[$key] = htmlentities($param);
+                break;
+            default:
+                $clearParams[$key] = $param;
+                break;
+        }
+    }
+
+    return $clearParams;
+}
+```
