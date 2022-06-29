@@ -72,7 +72,7 @@ class AuthController extends Controller
         View::set(['title' => "Przypomnienie hasła"]);
         if ($this->request->isPost() && $email = $this->request->postParam('email')) {
             if ($this->auth->existsEmail($email)) {
-                $username = $this->userRepository->get($email, 'email')->username;
+                $username = $this->userModel->find($email, 'email')->username;
                 $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
