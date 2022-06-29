@@ -20,16 +20,8 @@ class User extends Model
 
     private static $config;
 
-    public function __construct($data)
+    public function __construct()
     {
-        $this->id = $data['id'] ?? null;
-        $this->username = $data['username'];
-        $this->email = $data['email'];
-        $this->password = $data['password'];
-        $this->avatar = $data['avatar'];
-        $this->role = $data['role'] ?? null;
-        $this->created = $data['created'] ?? null;
-
         $this->rules = new UserRules();
         $this->repository = new UserRepository();
     }
