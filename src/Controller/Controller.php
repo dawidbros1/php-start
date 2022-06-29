@@ -14,7 +14,6 @@ use App\Model\Model;
 use App\Model\Route;
 use App\Model\User;
 use App\Repository\Repository;
-use App\Repository\UserRepository;
 use App\Validator\Validator;
 use App\View;
 
@@ -23,7 +22,6 @@ abstract class Controller extends Validator
     protected static $config = [];
     protected static $route = [];
 
-    protected $userRepository;
     protected $request;
     protected $view;
     protected $user = null;
@@ -45,10 +43,10 @@ abstract class Controller extends Validator
         Repository::initConfiguration(self::$config->get('db'));
 
         $this->mail = new Mail(self::$config->get('mail'));
-        $this->userRepository = new UserRepository();
+        $this->userModel = new User();
 
         if ($id = Session::get('user:id')) {
-            $this->user = $this->userRepository->get((int) $id);
+            $this->user = $this->userModel->find((int) $id);
         }
 
         $this->request = $request;
