@@ -22,7 +22,8 @@ class Auth extends Model
     {
         if ($status = ($this->validate($data) & !$this->isBusyEmail($data['email']))) {
             $data['password'] = $this->hash($data['password']);
-            $user = new User($data);
+            $user = new User();
+            $user->update($data);
             $user->escape();
             $this->repository->register($user);
             Session::set('success', 'Konto zostało utworzone');

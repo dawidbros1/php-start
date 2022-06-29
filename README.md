@@ -507,10 +507,10 @@ public function __construct(Request $request)
     Repository::initConfiguration(self::$config->get('db'));
 
     $this->mail = new Mail(self::$config->get('mail'));
-    $this->userRepository = new UserRepository();
+    $this->userModel = new User();
 
     if ($id = Session::get('user:id')) {
-        $this->user = $this->userRepository->get((int) $id);
+        $this->user = $this->userModel->find((int) $id);
     }
 
     $this->request = $request;
@@ -687,7 +687,7 @@ public function forgotPasswordAction(): void
     View::set(['title' => "Password reminder"]);
     if ($this->request->isPost() && $email = $this->request->postParam('email')) {
         if ($this->auth->existsEmail($email)) {
-            $username = $this->userRepository->get($email, 'email')->username;
+            $username = $this->userModel->find($email, 'email')->username;
             $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
         } else {
             Session::set("error:email:null", "The email address provided does not exist");
@@ -932,6 +932,19 @@ public static function initConfiguration($hashMethod)
 }
 ```
 
+* **find($value, $column = "id")**
+```
+public function find($value, $column = "id")
+{
+    if ($data = $this->repository->get($value, $column)) {
+        $this->update($data);
+        return $this;
+    }
+
+    return null;
+}
+```
+
 * **validate($data)**
 Return validated data status
 ```
@@ -1065,7 +1078,8 @@ public function register(array $data)
 {
     if ($status = ($this->validate($data) & !$this->isBusyEmail($data['email']))) {
         $data['password'] = $this->hash($data['password']);
-        $user = new User($data);
+        $user = new User();
+        $user->update($data);
         $user->escape();
         $this->repository->register($user);
         Session::set('success', 'The account has been created');
@@ -1128,16 +1142,8 @@ public function existsEmail($email)
 ### User
 * **__construct($data)**
 ```
-public function __construct($data)
+public function __construct()
 {
-    $this->id = $data['id'] ?? null;
-    $this->username = $data['username'];
-    $this->email = $data['email'];
-    $this->password = $data['password'];
-    $this->avatar = $data['avatar'];
-    $this->role = $data['role'] ?? null;
-    $this->created = $data['created'] ?? null;
-
     $this->rules = new UserRules();
     $this->repository = new UserRepository();
 }
@@ -1392,17 +1398,15 @@ public function getEmails(): array
 ``` 
 
 ### UserRepository
-+ **get($param, $type = "id"): ?User**
++ **get($param, $type = "id"): ?array**
 ```
-public function get($value, $column = "id"): ?User
+public function get($value, $column): ?array
 {
-  $user = null;
-  $stmt = $this->pdo->prepare("SELECT * FROM users WHERE $column=:$column");
-  $stmt->execute([$column => $value]);
-  $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-  if ($data) {$user = new User($data);}
-  return $user;
+    $user = null;
+    $stmt = $this->pdo->prepare("SELECT * FROM users WHERE $column=:$column");
+    $stmt->execute([$column => $value]);
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $data;
 }
 ```
 Return user by value and column.

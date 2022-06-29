@@ -18,6 +18,16 @@ abstract class Model
         self::$hashMethod = $hashMethod;
     }
 
+    public function find($value, $column = "id")
+    {
+        if ($data = $this->repository->get($value, $column)) {
+            $this->update($data);
+            return $this;
+        }
+
+        return null;
+    }
+
     protected function validate($data)
     {
         return self::$validator->validate($data, $this->rules);
