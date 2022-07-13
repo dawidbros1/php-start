@@ -12,7 +12,7 @@ class GeneralController extends Controller
 {
     public function homeAction(): void
     {
-        View::set(['title' => "Strona główna"]);
+        View::set(['title' => "Strona główna", "style" => "home"]);
         $this->view->render('general/home');
     }
 

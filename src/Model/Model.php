@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Helper\Session;
 use App\Validator\Validator;
 
 abstract class Model
@@ -18,14 +19,33 @@ abstract class Model
         self::$hashMethod = $hashMethod;
     }
 
-    public function find($value, $column = "id")
+    public function find(array $input, string $options = "")
     {
-        if ($data = $this->repository->get($value, $column)) {
-            $this->update($data);
+        if ($data = $this->repository->get($input, $options)) {
+            $this->set($data);
             return $this;
         }
 
         return null;
+    }
+
+    public function findById($id)
+    {
+        return $this->find(['id' => $id]);
+    }
+
+    public function findAll(array $input, string $options = "")
+    {
+        $output = [];
+        $data = $this->repository->getAll($input, $options);
+
+        if ($data) {
+            foreach ($data as $item) {
+                array_push($output, $this->object($item));
+            }
+        }
+
+        return $output;
     }
 
     protected function validate($data)
@@ -38,13 +58,62 @@ abstract class Model
         return self::$validator->validateImage($FILE, $this->rules, $type);
     }
 
-    public function update($data)
+    public function set($data)
     {
-        foreach (array_keys($data) as $key) {
-            if (property_exists($this, $key)) {
-                $this->$key = $data[$key];
+        foreach ($data as $key => $value) {
+            if (in_array($key, $this->fillable)) {
+                $this->$key = $value;
             }
         }
+    }
+
+    public function create(array $data, $validate = true)
+    {
+        $data['user_id'] = User::ID();
+
+        if (($validate === true && $this->validate($data)) || $validate === false) {
+            $this->set($data);
+            $this->repository->create($this);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function update(array $data, array $toUpdate = [], $validate = true)
+    {
+        if (($validate === true && $this->validate($data)) || $validate === false) {
+            $this->set($data);
+
+            if (empty($toUpdate)) {
+                $data = $this->getArray($this->fillable);
+            } else {
+                $data = $this->getArray(['id', ...$toUpdate]);
+            }
+
+            $this->escape();
+            $this->repository->update($data);
+            Session::set('success', 'Dane zostały zaktualizowane');
+        }
+    }
+
+    public function save(array $data, string $property)
+    {
+        $this->set($data);
+        $this->escape();
+        $data = $this->getArray(['id', $property]);
+        $this->repository->update($data);
+    }
+
+    public function delete(?int $id = null)
+    {
+        if ($id !== null) {
+            $this->repository->delete((int) $id);
+        } else {
+            $this->repository->delete((int) $this->id);
+        }
+
+        // Session::set('success', 'Element został skasowany');
     }
 
     public function getArray($array)
@@ -62,15 +131,9 @@ abstract class Model
 
     public function escape()
     {
-        $properties = get_object_vars($this);
-
-        foreach ($properties as $key => $value) {
-            if ($key === "rules" || $key === "repository") {
-                continue;
-            }
-
-            if ($value != null) {
-                $this->$key = htmlentities($value);
+        foreach ($this->fillable as $index => $key) {
+            if (property_exists($this, $key)) {
+                $this->$key = htmlentities((string) $this->$key);
             }
         }
     }
@@ -100,5 +163,13 @@ abstract class Model
             Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
             return false;
         }
+    }
+
+    private function object($data)
+    {
+        $this->set($data);
+        $object = clone $this;
+        unset($object->rules);
+        return $object;
     }
 }

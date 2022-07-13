@@ -7,11 +7,12 @@ namespace App\Model;
 use App\Helper\Session;
 use App\Model\Model;
 use App\Repository\AuthRepository;
-use App\Repository\UserRepository;
 use App\Rules\AuthRules;
 
 class Auth extends Model
 {
+    public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
+
     public function __construct()
     {
         $this->repository = new AuthRepository();
@@ -22,11 +23,12 @@ class Auth extends Model
     {
         if ($status = ($this->validate($data) & !$this->isBusyEmail($data['email']))) {
             $data['password'] = $this->hash($data['password']);
-            $user = new User();
-            $user->update($data);
-            $user->escape();
-            $this->repository->register($user);
-            Session::set('success', 'Konto zostało utworzone');
+            $data['role'] = "user";
+            $data['created'] = date('Y-m-d H:i:s');
+
+            if ($this->create($data, false)) {
+                Session::set('success', 'Konto zostało utworzone');
+            }
         }
 
         return $status;
@@ -36,24 +38,23 @@ class Auth extends Model
     {
         $data['password'] = $this->hash($data['password']);
 
-        if ($id = $this->repository->login($data['email'], $data['password'])) {
-            Session::set('user:id', $id);
+        if ($user = $this->find(['email' => $data['email'], 'password' => $data['password']])) {
+            Session::set('user:id', $user->id);
             $lastPage = Session::getNextClear('lastPage');
         }
 
-        return $id;
+        return $user;
     }
 
     public function resetPassword($data, $code)
     {
         if ($status = $this->validate($data)) {
-            $user = $this->userRepository->get(Session::get($code), 'email');
-            $user->password = $this->hash($data['password']);
-            $this->userRepository->update($user, 'password');
+            $user = $this->find(['email' => Session::get($code)]);
+            $user->update(['password' => $this->hash($data['password'])], ['password'], false);
             Session::clearArray([$code, "created:" . $code]);
             Session::set('success', 'Hasło do konta zostało zmienione');
         }
-        return $status;
+        return $user ?? null;
     }
 
     public function isBusyEmail($email)

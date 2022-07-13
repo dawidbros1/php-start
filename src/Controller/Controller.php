@@ -46,7 +46,7 @@ abstract class Controller extends Validator
         $this->userModel = new User();
 
         if ($id = Session::get('user:id')) {
-            $this->user = $this->userModel->find((int) $id);
+            $this->user = $this->userModel->findById(User::ID());
         }
 
         $this->request = $request;

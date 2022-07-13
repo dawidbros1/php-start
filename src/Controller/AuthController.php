@@ -19,7 +19,7 @@ class AuthController extends Controller
     {
         parent::__construct($request);
         $this->guest();
-        $this->auth = new Auth();
+        $this->model = new Auth();
     }
 
     public function registerAction(): void
@@ -31,7 +31,7 @@ class AuthController extends Controller
             $data = $this->request->postParams($names);
             $data['avatar'] = self::$config->get('default.path.avatar');
 
-            if ($this->auth->register($data)) {
+            if ($this->model->register($data)) {
                 $this->redirect(self::$route->get('auth.login'), ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);
@@ -50,10 +50,10 @@ class AuthController extends Controller
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
 
-            if ($this->auth->login($data)) {
+            if ($this->model->login($data)) {
                 $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
             } else {
-                if ($this->auth->existsEmail($email)) {
+                if ($this->model->existsEmail($data['email'])) {
                     Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
                 } else {
                     Session::set("error:email:null", "Podany adres email nie istnieje");
@@ -71,8 +71,8 @@ class AuthController extends Controller
     {
         View::set(['title' => "Przypomnienie hasła"]);
         if ($this->request->isPost() && $email = $this->request->postParam('email')) {
-            if ($this->auth->existsEmail($email)) {
-                $username = $this->userModel->find($email, 'email')->username;
+            if ($this->model->existsEmail($email)) {
+                $username = $this->model->find(['email' => $email])->username;
                 $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
@@ -93,7 +93,7 @@ class AuthController extends Controller
             $code = $data['code'];
             $this->checkCodeToResetPassword($code);
 
-            if ($this->auth->resetPassword($data, $code)) {
+            if ($user = $this->model->resetPassword($data, $code)) {
                 $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
             } else {
                 $this->redirect(self::$route->get('auth.resetPassword'), ['code' => $code]);

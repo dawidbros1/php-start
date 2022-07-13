@@ -10,15 +10,7 @@ use App\Rules\UserRules;
 
 class User extends Model
 {
-    public $id;
-    public $username;
-    public $email;
-    public $created;
-    public $password;
-    public $avatar;
-    public $role;
-
-    private static $config;
+    protected $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
 
     public function __construct()
     {
@@ -35,8 +27,7 @@ class User extends Model
     public function updateUsername($data)
     {
         if ($this->validate($data)) {
-            $this->update($data);
-            $this->repository->update($this, 'username');
+            $this->save($data, 'username');
             Session::set('success', "Nazwa użytkownika została zmieniona");
         }
     }
@@ -49,8 +40,7 @@ class User extends Model
 
         if ($this->validate($data) && $same) {
             $data['password'] = $this->hash($data['password']);
-            $this->update($data);
-            $this->repository->update($this, 'password');
+            $this->save($data, 'password');
             Session::set('success', 'Hasło zostało zaktualizowane');
         }
     }
@@ -65,8 +55,7 @@ class User extends Model
                     $this->deleteAvatar();
                 }
 
-                $this->update(['avatar' => $path . $file['name']]);
-                $this->repository->update($this, 'avatar');
+                $this->save(['avatar' => $path . $file['name']], 'avatar');
                 Session::set('success', 'Awatar został zaktualizowany');
             }
         }
@@ -84,5 +73,10 @@ class User extends Model
         if (file_exists($this->avatar)) {
             unlink($this->avatar);
         }
+    }
+
+    public static function ID()
+    {
+        return Session::get('user:id', 0);
     }
 }
