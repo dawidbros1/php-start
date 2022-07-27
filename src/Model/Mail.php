@@ -29,7 +29,7 @@ class Mail extends Model
         $html = "<html> <head> </head> <body> <p>Imię i nazwisko: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
 
         if ($this->send($this->config['email'], $data['subject'], $html, $headers)) {
-            Session::set('success', "Wiadomość została wysłana");
+            Session::success("Wiadomość została wysłana");
         }
     }
 
@@ -67,7 +67,7 @@ class Mail extends Model
         $html = "<html><head></head><body>" . $message . "</body></html>";
 
         if ($this->send($data['email'], $data['subject'], $html, $headers)) {
-            Session::set('success', "Link do zresetowania hasła został wysłany na podany adres email");
+            Session::success("Link do zresetowania hasła został wysłany na podany adres email");
         }
     }
 

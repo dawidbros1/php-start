@@ -27,7 +27,7 @@ class Auth extends Model
             $data['created'] = date('Y-m-d H:i:s');
 
             if ($this->create($data, false)) {
-                Session::set('success', 'Konto zostało utworzone');
+                Session::success('Konto zostało utworzone');
             }
         }
 
@@ -51,7 +51,7 @@ class Auth extends Model
             $user = $this->find(['email' => Session::get($code)]);
             $user->update(['password' => $this->hash($data['password'])], ['password'], false);
             Session::clearArray([$code, "created:" . $code]);
-            Session::set('success', 'Hasło do konta zostało zmienione');
+            Session::success('Hasło do konta zostało zmienione');
         }
         return $user ?? null;
     }

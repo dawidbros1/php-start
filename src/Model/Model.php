@@ -93,7 +93,7 @@ abstract class Model
 
             $this->escape();
             $this->repository->update($data);
-            Session::set('success', 'Dane zostały zaktualizowane');
+            Session::success('Dane zostały zaktualizowane');
         }
     }
 
