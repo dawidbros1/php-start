@@ -12,7 +12,7 @@ class GeneralController extends Controller
 {
     public function homeAction(): void
     {
-        View::set(['title' => "Strona główna"]);
+        View::set(['title' => "Strona główna", "style" => "home"]);
         $this->view->render('general/home');
     }
 
@@ -51,9 +51,7 @@ class GeneralController extends Controller
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }
 
-            // ===== //
-
-            $this->redirect(self::$route->get('contact'));
+            $this->redirect('contact');
         }
 
         $path = self::$config->get('default.path.medium') ?? "";

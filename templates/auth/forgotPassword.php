@@ -17,7 +17,7 @@ use App\Helper\Session;
                 <form action="<?=$route->get('auth.forgotPassword')?>" method="post">
 
                     <?php Component::render('form.input', ['class' => "mt-3", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? '', 'prefix' => true])?>
-                    <?php Component::render('error', ['text' => Session::getNextClear('error:email:null')])?>
+                    <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
                     <div class="d-grid col-12 mx-auto mt-3">
                         <button class="btn btn-primary" type="submit"><span></span> Przypomnij hasło </button>

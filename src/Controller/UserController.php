@@ -19,7 +19,7 @@ class UserController extends Controller
     public function logoutAction(): void
     {
         $this->user->logout();
-        $this->redirect(self::$route->get('auth.login'), ['email' => $this->user->email]);
+        $this->redirect(self::$config->get('default.route.logout'), ['email' => $this->user->email]);
     }
 
     public function profileAction(): void
@@ -40,7 +40,7 @@ class UserController extends Controller
             }
         }
 
-        $this->redirect(self::$route->get('user.profile'));
+        $this->redirect('user.profile');
     }
 
     private function updateUsername(): void
