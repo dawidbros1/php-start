@@ -25,6 +25,10 @@ return new Config(
                 'avatar' => 'public/images/avatar.png',
                 'medium' => 'public/images/SocialMedia/',
             ],
+            'route' => [
+                'home' => 'home', // page after login
+                'logout' => 'auth.login', // page after logout
+            ],
         ],
         'hash' => [
             'method' => 'sha256', // sha25 || md5 ...
