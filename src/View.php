@@ -10,6 +10,12 @@ class View
     private static $style = null;
     private static $title = "Brak tytułu";
 
+    public function __construct($user, $route)
+    {
+        $this->user = $user;
+        $this->route = $route;
+    }
+
     public static function set($data)
     {
         if (array_key_exists('style', $data)) {
@@ -19,12 +25,6 @@ class View
         if (array_key_exists('title', $data)) {
             self::$title = $data['title'] ?? null;
         }
-    }
-
-    public function __construct($user, $route)
-    {
-        $this->user = $user;
-        $this->route = $route;
     }
 
     public function render(string $page, array $params = []): void
