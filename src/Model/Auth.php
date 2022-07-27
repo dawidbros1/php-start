@@ -40,7 +40,6 @@ class Auth extends Model
 
         if ($user = $this->find(['email' => $data['email'], 'password' => $data['password']])) {
             Session::set('user:id', $user->id);
-            $lastPage = Session::getNextClear('lastPage');
         }
 
         return $user;
