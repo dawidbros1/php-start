@@ -97,14 +97,6 @@ abstract class Model
         }
     }
 
-    public function save(array $data, string $property)
-    {
-        $this->set($data);
-        $this->escape();
-        $data = $this->getArray(['id', $property]);
-        $this->repository->update($data);
-    }
-
     public function delete(?int $id = null)
     {
         if ($id !== null) {
