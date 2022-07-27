@@ -51,9 +51,7 @@ class GeneralController extends Controller
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }
 
-            // ===== //
-
-            $this->redirect(self::$route->get('contact'));
+            $this->redirect('contact');
         }
 
         $path = self::$config->get('default.path.medium') ?? "";

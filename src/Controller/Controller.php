@@ -70,7 +70,7 @@ abstract class Controller extends Validator
 
     protected function redirect(string $to, array $params = []): void
     {
-        $location = $to;
+        $location = self::$route->get($to);
 
         if (count($params)) {
             $queryParams = [];
@@ -100,27 +100,25 @@ abstract class Controller extends Validator
     {
         if ($this->user != null) {
             Session::set("error", "Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
-            $this->redirect(self::$route->get('home'));
+            $this->redirect('home');
         }
     }
 
     final protected function requireLogin(): void
     {
         if ($this->user == null) {
-            Session::set('lastPage', $this->request->queryString());
             Session::set("error", "Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
-            $this->redirect(self::$route->get('auth.login'));
+            $this->redirect('auth.login');
         }
     }
 
     final protected function requireAdmin(): void
     {
         $this->requireLogin();
-        Session::clear('lastPage');
 
         if (!$this->user->isAdmin()) {
             Session::set("error", "Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
-            $this->redirect(self::$route->get('home'));
+            $this->redirect('home');
         }
     }
 }

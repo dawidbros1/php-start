@@ -32,10 +32,10 @@ class AuthController extends Controller
             $data['avatar'] = self::$config->get('default.path.avatar');
 
             if ($this->model->register($data)) {
-                $this->redirect(self::$route->get('auth.login'), ['email' => $data['email']]);
+                $this->redirect('auth.login', ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);
-                $this->redirect(self::$route->get('auth.register'), $data);
+                $this->redirect('auth.register', $data);
             }
         } else {
             $this->view->render('auth/register', $this->request->getParams(['username', 'email']));
@@ -51,7 +51,7 @@ class AuthController extends Controller
             $data = $this->request->postParams($names);
 
             if ($this->model->login($data)) {
-                $this->redirect($lastPage ? "?" . $lastPage : self::$route->get('home'));
+                $this->redirect(self::$config->get('default.route.home'));
             } else {
                 if ($this->model->existsEmail($data['email'])) {
                     Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
@@ -59,7 +59,7 @@ class AuthController extends Controller
                     Session::set("error:email:null", "Podany adres email nie istnieje");
                 }
                 unset($data['password']);
-                $this->redirect(self::$route->get('auth.login'), $data);
+                $this->redirect('auth.login', $data);
             }
 
         } else {
@@ -77,7 +77,7 @@ class AuthController extends Controller
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
             }
-            $this->redirect(self::$route->get('auth.forgotPassword'));
+            $this->redirect('auth.forgotPassword');
         } else {
             $this->view->render('auth/forgotPassword');
         }
@@ -94,9 +94,9 @@ class AuthController extends Controller
             $this->checkCodeToResetPassword($code);
 
             if ($user = $this->model->resetPassword($data, $code)) {
-                $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
+                $this->redirect('auth.login', ['email' => $user->email]);
             } else {
-                $this->redirect(self::$route->get('auth.resetPassword'), ['code' => $code]);
+                $this->redirect('auth.resetPassword', ['code' => $code]);
             }
         }
 
@@ -105,7 +105,7 @@ class AuthController extends Controller
             $this->view->render('auth/resetPassword', ['email' => Session::get($code), 'code' => $code]);
         } else {
             Session::set('error', 'Kod resetu hasła nie został podany');
-            $this->redirect(self::$route->get('auth.forgotPassword'));
+            $this->redirect('auth.forgotPassword');
         }
     }
 
@@ -117,11 +117,11 @@ class AuthController extends Controller
             if ((time() - Session::get("created:" . $code)) > 86400) {
                 Session::set('error', 'Link do zresetowania hasła stracił ważność');
                 Session::clearArray($names);
-                $this->redirect(self::$route->get('auth.forgotPassword'));
+                $this->redirect('auth.forgotPassword');
             }
         } else {
             Session::set('error', 'Nieprawidłowy kod resetu hasła');
-            $this->redirect(self::$route->get('auth.forgotPassword'));
+            $this->redirect('auth.forgotPassword');
         }
     }
 }
