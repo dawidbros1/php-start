@@ -1089,18 +1089,9 @@ public function update(array $data, array $toUpdate = [], $validate = true)
         $this->escape();
         $this->repository->update($data);
         Session::success('The data has been updated');
+        return true;
     }
-}
-```
-
-* **save(array $data, string $property)**: Method updates one property in database without validate.
-```
-public function save(array $data, string $property)
-{
-    $this->set($data);
-    $this->escape();
-    $data = $this->getArray(['id', $property]);
-    $this->repository->update($data);
+    return false;
 }
 ```
 
@@ -1285,9 +1276,8 @@ public function logout()
 ```
 public function updateUsername($data)
 {
-    if ($this->validate($data)) {
-        $this->save($data, 'username');
-        Session::success("The username has been changed");
+    if ($this->update($data, ['username'])) {
+            Session::success("The username has been changed");
     }
 }
 ```
@@ -1300,10 +1290,12 @@ public function updatePassword($data)
         Session::set("error:current_password:same", "The password provided is incorrect");
     }
 
+
     if ($this->validate($data) && $same) {
         $data['password'] = $this->hash($data['password']);
-        $this->save($data, 'password');
-        Session::success('The password has been updated');
+        if ($this->update($data, ['password'], false)) {
+            Session::success('The password has been updated');
+        }
     }
 }
 ```
@@ -1320,8 +1312,9 @@ public function updateAvatar($file, $path, $defaultAvatar)
                 $this->deleteAvatar();
             }
 
-            $this->save(['avatar' => $path . $file['name']], 'avatar');
-            Session::success('The avatar has been updated');
+            if ($this->update(['avatar' => $path . $file['name']], ['avatar'], false)) {
+                Session::success('The avatar has been updated');
+            }
         }
     }
 }
