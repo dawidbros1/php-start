@@ -125,6 +125,7 @@ The project is a complete file package to create applications in PHP technology.
   - [Model](#abstract-model)
   - [Auth](#auth)
   - [User](#user)
+  - [Mail](#mail)
 - [Repositories](#repositories)
   - [How to create new repository](#how-to-create-new-repository)
   - [Repository](#abstract-repository)
@@ -591,7 +592,7 @@ public function run(): void
   try {
       $action = $this->action() . 'Action';
       if (!method_exists($this, $action)) {
-          Session::set("error", 'The action you wanted to access does not exist');
+          Session::error('The action you wanted to access does not exist');
           $this->redirect("./");
       }
 
@@ -654,7 +655,7 @@ final private function action(): string
 final protected function guest(): void
 {
   if ($this->user != null) {
-      Session::set("error", "The page you tried to access is only available to users who are not logged in.");
+      Session::error("The page you tried to access is only available to users who are not logged in.");
       $this->redirect(self::$route->get('home'));
   }
 }
@@ -665,7 +666,7 @@ final protected function guest(): void
 final protected function requireLogin(): void
 {
   if ($this->user == null) {
-      Session::set("error", "The page you tried to access requires login.");
+      Session::error("The page you tried to access requires login.");
       $this->redirect(self::$route->get('auth.login'));
   }
 }
@@ -678,7 +679,7 @@ final protected function requireAdmin(): void
   $this->requireLogin();
 
   if (!$this->user->isAdmin()) {
-      Session::set("error", "You do not have sufficient permissions for the action you wanted to perform");
+      Session::error("You do not have sufficient permissions for the action you wanted to perform");
       $this->redirect(self::$route->get('home'));
   }
 }
@@ -1087,7 +1088,7 @@ public function update(array $data, array $toUpdate = [], $validate = true)
 
         $this->escape();
         $this->repository->update($data);
-        Session::set('success', 'Dane zostały zaktualizowane');
+        Session::success('The data has been updated');
     }
 }
 ```
@@ -1214,7 +1215,7 @@ public function register(array $data)
         $data['created'] = date('Y-m-d H:i:s');
 
         if ($this->create($data, false)) {
-            Session::set('success', 'The account has been created');
+            Session::success('The account has been created');
         }
     }
 
@@ -1244,7 +1245,7 @@ public function login(array $data)
             $user = $this->find(['email' => Session::get($code)]);
             $user->update(['password' => $this->hash($data['password'])], ['password'], false);
             Session::clearArray([$code, "created:" . $code]);
-            Session::set('success', 'The account password has been changed');
+            Session::success('The account password has been changed');
         }
         return $user ?? null;
     }
@@ -1276,7 +1277,7 @@ public function existsEmail($email)
 public function logout()
 {
     Session::clear('user:id');
-    Session::set('success', "You have been logged out of the system");
+    Session::success("You have been logged out of the system");
 }
 ```
 
@@ -1286,7 +1287,7 @@ public function updateUsername($data)
 {
     if ($this->validate($data)) {
         $this->save($data, 'username');
-        Session::set('success', "The username has been changed");
+        Session::success("The username has been changed");
     }
 }
 ```
@@ -1302,7 +1303,7 @@ public function updatePassword($data)
     if ($this->validate($data) && $same) {
         $data['password'] = $this->hash($data['password']);
         $this->save($data, 'password');
-        Session::set('success', 'The password has been updated');
+        Session::success('The password has been updated');
     }
 }
 ```
@@ -1320,7 +1321,7 @@ public function updateAvatar($file, $path, $defaultAvatar)
             }
 
             $this->save(['avatar' => $path . $file['name']], 'avatar');
-            Session::set('success', 'The avatar has been updated');
+            Session::success('The avatar has been updated');
         }
     }
 }
@@ -1360,7 +1361,7 @@ public function contact(array $data)
     $html = "<html> <head> </head> <body> <p>Name: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
 
     if ($this->send($this->config['email'], $data['subject'], $html, $headers)) {
-        Session::set('success', "Message was sent");
+        Session::success("Message was sent");
     }
 }
 ```
@@ -1391,7 +1392,7 @@ public function forgotPassword($email, $route, $username)
     $html = "<html><head></head><body>" . $message . "</body></html>";
 
     if ($this->send($data['email'], $data['subject'], $html, $headers)) {
-        Session::set('success', "A link to reset your password has been sent to the email address you provided");
+        Session::success("A link to reset your password has been sent to the email address you provided");
     }
 }
 ```
@@ -1856,6 +1857,22 @@ public static function getNextClear($name)
 public static function set($name, $value): void
 {
   $_SESSION[$name] = $value;
+}
+```
+
+* **success(string $message)**: Short method to set success message.
+```
+public static function success(string $message)
+{
+    Session::set('success', $message);
+}
+```
+
+* **error(string $message)**: Short method to set error message.
+```
+public static function error(string $message)
+{
+    Session::set('error', $message);
 }
 ```
 
