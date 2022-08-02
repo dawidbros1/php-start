@@ -7,9 +7,7 @@
 }
 ?>
     >
-    <?php if (array_key_exists('label', $params)): ?>
-        <label class="form-check-label" for="<?=$params['id'] ?? ""?>">
-            <?=$params['label']?>
-        </label>
-    <?php endif?>
+    <label class="form-check-label" for="<?=$params['id'] ?? ""?>">
+        <?=$params['label'] ?? "Opis nie został ustawiony"?>
+    </label>
 </div>

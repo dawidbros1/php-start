@@ -12,7 +12,7 @@ declare (strict_types = 1);
     <span class="input-group-text bg-primary"></span>
     <select class="form-select" name = "<?=$params['name']?>">
         <?php foreach ($params['options'] as $item): ?>
-            <option value="<?=$item->id?>" <?=$params['search'] == $item->id ? "selected" : ""?>><?=$item->name?></option>
+            <option value="<?=$item->id?>" <?=$params['selected'] == $item->id ? "selected" : ""?>><?=$item->name?></option>
         <?php endforeach;?>
     </select>
     <span class="input-group-text bg-primary"></span>
