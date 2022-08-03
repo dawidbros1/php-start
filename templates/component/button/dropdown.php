@@ -6,5 +6,5 @@
     <?=$params['class'] ?? ''?>"
 
     data-bs-toggle="collapse" data-bs-target="<?=$params['target']?>" aria-expanded="false">
-    <?=$params['text'] ?? 'USUŃ'?>
+    <?=$params['text']?>
 </button>

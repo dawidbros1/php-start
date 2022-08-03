@@ -14,7 +14,7 @@ $mt = $params['mt'] ?? "mt-2";
     <?php endif;?>
 
     <?php $array = ['type', 'name', 'placeholder', 'disabled', 'value']?>
-    
+
     <span class="input-group-text bg-primary"></span>
     <input class="form-control"
         <?php foreach ($array as $name): ?>
