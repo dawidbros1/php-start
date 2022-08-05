@@ -10,25 +10,15 @@ abstract class Rules
 {
     private static $rules = [
         'button' => [
-            'back' => ['action'],
+            'link' => ['action', 'text'],
             'dropdown' => ['target', "text"],
         ],
 
         'form' => [
             'checkbox' => ['name', 'label'],
             'input' => ['type', 'name'],
-            'select' => ['name', 'options', 'selected'],
+            'select' => ['name', 'options', 'selected', 'show'],
             'submit' => [],
-        ],
-
-        'item' => [
-            'page' => ['item', 'route'],
-            'category' => ['item', 'route'],
-            'form' => [
-                'open' => [],
-                'close' => [],
-                'delete' => ['action', 'id', 'target'],
-            ],
         ],
 
         'error' => ['names', 'type'],
