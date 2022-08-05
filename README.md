@@ -136,6 +136,11 @@ The project is a complete file package to create applications in PHP technology.
   - [Available methods to validate images](#available-methods-to-validate-images)
 - [View](#view)
 - [Components](#component)
+  - [How to create new component](#how-to-create-new-component)
+  - [Methods](#methods)
+  - [Component rules](#component-rules)
+  - [Avaiable components](#available-components)
+- [Screen shots](#screen-shots)
 - [Helpers](#helpers)
   - [Session](#session)
   - [Request](#request)
@@ -278,7 +283,7 @@ class AuthRules extends Rules
 ```
 
 The structure of object in above example looks like this:
-![](readme_img/rules.png)
+![](readme_img/other/rules.png)
 
 ### Rules model
 * **createRule(string $type, array $rules): void**: Method adds type of rule with rules to array.
@@ -1758,48 +1763,206 @@ private function escape(array $params): array
 ## Component
 Component renders fragment of html with one call.
 
-```
-class Component
-{
-    private static $default_path = "/../templates/component/";
-
-    public static function render(string $path, array $params = []): void
-    {
-        $path = __DIR__ . self::$default_path . str_replace(".", "/", $path) . ".php";
-
-        if (!file_exists($path)) {
-            throw new AppException("The specified path to the component [$path] does not exist";
-        }
-
-        if (array_key_exists('description', $params)) {
-            $params['label'] = $params['description'];
-            $params['placeholder'] = $params['description'];
-            unset($params['description']);
-        }
-
-        include $path;
-    }
-}
-```
-
-example component file `templates/component/folder/welcome.php`
+### How to create new component
+Create a new file in `templates/component/` like a **folder/welcome.php**.
 ```
 <div>Welcome: <?=$params['name']?></div>
 ```
 
-use component in template:
+Use component in template:
 ```
 <?php
 use App\Component;
 
 <?php Component::render('folder.welcome', ['name' => "Adam"])?>
-?>
 ```
 
 Output:
 ```
 Welcome: Adam
+``` 
+
+### Methods
+* **render(string $component, array $params = []): void**: Method renders component.
 ```
+public static function render(string $component, array $params = []): void
+{
+    $path = __DIR__ . self::$default_path . str_replace(".", "/", $component) . ".php";
+
+    if (!file_exists($path)) {
+        throw new AppException("Komponent [ $component ] nie istnieje");
+    }
+
+    if (array_key_exists('description', $params)) {
+        $params['label'] = $params['description'];
+        $params['placeholder'] = $params['description'];
+        unset($params['description']);
+    }
+
+    Component::requireParams($component, $params);
+    $styles = Component::getStyles($params);
+    include $path;
+}
+```
+
+* **getStyles(array $params): string**: Method returns unique parameters of styles as string.
+```
+private static function getStyles(array $params): string
+{
+    $mt = $params['mt'] ?? "mt-3";
+    $class = $params['class'] ?? "";
+    $col = $params['col'] ?? "col-12";
+
+    return "$mt $class $col";
+}
+```
+
+* **requireParams(string $path, array $params)**: The method checks if all required parameters have been passed to the component.
+```
+public static function requireParams(string $path, array $params)
+{
+    $rules = Rules::get($path);
+
+    foreach ($rules ?? [] as $rule) {
+        if (!array_key_exists($rule, $params)) {
+            throw new AppException("Wymagany parametr [ $rule ] nie został wprowadzony");
+        }
+    }
+}
+```
+
+### Component rules
+* **private static $rules**: Property where insert require params for component.
+```
+private static $rules = [
+    'button' => [
+        'link' => ['action', 'text'],
+        'dropdown' => ['target', "text"],
+    ],
+
+    'form' => [
+        'checkbox' => ['id', 'name', 'label', 'checked'],
+        'input' => ['type', 'name'],
+        'select' => ['name', 'options', 'selected', 'show', 'label'],
+        'submit' => ['text'],
+    ],
+
+    'error' => ['names', 'type'],
+];
+```
+
+* **get($path)**: Method that returns the required parameters to the component.
+```
+public static function get($path)
+{
+    $output = self::$rules;
+    $array = explode(".", $path);
+
+    foreach ($array as $name) {
+        if (array_key_exists($name, $output)) {
+            $output = $output[$name];
+        } else {
+            throw new AppException("Reguły podanego komponentu [ $path ] nie zostały zarejestrowane");
+        }
+    }
+
+    return $output;
+}
+```
+
+### Available components
+* **error**: Component renders error message in form after validate.
+```
+Component::render('error', [
+    'type' => "username", 
+    'names' => ['between', 'specialCharacters']
+]);
+```
+
+![](readme_img/components/error_1.png)
+![](readme_img/components/error_2.png)
+
+* **button.link**: Component renders button to redirect to selected page.
+```
+Component::render('button.link', [
+    'text' => "register",
+    'action' => $route->get('auth.register'),
+    'a.class' => "w-50 mx-auto d-block mt-5",
+    'buttom.class' => "text-white btn-success",
+    'col' => "col-12",
+]);
+```
+![](readme_img/components/button.link.png)
+
+* **button.dropdown**: Component renders button which on event onClick dropdown section with selected class.
+```
+Component::render('button.dropdown', [
+    'text' => ["show", 'hide'],
+    'target' => "target_class",
+    'class' => "text-warning btn-danger",
+    'col' => "col-12",
+]);
+
+<div class="text-center collapse target_class mt-2 fw-bold"> It works!</div>
+```
+![](readme_img/components/button.dropdown.show.png)
+![](readme_img/components/button.dropdown.hide.png)
+
+* **form.checknox**: Component renders checkbox.
+```
+Component::render('form.checkbox', [
+    'id' => "regulations",
+    'name' => "regulations",
+    'label' => "I have read the regulations",
+    'checked' => false,
+]);
+```
+![](readme_img/components/form.checbox.png)
+
+* **form.select**: Component renders select section to form.
+```
+Component::render('form.select', [
+    'name' => "fruits",
+    'options' => Fruit::addArray(['watermelon', 'strawberry', 'raspberry', 'peach']),
+    'show' => "name",
+    'selected' => ['id' => 2],
+    'label' => 'Choose your favorite fruit',
+    'col' => "col-12",
+]);
+```
+![](readme_img/components/form.select_1.png)
+
+```
+Component::render('form.select', [
+    'name' => "fruits",
+    'options' => Fruit::addArray(['watermelon', 'strawberry', 'raspberry', 'peach']),
+    'show' => "id",
+    'selected' => ['name' => 'raspberry'],
+    'label' => 'Choose your favorite fruit',
+    'col' => "col-12",
+]);
+```
+![](readme_img/components/form.select_2.png)
+
+**Array of fruits**:
+![](readme_img/components/form.select.data.png)
+
+## Screen shots
+* **register**
+![](readme_img/template/register.png)
+
+* **login**
+![](readme_img/template/login.png)
+
+* **profile**
+![](readme_img/template/profile.png)
+
+* **guest menu**
+![](readme_img/menu/guest.png)
+
+* **user menu**
+![](readme_img/menu/user.png)
+
 
 ## Helpers
 ### Session
