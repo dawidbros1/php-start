@@ -39,7 +39,7 @@ abstract class Rules
         $rule = substr($name, strpos($name, '.') + 1);
         $output = '';
 
-        if(!is_array($this->rules[$type][$rule]['value'])){
+        if (!is_array($this->rules[$type][$rule]['value'])) {
             throw new AppException(`Value [$name] nie jest tablicą`);
         }
 

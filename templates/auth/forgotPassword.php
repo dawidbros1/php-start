@@ -16,7 +16,7 @@ use App\Helper\Session;
             <div class="p-4">
                 <form action="<?=$route->get('auth.forgotPassword')?>" method="post">
 
-                    <?php Component::render('form.input', ['class' => "mt-3", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
+                    <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
                     <div class="d-grid col-12 mx-auto mt-3">

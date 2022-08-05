@@ -1,6 +1,4 @@
-<button type="button" class="<?=$params['class'] ?? ""?> btn fw-bold d-grid text-info btn-primary
-    <?=$params['col'] ?? "col-12"?>">
-
+<button type="button" class="btn fw-bold d-grid text-light btn-primary <?=$styles?>">
     <div data-bs-toggle="collapse" data-bs-target=".btn1,.btn2,.<?=$params['target']?>" class="btn1 show">
         <?=$params['text'][0]?>
     </div>

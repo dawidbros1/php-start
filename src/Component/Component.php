@@ -27,7 +27,17 @@ class Component
         }
 
         Component::requireParams($component, $params);
+        $styles = Component::getStyles($params);
         include $path;
+    }
+
+    private static function getStyles(array $params): string
+    {
+        $mt = $params['mt'] ?? "mt-3";
+        $class = $params['class'] ?? "";
+        $col = $params['col'] ?? "col-12";
+
+        return "$mt $class $col";
     }
 
     public static function requireParams(string $path, array $params)

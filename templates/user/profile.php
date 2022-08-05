@@ -63,7 +63,7 @@ use App\Helper\Session;
                     </div>
 
                     <form action="<?=$route->get('user.update')?>" method="post">
-                        <?php Component::render('form.input', ['class' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->username])?>
+                        <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->username])?>
                         <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
                         <input type = "hidden" name = "update" value = "username">
@@ -79,13 +79,13 @@ use App\Helper\Session;
                             <h6 class="text-center w-100">Zmień hasło</h6>
                         </div>
 
-                        <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "current_password", "placeholder" => "Aktualne hasło", 'label' => "Aktualne hasło "])?>
+                        <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "password", 'name' => "current_password", "placeholder" => "Aktualne hasło", 'label' => "Aktualne hasło "])?>
                         <?php Component::render('error', ['type' => "current_password", 'names' => ['same']])?>
 
-                        <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "password", "placeholder" => "Nowe hasło", 'label' => 'Nowe hasło '])?>
+                        <?php Component::render('form.input', ['type' => "password", 'name' => "password", "placeholder" => "Nowe hasło", 'label' => 'Nowe hasło '])?>
                         <?php Component::render('error', ['type' => "password", 'names' => ['between', 'same']])?>
 
-                        <?php Component::render('form.input', ['class' => "mt-3", 'type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz nowe hasło", 'label' => 'Powtórz nowe hasło '])?>
+                        <?php Component::render('form.input', ['type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz nowe hasło", 'label' => 'Powtórz nowe hasło '])?>
                         <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
 
                         <input type = "hidden" name = "update" value = "password">

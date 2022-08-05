@@ -15,10 +15,10 @@ abstract class Rules
         ],
 
         'form' => [
-            'checkbox' => ['name', 'label'],
+            'checkbox' => ['id', 'name', 'label', 'checked'],
             'input' => ['type', 'name'],
-            'select' => ['name', 'options', 'selected', 'show'],
-            'submit' => [],
+            'select' => ['name', 'options', 'selected', 'show', 'label'],
+            'submit' => ['text'],
         ],
 
         'error' => ['names', 'type'],
