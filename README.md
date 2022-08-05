@@ -1945,22 +1945,28 @@ Component::render('form.select', [
 ![](readme_img/components/form.select_2.png)
 
 **Array of fruits**:
+
 ![](readme_img/components/form.select.data.png)
 
 ## Screen shots
 * **register**
+
 ![](readme_img/template/register.png)
 
 * **login**
+
 ![](readme_img/template/login.png)
 
 * **profile**
+
 ![](readme_img/template/profile.png)
 
 * **guest menu**
+
 ![](readme_img/menu/guest.png)
 
 * **user menu**
+
 ![](readme_img/menu/user.png)
 
 
