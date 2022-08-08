@@ -34,7 +34,7 @@ class AuthRules extends Rules
         ]);
 
         $this->createMessages('regulations', [
-            'require' => "Adres email zawiera niedozwolone znaki",
+            'require' => "Regulamin nie został zaakceptowany",
         ]);
     }
 }
