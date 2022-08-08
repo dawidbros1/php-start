@@ -41,6 +41,16 @@ class Session
         $_SESSION[$name] = $value;
     }
 
+    public static function success(string $message)
+    {
+        Session::set('success', $message);
+    }
+
+    public static function error(string $message)
+    {
+        Session::set('error', $message);
+    }
+
     public static function clear($name): void
     {
         unset($_SESSION[$name]);

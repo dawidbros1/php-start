@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace App\Controller;
 
 use App\Controller\Controller;
+use App\Helper\Checkbox;
 use App\Helper\Request;
 use App\Helper\Session;
 use App\Model\Auth;
@@ -30,6 +31,7 @@ class AuthController extends Controller
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
             $data = $this->request->postParams($names);
             $data['avatar'] = self::$config->get('default.path.avatar');
+            $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
             if ($this->model->register($data)) {
                 $this->redirect('auth.login', ['email' => $data['email']]);

@@ -14,6 +14,7 @@ class AuthRules extends Rules
         $this->createRule('username', ['between' => ['min' => 3, "max" => 16], 'specialCharacters' => false]);
         $this->createRule('password', ['between' => ['min' => 6, 'max' => 36]]);
         $this->createRule('email', ['sanitize' => true, "validate" => true]);
+        $this->createRule('regulations', ['require' => true]);
     }
 
     public function messages()
@@ -30,6 +31,10 @@ class AuthRules extends Rules
         $this->createMessages('email', [
             'sanitize' => "Adres email zawiera niedozwolone znaki",
             'validate' => "Adres email nie jest prawidłowy",
+        ]);
+
+        $this->createMessages('regulations', [
+            'require' => "Regulamin nie został zaakceptowany",
         ]);
     }
 }

@@ -21,27 +21,27 @@ class User extends Model
     public function logout()
     {
         Session::clear('user:id');
-        Session::set('success', "Nastąpiło wylogowanie z systemu");
+        Session::success("Nastąpiło wylogowanie z systemu");
     }
 
     public function updateUsername($data)
     {
-        if ($this->validate($data)) {
-            $this->save($data, 'username');
-            Session::set('success', "Nazwa użytkownika została zmieniona");
+        if ($this->update($data, ['username'])) {
+            Session::success("Nazwa użytkownika została zmieniona");
         }
     }
 
     public function updatePassword($data)
     {
         if (!$same = ($this->password == $this->hash($data['current_password']))) {
-            Session::set("error:current_password:same", "Podane hasło jest nieprawidłowe");
+            Session::set("w:current_password:same", "Podane hasło jest nieprawidłowe");
         }
 
         if ($this->validate($data) && $same) {
             $data['password'] = $this->hash($data['password']);
-            $this->save($data, 'password');
-            Session::set('success', 'Hasło zostało zaktualizowane');
+            if ($this->update($data, ['password'], false)) {
+                Session::success('Hasło zostało zaktualizowane');
+            }
         }
     }
 
@@ -55,8 +55,9 @@ class User extends Model
                     $this->deleteAvatar();
                 }
 
-                $this->save(['avatar' => $path . $file['name']], 'avatar');
-                Session::set('success', 'Awatar został zaktualizowany');
+                if ($this->update(['avatar' => $path . $file['name']], ['avatar'], false)) {
+                    Session::success('Awatar został zaktualizowany');
+                }
             }
         }
     }

@@ -18,92 +18,119 @@ The project is a complete file package to create applications in PHP technology.
 6. Import tables from file `./sql/database.sql` to your database
 
 ## Tree directory
-   - [composer.json](composer.json)
-   - [composer.lock](composer.lock)
-   - __config__
-     - [config\_dist.php](config/config_dist.php)
-   - [index.php](index.php)
-   - __public__
-     - __css__
-       - [contact.css](public/css/contact.css)
-       - [profile.css](public/css/profile.css)
-       - [style.css](public/css/style.css)
-     - __images__
-       - __SocialMedia__
-         - [facebook.png](public/images/SocialMedia/facebook.png)
-         - [instagram.png](public/images/SocialMedia/instagram.png)
-         - [linkedin.png](public/images/SocialMedia/linkedin.png)
-         - [twitter.png](public/images/SocialMedia/twitter.png)
-         - [youtube.png](public/images/SocialMedia/youtube.png)
-       - [avatar.png](public/images/avatar.png)
-     - __js__
-       - [main.js](public/js/main.js)
-   - [recaptchalib.php](recaptchalib.php)
-   - __routes__
-     - [routes.php](routes/routes.php)
-   - __sql__
-     - [database.sql](sql/database.sql)
-   - __src__
-     - [Component.php](src/Component.php)
-     - __Controller__
-       - [AuthController.php](src/Controller/AuthController.php)
-       - [Controller.php](src/Controller/Controller.php)
-       - [GeneralController.php](src/Controller/GeneralController.php)
-       - [UserController.php](src/Controller/UserController.php)
-     - __Exception__
-       - [AppException.php](src/Exception/AppException.php)
-       - [ConfigurationException.php](src/Exception/ConfigurationException.php)
-       - [NotFoundException.php](src/Exception/NotFoundException.php)
-       - [StorageException.php](src/Exception/StorageException.php)
-     - __Helper__
-       - [Request.php](src/Helper/Request.php)
-       - [Session.php](src/Helper/Session.php)
-     - __Model__
-       - [Auth.php](src/Model/Auth.php)
-       - [Config.php](src/Model/Config.php)
-       - [Mail.php](src/Model/Mail.php)
-       - [Model.php](src/Model/Model.php)
-       - [Route.php](src/Model/Route.php)
-       - [Rules.php](src/Model/Rules.php)
-       - [User.php](src/Model/User.php)
-     - __Repository__
-       - [AuthRepository.php](src/Repository/AuthRepository.php)
-       - [Repository.php](src/Repository/Repository.php)
-       - [UserRepository.php](src/Repository/UserRepository.php)
-     - __Rules__
-       - [AuthRules.php](src/Rules/AuthRules.php)
-       - [UserRules.php](src/Rules/UserRules.php)
-     - __Utils__
-       - [debug.php](src/Utils/debug.php)
-     - __Validator__
-       - [Validator.php](src/Validator/Validator.php)
-     - [View.php](src/View.php)
-   - __templates__
-     - __auth__
-       - [forgotPassword.php](templates/auth/forgotPassword.php)
-       - [login.php](templates/auth/login.php)
-       - [register.php](templates/auth/register.php)
-       - [resetPassword.php](templates/auth/resetPassword.php)
-     - __component__
-       - __button__
-         - [back.php](templates/component/button/back.php)
-       - [error.php](templates/component/error.php)
-       - __form__
-         - [button.php](templates/component/form/button.php)
-         - [input.php](templates/component/form/input.php)
-     - __general__
-       - [contact.php](templates/general/contact.php)
-       - [home.php](templates/general/home.php)
-       - [policy.php](templates/general/policy.php)
-       - [regulations.php](templates/general/regulations.php)
-     - __layout__
-       - [main.php](templates/layout/main.php)
-     - [messages.php](templates/messages.php)
-     - __user__
-       - [profile.php](templates/user/profile.php)
-   - __uploads__
-     - __images__
-       - __avatar__
+   - 📄 [README.md](README.md)        
+   - 📄 [composer.json](composer.json)
+   - 📄 [composer.lock](composer.lock)
+   - 📂 __config__
+     - 📄 [config\_dist.php](config/config_dist.php)
+   - 📄 [index.php](index.php)
+   - 📂 __public__
+     - 📂 __css__
+       - 📄 [contact.css](public/css/contact.css)
+       - 📄 [profile.css](public/css/profile.css)
+       - 📄 [style.css](public/css/style.css)
+     - 📂 __images__
+       - 📂 __SocialMedia__
+         - 📄 [facebook.png](public/images/SocialMedia/facebook.png)
+         - 📄 [instagram.png](public/images/SocialMedia/instagram.png)
+         - 📄 [linkedin.png](public/images/SocialMedia/linkedin.png)
+         - 📄 [twitter.png](public/images/SocialMedia/twitter.png)
+         - 📄 [youtube.png](public/images/SocialMedia/youtube.png)
+       - 📄 [avatar.png](public/images/avatar.png)
+     - 📂 __js__
+       - 📄 [main.js](public/js/main.js)
+   - 📂 __readme\_img__
+     - 📂 __components__
+       - 📄 [button.dropdown.hide.png](readme_img/components/button.dropdown.hide.png)
+       - 📄 [button.dropdown.show.png](readme_img/components/button.dropdown.show.png)
+       - 📄 [button.link.png](readme_img/components/button.link.png)
+       - 📄 [error\_1.png](readme_img/components/error_1.png)
+       - 📄 [error\_2.png](readme_img/components/error_2.png)
+       - 📄 [form.checbox.png](readme_img/components/form.checbox.png)
+       - 📄 [form.select.data.png](readme_img/components/form.select.data.png)
+       - 📄 [form.select\_1.png](readme_img/components/form.select_1.png)
+       - 📄 [form.select\_2.png](readme_img/components/form.select_2.png)
+     - 📂 __menu__
+       - 📄 [guest.png](readme_img/menu/guest.png)
+       - 📄 [user.png](readme_img/menu/user.png)
+     - 📂 __other__
+       - 📄 [rules.png](readme_img/other/rules.png)
+     - 📂 __template__
+       - 📄 [login.png](readme_img/template/login.png)
+       - 📄 [profile.png](readme_img/template/profile.png)
+       - 📄 [register.png](readme_img/template/register.png)
+   - 📄 [recaptchalib.php](recaptchalib.php)
+   - 📂 __routes__
+     - 📄 [routes.php](routes/routes.php)
+   - 📂 __sql__
+     - 📄 [database.sql](sql/database.sql)
+   - 📂 __src__
+     - 📂 __Component__
+       - 📄 [Component.php](src/Component/Component.php)
+       - 📄 [Rules.php](src/Component/Rules.php)
+     - 📂 __Controller__
+       - 📄 [AuthController.php](src/Controller/AuthController.php)
+       - 📄 [Controller.php](src/Controller/Controller.php)
+       - 📄 [GeneralController.php](src/Controller/GeneralController.php)
+       - 📄 [UserController.php](src/Controller/UserController.php)
+     - 📂 __Exception__
+       - 📄 [AppException.php](src/Exception/AppException.php)
+       - 📄 [ConfigurationException.php](src/Exception/ConfigurationException.php)
+       - 📄 [NotFoundException.php](src/Exception/NotFoundException.php)
+       - 📄 [StorageException.php](src/Exception/StorageException.php)
+     - 📂 __Helper__
+       - 📄 [CheckBox.php](src/Helper/CheckBox.php)
+       - 📄 [Request.php](src/Helper/Request.php)
+       - 📄 [Session.php](src/Helper/Session.php)
+     - 📂 __Model__
+       - 📄 [Auth.php](src/Model/Auth.php)
+       - 📄 [Config.php](src/Model/Config.php)
+       - 📄 [Mail.php](src/Model/Mail.php)
+       - 📄 [Model.php](src/Model/Model.php)
+       - 📄 [Route.php](src/Model/Route.php)
+       - 📄 [Rules.php](src/Model/Rules.php)
+       - 📄 [User.php](src/Model/User.php)
+     - 📂 __Repository__
+       - 📄 [AuthRepository.php](src/Repository/AuthRepository.php)
+       - 📄 [Repository.php](src/Repository/Repository.php)
+       - 📄 [UserRepository.php](src/Repository/UserRepository.php)
+     - 📂 __Rules__
+       - 📄 [AuthRules.php](src/Rules/AuthRules.php)
+       - 📄 [UserRules.php](src/Rules/UserRules.php)
+     - 📂 __Utils__
+       - 📄 [debug.php](src/Utils/debug.php)
+     - 📂 __Validator__
+       - 📄 [Validator.php](src/Validator/Validator.php)
+     - 📄 [View.php](src/View.php)
+   - 📂 __templates__
+     - 📂 __auth__
+       - 📄 [forgotPassword.php](templates/auth/forgotPassword.php)
+       - 📄 [login.php](templates/auth/login.php)
+       - 📄 [register.php](templates/auth/register.php)
+       - 📄 [resetPassword.php](templates/auth/resetPassword.php)
+     - 📂 __component__
+       - 📂 __button__
+         - 📄 [dropdown.php](templates/component/button/dropdown.php)
+         - 📄 [link.php](templates/component/button/link.php)
+       - 📄 [error.php](templates/component/error.php)
+       - 📂 __form__
+         - 📄 [checkbox.php](templates/component/form/checkbox.php)
+         - 📄 [input.php](templates/component/form/input.php)
+         - 📄 [select.php](templates/component/form/select.php)
+         - 📄 [submit.php](templates/component/form/submit.php)
+     - 📂 __general__
+       - 📄 [contact.php](templates/general/contact.php)
+       - 📄 [home.php](templates/general/home.php)
+       - 📄 [policy.php](templates/general/policy.php)
+       - 📄 [regulations.php](templates/general/regulations.php)
+     - 📂 __layout__
+       - 📄 [main.php](templates/layout/main.php)
+     - 📄 [messages.php](templates/messages.php)
+     - 📂 __user__
+       - 📄 [profile.php](templates/user/profile.php)
+   - 📂 __uploads__
+     - 📂 __images__
+       - 📂 __avatar__
 
 ## Table of contents
 - [Routing](#routing)
@@ -125,6 +152,7 @@ The project is a complete file package to create applications in PHP technology.
   - [Model](#abstract-model)
   - [Auth](#auth)
   - [User](#user)
+  - [Mail](#mail)
 - [Repositories](#repositories)
   - [How to create new repository](#how-to-create-new-repository)
   - [Repository](#abstract-repository)
@@ -135,9 +163,15 @@ The project is a complete file package to create applications in PHP technology.
   - [Available methods to validate images](#available-methods-to-validate-images)
 - [View](#view)
 - [Components](#component)
+  - [How to create new component](#how-to-create-new-component)
+  - [Methods](#methods)
+  - [Component rules](#component-rules)
+  - [Avaiable components](#available-components)
+- [Screen shots](#screen-shots)
 - [Helpers](#helpers)
   - [Session](#session)
   - [Request](#request)
+  - [Checkbox](#checkbox)
 ## Routing
 ### How to create new routing
 Create a new route in `routes/routes.php` by method `group()`.
@@ -229,23 +263,23 @@ namespace App\Rules;
 
 use App\Model\Rules;
 
-class UserRules extends Rules
+class AuthRules extends Rules
 {
     public function rules()
     {
-        $this->createRule('username', ['min' => 3, "max" => 16, 'specialCharacters' => false]);
+        $this->createRule('username', ['min' => 3, "max" => 16]);
     }
 
     public function messages()
     {
         $this->createMessages('username', [
-            'min' => "Username cannot contain less than". $this->value('username.min') "characters",
-            'max' => "Username cannot contain more than". $this->value('username.max') "characters",
-            'specialCharacters' => "Username cannot contain special characters",
+            'min' => "Username cannot contain less than ". $this->value('username.min') .  "characters",
+            'max' => "Username cannot contain more than ". $this->value('username.max') . " characters",
         ]);
     }
 }
 ```
+![](readme_img/other/rules.png)
 
 `min` and `max` rules can be package in `between` rule like here:
 ```
@@ -253,31 +287,18 @@ class AuthRules extends Rules
 {
     public function rules()
     {
-        $this->createRule('username', ['between' => ['min' => 3, "max" => 16], 'specialCharacters' => false]);
-        $this->createRule('password', ['between' => ['min' => 6, 'max' => 36]]);
+        $this->createRule('username', ['between' => ['min' => 3, "max" => 16]]);
     }
 
     public function messages()
     {
         $this->createMessages('username', [
             'between' => "Username should contain from " . $this->between('username.min') . " to " . $this->between('username.max') . " characters",
-            'specialCharacters' => "Username cannot contain special characters",
-        ]);
-
-        $this->createMessages('password', [
-            'between' => "Password should contain from " . $this->between('password.min') . " to " . $this->between('password.max') . " characters",
-        ]);
-
-        $this->createMessages('email', [
-            'sanitize' => "Email address contains illegal characters",
-            'validate' => "The email address is not valid",
         ]);
     }
 }
 ```
-
-The structure of object in above example looks like this:
-![](readme_img/rules.png)
+![](readme_img/other/rules.between.png)
 
 ### Rules model
 * **createRule(string $type, array $rules): void**: Method adds type of rule with rules to array.
@@ -340,8 +361,8 @@ public function createMessages(string $type, array $rules): void
 public function messages()
 {
     $this->createMessages('username', [
-        'min' => "Username cannot contain less than". $this->value('username.min') "characters",
-        'max' => "Username cannot contain more than". $this->value('username.max') "characters",
+        'min' => "Username cannot contain less than ". $this->value('username.min') . " characters",
+        'max' => "Username cannot contain more than ". $this->value('username.max') . " characters",
         'specialCharacters' => "Username cannot contain special characters",
     ]);
 }
@@ -591,7 +612,7 @@ public function run(): void
   try {
       $action = $this->action() . 'Action';
       if (!method_exists($this, $action)) {
-          Session::set("error", 'The action you wanted to access does not exist');
+          Session::error('The action you wanted to access does not exist');
           $this->redirect("./");
       }
 
@@ -654,7 +675,7 @@ final private function action(): string
 final protected function guest(): void
 {
   if ($this->user != null) {
-      Session::set("error", "The page you tried to access is only available to users who are not logged in.");
+      Session::error("The page you tried to access is only available to users who are not logged in.");
       $this->redirect(self::$route->get('home'));
   }
 }
@@ -665,7 +686,7 @@ final protected function guest(): void
 final protected function requireLogin(): void
 {
   if ($this->user == null) {
-      Session::set("error", "The page you tried to access requires login.");
+      Session::error("The page you tried to access requires login.");
       $this->redirect(self::$route->get('auth.login'));
   }
 }
@@ -678,7 +699,7 @@ final protected function requireAdmin(): void
   $this->requireLogin();
 
   if (!$this->user->isAdmin()) {
-      Session::set("error", "You do not have sufficient permissions for the action you wanted to perform");
+      Session::error("You do not have sufficient permissions for the action you wanted to perform");
       $this->redirect(self::$route->get('home'));
   }
 }
@@ -695,6 +716,7 @@ public function registerAction(): void
     if ($this->request->isPost() && $this->request->hasPostNames($names)) {
         $data = $this->request->postParams($names);
         $data['avatar'] = self::$config->get('default.path.avatar');
+        $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
         if ($this->model->register($data)) {
             $this->redirect(self::$route->get('auth.login'), ['email' => $data['email']]);
@@ -1087,19 +1109,10 @@ public function update(array $data, array $toUpdate = [], $validate = true)
 
         $this->escape();
         $this->repository->update($data);
-        Session::set('success', 'Dane zostały zaktualizowane');
+        Session::success('The data has been updated');
+        return true;
     }
-}
-```
-
-* **save(array $data, string $property)**: Method updates one property in database without validate.
-```
-public function save(array $data, string $property)
-{
-    $this->set($data);
-    $this->escape();
-    $data = $this->getArray(['id', $property]);
-    $this->repository->update($data);
+    return false;
 }
 ```
 
@@ -1214,7 +1227,7 @@ public function register(array $data)
         $data['created'] = date('Y-m-d H:i:s');
 
         if ($this->create($data, false)) {
-            Session::set('success', 'The account has been created');
+            Session::success('The account has been created');
         }
     }
 
@@ -1244,7 +1257,7 @@ public function login(array $data)
             $user = $this->find(['email' => Session::get($code)]);
             $user->update(['password' => $this->hash($data['password'])], ['password'], false);
             Session::clearArray([$code, "created:" . $code]);
-            Session::set('success', 'The account password has been changed');
+            Session::success('The account password has been changed');
         }
         return $user ?? null;
     }
@@ -1276,7 +1289,7 @@ public function existsEmail($email)
 public function logout()
 {
     Session::clear('user:id');
-    Session::set('success', "You have been logged out of the system");
+    Session::success("You have been logged out of the system");
 }
 ```
 
@@ -1284,9 +1297,8 @@ public function logout()
 ```
 public function updateUsername($data)
 {
-    if ($this->validate($data)) {
-        $this->save($data, 'username');
-        Session::set('success', "The username has been changed");
+    if ($this->update($data, ['username'])) {
+            Session::success("The username has been changed");
     }
 }
 ```
@@ -1299,10 +1311,12 @@ public function updatePassword($data)
         Session::set("error:current_password:same", "The password provided is incorrect");
     }
 
+
     if ($this->validate($data) && $same) {
         $data['password'] = $this->hash($data['password']);
-        $this->save($data, 'password');
-        Session::set('success', 'The password has been updated');
+        if ($this->update($data, ['password'], false)) {
+            Session::success('The password has been updated');
+        }
     }
 }
 ```
@@ -1319,8 +1333,9 @@ public function updateAvatar($file, $path, $defaultAvatar)
                 $this->deleteAvatar();
             }
 
-            $this->save(['avatar' => $path . $file['name']], 'avatar');
-            Session::set('success', 'The avatar has been updated');
+            if ($this->update(['avatar' => $path . $file['name']], ['avatar'], false)) {
+                Session::success('The avatar has been updated');
+            }
         }
     }
 }
@@ -1360,7 +1375,7 @@ public function contact(array $data)
     $html = "<html> <head> </head> <body> <p>Name: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
 
     if ($this->send($this->config['email'], $data['subject'], $html, $headers)) {
-        Session::set('success', "Message was sent");
+        Session::success("Message was sent");
     }
 }
 ```
@@ -1391,7 +1406,7 @@ public function forgotPassword($email, $route, $username)
     $html = "<html><head></head><body>" . $message . "</body></html>";
 
     if ($this->send($data['email'], $data['subject'], $html, $headers)) {
-        Session::set('success', "A link to reset your password has been sent to the email address you provided");
+        Session::success("A link to reset your password has been sent to the email address you provided");
     }
 }
 ```
@@ -1764,48 +1779,211 @@ private function escape(array $params): array
 ## Component
 Component renders fragment of html with one call.
 
-```
-class Component
-{
-    private static $default_path = "/../templates/component/";
-
-    public static function render(string $path, array $params = []): void
-    {
-        $path = __DIR__ . self::$default_path . str_replace(".", "/", $path) . ".php";
-
-        if (!file_exists($path)) {
-            throw new AppException("The specified path to the component [$path] does not exist";
-        }
-
-        if (array_key_exists('description', $params)) {
-            $params['label'] = $params['description'];
-            $params['placeholder'] = $params['description'];
-            unset($params['description']);
-        }
-
-        include $path;
-    }
-}
-```
-
-example component file `templates/component/folder/welcome.php`
+### How to create new component
+Create a new file in `templates/component/` like a **folder/welcome.php**.
 ```
 <div>Welcome: <?=$params['name']?></div>
 ```
 
-use component in template:
+Use component in template:
 ```
 <?php
 use App\Component;
 
 <?php Component::render('folder.welcome', ['name' => "Adam"])?>
-?>
 ```
 
 Output:
 ```
 Welcome: Adam
+``` 
+
+### Methods
+* **render(string $component, array $params = []): void**: Method renders component.
 ```
+public static function render(string $component, array $params = []): void
+{
+    $path = __DIR__ . self::$default_path . str_replace(".", "/", $component) . ".php";
+
+    if (!file_exists($path)) {
+        throw new AppException("Komponent [ $component ] nie istnieje");
+    }
+
+    if (array_key_exists('description', $params)) {
+        $params['label'] = $params['description'];
+        $params['placeholder'] = $params['description'];
+        unset($params['description']);
+    }
+
+    Component::requireParams($component, $params);
+    $styles = Component::getStyles($params);
+    include $path;
+}
+```
+
+* **getStyles(array $params): string**: Method returns unique parameters of styles as string.
+```
+private static function getStyles(array $params): string
+{
+    $mt = $params['mt'] ?? "mt-3";
+    $class = $params['class'] ?? "";
+    $col = $params['col'] ?? "col-12";
+
+    return "$mt $class $col";
+}
+```
+
+* **requireParams(string $path, array $params)**: The method checks if all required parameters have been passed to the component.
+```
+public static function requireParams(string $path, array $params)
+{
+    $rules = Rules::get($path);
+
+    foreach ($rules ?? [] as $rule) {
+        if (!array_key_exists($rule, $params)) {
+            throw new AppException("Wymagany parametr [ $rule ] nie został wprowadzony");
+        }
+    }
+}
+```
+
+### Component rules
+* **private static $rules**: Property where insert require params for component.
+```
+private static $rules = [
+    'button' => [
+        'link' => ['action', 'text'],
+        'dropdown' => ['target', "text"],
+    ],
+
+    'form' => [
+        'checkbox' => ['id', 'name', 'label'],
+        'input' => ['type', 'name'],
+        'select' => ['name', 'options', 'selected', 'show', 'label'],
+        'submit' => ['text'],
+    ],
+
+    'error' => ['names', 'type'],
+];
+```
+
+* **get($path)**: Method that returns the required parameters to the component.
+```
+public static function get($path)
+{
+    $output = self::$rules;
+    $array = explode(".", $path);
+
+    foreach ($array as $name) {
+        if (array_key_exists($name, $output)) {
+            $output = $output[$name];
+        } else {
+            throw new AppException("Reguły podanego komponentu [ $path ] nie zostały zarejestrowane");
+        }
+    }
+
+    return $output;
+}
+```
+
+### Available components
+* **error**: Component renders error message in form after validate.
+```
+Component::render('error', [
+    'type' => "username", 
+    'names' => ['between', 'specialCharacters']
+]);
+```
+
+![](readme_img/components/error_1.png)
+![](readme_img/components/error_2.png)
+
+* **button.link**: Component renders button to redirect to selected page.
+```
+Component::render('button.link', [
+    'text' => "register",
+    'action' => $route->get('auth.register'),
+    'a.class' => "w-50 mx-auto d-block mt-5",
+    'buttom.class' => "text-white btn-success",
+    'col' => "col-12",
+]);
+```
+![](readme_img/components/button.link.png)
+
+* **button.dropdown**: Component renders button which on event onClick dropdown section with selected class.
+```
+Component::render('button.dropdown', [
+    'text' => ["show", 'hide'],
+    'target' => "target_class",
+    'class' => "text-warning btn-danger",
+    'col' => "col-12",
+]);
+
+<div class="text-center collapse target_class mt-2 fw-bold"> It works!</div>
+```
+![](readme_img/components/button.dropdown.show.png)
+![](readme_img/components/button.dropdown.hide.png)
+
+* **form.checknox**: Component renders checkbox.
+```
+Component::render('form.checkbox', [
+    'id' => "regulations",
+    'name' => "regulations",
+    'label' => "I have read the regulations",
+]);
+```
+![](readme_img/components/form.checbox.png)
+
+* **form.select**: Component renders select section to form.
+```
+Component::render('form.select', [
+    'name' => "fruits",
+    'options' => Fruit::addArray(['watermelon', 'strawberry', 'raspberry', 'peach']),
+    'show' => "name",
+    'selected' => ['id' => 2],
+    'label' => 'Choose your favorite fruit',
+    'col' => "col-12",
+]);
+```
+![](readme_img/components/form.select_1.png)
+
+```
+Component::render('form.select', [
+    'name' => "fruits",
+    'options' => Fruit::addArray(['watermelon', 'strawberry', 'raspberry', 'peach']),
+    'show' => "id",
+    'selected' => ['name' => 'raspberry'],
+    'label' => 'Choose your favorite fruit',
+    'col' => "col-12",
+]);
+```
+![](readme_img/components/form.select_2.png)
+
+**Array of fruits**:
+
+![](readme_img/components/form.select.data.png)
+
+## Screen shots
+* **register**
+
+![](readme_img/template/register.png)
+
+* **login**
+
+![](readme_img/template/login.png)
+
+* **profile**
+
+![](readme_img/template/profile.png)
+
+* **guest menu**
+
+![](readme_img/menu/guest.png)
+
+* **user menu**
+
+![](readme_img/menu/user.png)
+
 
 ## Helpers
 ### Session
@@ -1856,6 +2034,22 @@ public static function getNextClear($name)
 public static function set($name, $value): void
 {
   $_SESSION[$name] = $value;
+}
+```
+
+* **success(string $message)**: Short method to set success message.
+```
+public static function success(string $message)
+{
+    Session::set('success', $message);
+}
+```
+
+* **error(string $message)**: Short method to set error message.
+```
+public static function error(string $message)
+{
+    Session::set('error', $message);
 }
 ```
 
@@ -1994,5 +2188,14 @@ public function queryString(): string
 public function file(string $name, $default = null)
 {
     return $this->files[$name] ?? $default;
+}
+```
+
+### Checkbox
+* **get**: Method returns 1 or 0 in dependens if checkbox exists.
+```
+public static function get($checkbox)
+{
+    if ($checkbox) {return 1;} else {return 0;}
 }
 ```

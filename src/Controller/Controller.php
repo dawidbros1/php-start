@@ -58,7 +58,7 @@ abstract class Controller extends Validator
         try {
             $action = $this->action() . 'Action';
             if (!method_exists($this, $action)) {
-                Session::set("error", 'Akcja do której chciałeś otrzymać dostęp nie istnieje');
+                Session::error('Akcja do której chciałeś otrzymać dostęp nie istnieje');
                 $this->redirect("./");
             }
 
@@ -99,7 +99,7 @@ abstract class Controller extends Validator
     final protected function guest(): void
     {
         if ($this->user != null) {
-            Session::set("error", "Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
+            Session::error("Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
             $this->redirect('home');
         }
     }
@@ -107,7 +107,7 @@ abstract class Controller extends Validator
     final protected function requireLogin(): void
     {
         if ($this->user == null) {
-            Session::set("error", "Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
+            Session::error("Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
             $this->redirect('auth.login');
         }
     }
@@ -117,7 +117,7 @@ abstract class Controller extends Validator
         $this->requireLogin();
 
         if (!$this->user->isAdmin()) {
-            Session::set("error", "Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
+            Session::error("Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
             $this->redirect('home');
         }
     }
