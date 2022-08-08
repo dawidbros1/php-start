@@ -16,7 +16,6 @@ use App\Helper\Session;
         <div class="col-md-0 col-lg-1"></div>
         <div class="col-md-12 col-lg-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-
             <!-- START -->
                 <div class = "w-100 fw-bold px-2 pt-1">
                     <form action = "<?=$route->get('user.update')?>" method = "post" enctype="multipart/form-data">
@@ -63,7 +62,7 @@ use App\Helper\Session;
                     </div>
 
                     <form action="<?=$route->get('user.update')?>" method="post">
-                        <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->username])?>
+                        <?php Component::render('form.input', ['class' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->username])?>
                         <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
                         <input type = "hidden" name = "update" value = "username">
@@ -72,20 +71,19 @@ use App\Helper\Session;
                 </div>
 
                 <!-- Zmiana hasła -->
-
                 <div class="mb-1 border p-2 pt-1">
                     <form action="<?=$route->get('user.update')?>" method="post">
                         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom">
                             <h6 class="text-center w-100">Zmień hasło</h6>
                         </div>
 
-                        <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "password", 'name' => "current_password", "placeholder" => "Aktualne hasło", 'label' => "Aktualne hasło "])?>
+                        <?php Component::render('form.input', ['type' => "password", 'name' => "current_password", "placeholder" => "Aktualne hasło", 'label' => "Aktualne hasło "])?>
                         <?php Component::render('error', ['type' => "current_password", 'names' => ['same']])?>
 
-                        <?php Component::render('form.input', ['type' => "password", 'name' => "password", "placeholder" => "Nowe hasło", 'label' => 'Nowe hasło '])?>
+                        <?php Component::render('form.input', ['mt' => "mt-2", 'type' => "password", 'name' => "password", "placeholder" => "Nowe hasło", 'label' => 'Nowe hasło '])?>
                         <?php Component::render('error', ['type' => "password", 'names' => ['between', 'same']])?>
 
-                        <?php Component::render('form.input', ['type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz nowe hasło", 'label' => 'Powtórz nowe hasło '])?>
+                        <?php Component::render('form.input', ['mt' => "mt-2", 'type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz nowe hasło", 'label' => 'Powtórz nowe hasło '])?>
                         <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
 
                         <input type = "hidden" name = "update" value = "password">
