@@ -15,7 +15,7 @@ abstract class Rules
         ],
 
         'form' => [
-            'checkbox' => ['id', 'name', 'label', 'checked'],
+            'checkbox' => ['id', 'name', 'label'],
             'input' => ['type', 'name'],
             'select' => ['name', 'options', 'selected', 'show', 'label'],
             'submit' => ['text'],
