@@ -18,92 +18,119 @@ The project is a complete file package to create applications in PHP technology.
 6. Import tables from file `./sql/database.sql` to your database
 
 ## Tree directory
-   - [composer.json](composer.json)
-   - [composer.lock](composer.lock)
-   - __config__
-     - [config\_dist.php](config/config_dist.php)
-   - [index.php](index.php)
-   - __public__
-     - __css__
-       - [contact.css](public/css/contact.css)
-       - [profile.css](public/css/profile.css)
-       - [style.css](public/css/style.css)
-     - __images__
-       - __SocialMedia__
-         - [facebook.png](public/images/SocialMedia/facebook.png)
-         - [instagram.png](public/images/SocialMedia/instagram.png)
-         - [linkedin.png](public/images/SocialMedia/linkedin.png)
-         - [twitter.png](public/images/SocialMedia/twitter.png)
-         - [youtube.png](public/images/SocialMedia/youtube.png)
-       - [avatar.png](public/images/avatar.png)
-     - __js__
-       - [main.js](public/js/main.js)
-   - [recaptchalib.php](recaptchalib.php)
-   - __routes__
-     - [routes.php](routes/routes.php)
-   - __sql__
-     - [database.sql](sql/database.sql)
-   - __src__
-     - [Component.php](src/Component.php)
-     - __Controller__
-       - [AuthController.php](src/Controller/AuthController.php)
-       - [Controller.php](src/Controller/Controller.php)
-       - [GeneralController.php](src/Controller/GeneralController.php)
-       - [UserController.php](src/Controller/UserController.php)
-     - __Exception__
-       - [AppException.php](src/Exception/AppException.php)
-       - [ConfigurationException.php](src/Exception/ConfigurationException.php)
-       - [NotFoundException.php](src/Exception/NotFoundException.php)
-       - [StorageException.php](src/Exception/StorageException.php)
-     - __Helper__
-       - [Request.php](src/Helper/Request.php)
-       - [Session.php](src/Helper/Session.php)
-     - __Model__
-       - [Auth.php](src/Model/Auth.php)
-       - [Config.php](src/Model/Config.php)
-       - [Mail.php](src/Model/Mail.php)
-       - [Model.php](src/Model/Model.php)
-       - [Route.php](src/Model/Route.php)
-       - [Rules.php](src/Model/Rules.php)
-       - [User.php](src/Model/User.php)
-     - __Repository__
-       - [AuthRepository.php](src/Repository/AuthRepository.php)
-       - [Repository.php](src/Repository/Repository.php)
-       - [UserRepository.php](src/Repository/UserRepository.php)
-     - __Rules__
-       - [AuthRules.php](src/Rules/AuthRules.php)
-       - [UserRules.php](src/Rules/UserRules.php)
-     - __Utils__
-       - [debug.php](src/Utils/debug.php)
-     - __Validator__
-       - [Validator.php](src/Validator/Validator.php)
-     - [View.php](src/View.php)
-   - __templates__
-     - __auth__
-       - [forgotPassword.php](templates/auth/forgotPassword.php)
-       - [login.php](templates/auth/login.php)
-       - [register.php](templates/auth/register.php)
-       - [resetPassword.php](templates/auth/resetPassword.php)
-     - __component__
-       - __button__
-         - [back.php](templates/component/button/back.php)
-       - [error.php](templates/component/error.php)
-       - __form__
-         - [button.php](templates/component/form/button.php)
-         - [input.php](templates/component/form/input.php)
-     - __general__
-       - [contact.php](templates/general/contact.php)
-       - [home.php](templates/general/home.php)
-       - [policy.php](templates/general/policy.php)
-       - [regulations.php](templates/general/regulations.php)
-     - __layout__
-       - [main.php](templates/layout/main.php)
-     - [messages.php](templates/messages.php)
-     - __user__
-       - [profile.php](templates/user/profile.php)
-   - __uploads__
-     - __images__
-       - __avatar__
+   - 📄 [README.md](README.md)        
+   - 📄 [composer.json](composer.json)
+   - 📄 [composer.lock](composer.lock)
+   - 📂 __config__
+     - 📄 [config\_dist.php](config/config_dist.php)
+   - 📄 [index.php](index.php)
+   - 📂 __public__
+     - 📂 __css__
+       - 📄 [contact.css](public/css/contact.css)
+       - 📄 [profile.css](public/css/profile.css)
+       - 📄 [style.css](public/css/style.css)
+     - 📂 __images__
+       - 📂 __SocialMedia__
+         - 📄 [facebook.png](public/images/SocialMedia/facebook.png)
+         - 📄 [instagram.png](public/images/SocialMedia/instagram.png)
+         - 📄 [linkedin.png](public/images/SocialMedia/linkedin.png)
+         - 📄 [twitter.png](public/images/SocialMedia/twitter.png)
+         - 📄 [youtube.png](public/images/SocialMedia/youtube.png)
+       - 📄 [avatar.png](public/images/avatar.png)
+     - 📂 __js__
+       - 📄 [main.js](public/js/main.js)
+   - 📂 __readme\_img__
+     - 📂 __components__
+       - 📄 [button.dropdown.hide.png](readme_img/components/button.dropdown.hide.png)
+       - 📄 [button.dropdown.show.png](readme_img/components/button.dropdown.show.png)
+       - 📄 [button.link.png](readme_img/components/button.link.png)
+       - 📄 [error\_1.png](readme_img/components/error_1.png)
+       - 📄 [error\_2.png](readme_img/components/error_2.png)
+       - 📄 [form.checbox.png](readme_img/components/form.checbox.png)
+       - 📄 [form.select.data.png](readme_img/components/form.select.data.png)
+       - 📄 [form.select\_1.png](readme_img/components/form.select_1.png)
+       - 📄 [form.select\_2.png](readme_img/components/form.select_2.png)
+     - 📂 __menu__
+       - 📄 [guest.png](readme_img/menu/guest.png)
+       - 📄 [user.png](readme_img/menu/user.png)
+     - 📂 __other__
+       - 📄 [rules.png](readme_img/other/rules.png)
+     - 📂 __template__
+       - 📄 [login.png](readme_img/template/login.png)
+       - 📄 [profile.png](readme_img/template/profile.png)
+       - 📄 [register.png](readme_img/template/register.png)
+   - 📄 [recaptchalib.php](recaptchalib.php)
+   - 📂 __routes__
+     - 📄 [routes.php](routes/routes.php)
+   - 📂 __sql__
+     - 📄 [database.sql](sql/database.sql)
+   - 📂 __src__
+     - 📂 __Component__
+       - 📄 [Component.php](src/Component/Component.php)
+       - 📄 [Rules.php](src/Component/Rules.php)
+     - 📂 __Controller__
+       - 📄 [AuthController.php](src/Controller/AuthController.php)
+       - 📄 [Controller.php](src/Controller/Controller.php)
+       - 📄 [GeneralController.php](src/Controller/GeneralController.php)
+       - 📄 [UserController.php](src/Controller/UserController.php)
+     - 📂 __Exception__
+       - 📄 [AppException.php](src/Exception/AppException.php)
+       - 📄 [ConfigurationException.php](src/Exception/ConfigurationException.php)
+       - 📄 [NotFoundException.php](src/Exception/NotFoundException.php)
+       - 📄 [StorageException.php](src/Exception/StorageException.php)
+     - 📂 __Helper__
+       - 📄 [CheckBox.php](src/Helper/CheckBox.php)
+       - 📄 [Request.php](src/Helper/Request.php)
+       - 📄 [Session.php](src/Helper/Session.php)
+     - 📂 __Model__
+       - 📄 [Auth.php](src/Model/Auth.php)
+       - 📄 [Config.php](src/Model/Config.php)
+       - 📄 [Mail.php](src/Model/Mail.php)
+       - 📄 [Model.php](src/Model/Model.php)
+       - 📄 [Route.php](src/Model/Route.php)
+       - 📄 [Rules.php](src/Model/Rules.php)
+       - 📄 [User.php](src/Model/User.php)
+     - 📂 __Repository__
+       - 📄 [AuthRepository.php](src/Repository/AuthRepository.php)
+       - 📄 [Repository.php](src/Repository/Repository.php)
+       - 📄 [UserRepository.php](src/Repository/UserRepository.php)
+     - 📂 __Rules__
+       - 📄 [AuthRules.php](src/Rules/AuthRules.php)
+       - 📄 [UserRules.php](src/Rules/UserRules.php)
+     - 📂 __Utils__
+       - 📄 [debug.php](src/Utils/debug.php)
+     - 📂 __Validator__
+       - 📄 [Validator.php](src/Validator/Validator.php)
+     - 📄 [View.php](src/View.php)
+   - 📂 __templates__
+     - 📂 __auth__
+       - 📄 [forgotPassword.php](templates/auth/forgotPassword.php)
+       - 📄 [login.php](templates/auth/login.php)
+       - 📄 [register.php](templates/auth/register.php)
+       - 📄 [resetPassword.php](templates/auth/resetPassword.php)
+     - 📂 __component__
+       - 📂 __button__
+         - 📄 [dropdown.php](templates/component/button/dropdown.php)
+         - 📄 [link.php](templates/component/button/link.php)
+       - 📄 [error.php](templates/component/error.php)
+       - 📂 __form__
+         - 📄 [checkbox.php](templates/component/form/checkbox.php)
+         - 📄 [input.php](templates/component/form/input.php)
+         - 📄 [select.php](templates/component/form/select.php)
+         - 📄 [submit.php](templates/component/form/submit.php)
+     - 📂 __general__
+       - 📄 [contact.php](templates/general/contact.php)
+       - 📄 [home.php](templates/general/home.php)
+       - 📄 [policy.php](templates/general/policy.php)
+       - 📄 [regulations.php](templates/general/regulations.php)
+     - 📂 __layout__
+       - 📄 [main.php](templates/layout/main.php)
+     - 📄 [messages.php](templates/messages.php)
+     - 📂 __user__
+       - 📄 [profile.php](templates/user/profile.php)
+   - 📂 __uploads__
+     - 📂 __images__
+       - 📂 __avatar__
 
 ## Table of contents
 - [Routing](#routing)
@@ -144,6 +171,7 @@ The project is a complete file package to create applications in PHP technology.
 - [Helpers](#helpers)
   - [Session](#session)
   - [Request](#request)
+  - [Checkbox](#checkbox)
 ## Routing
 ### How to create new routing
 Create a new route in `routes/routes.php` by method `group()`.
@@ -235,23 +263,23 @@ namespace App\Rules;
 
 use App\Model\Rules;
 
-class UserRules extends Rules
+class AuthRules extends Rules
 {
     public function rules()
     {
-        $this->createRule('username', ['min' => 3, "max" => 16, 'specialCharacters' => false]);
+        $this->createRule('username', ['min' => 3, "max" => 16]);
     }
 
     public function messages()
     {
         $this->createMessages('username', [
-            'min' => "Username cannot contain less than". $this->value('username.min') "characters",
-            'max' => "Username cannot contain more than". $this->value('username.max') "characters",
-            'specialCharacters' => "Username cannot contain special characters",
+            'min' => "Username cannot contain less than ". $this->value('username.min') .  "characters",
+            'max' => "Username cannot contain more than ". $this->value('username.max') . " characters",
         ]);
     }
 }
 ```
+![](readme_img/other/rules.png)
 
 `min` and `max` rules can be package in `between` rule like here:
 ```
@@ -259,31 +287,18 @@ class AuthRules extends Rules
 {
     public function rules()
     {
-        $this->createRule('username', ['between' => ['min' => 3, "max" => 16], 'specialCharacters' => false]);
-        $this->createRule('password', ['between' => ['min' => 6, 'max' => 36]]);
+        $this->createRule('username', ['between' => ['min' => 3, "max" => 16]]);
     }
 
     public function messages()
     {
         $this->createMessages('username', [
             'between' => "Username should contain from " . $this->between('username.min') . " to " . $this->between('username.max') . " characters",
-            'specialCharacters' => "Username cannot contain special characters",
-        ]);
-
-        $this->createMessages('password', [
-            'between' => "Password should contain from " . $this->between('password.min') . " to " . $this->between('password.max') . " characters",
-        ]);
-
-        $this->createMessages('email', [
-            'sanitize' => "Email address contains illegal characters",
-            'validate' => "The email address is not valid",
         ]);
     }
 }
 ```
-
-The structure of object in above example looks like this:
-![](readme_img/other/rules.png)
+![](readme_img/other/rules.between.png)
 
 ### Rules model
 * **createRule(string $type, array $rules): void**: Method adds type of rule with rules to array.
@@ -346,8 +361,8 @@ public function createMessages(string $type, array $rules): void
 public function messages()
 {
     $this->createMessages('username', [
-        'min' => "Username cannot contain less than". $this->value('username.min') "characters",
-        'max' => "Username cannot contain more than". $this->value('username.max') "characters",
+        'min' => "Username cannot contain less than ". $this->value('username.min') . " characters",
+        'max' => "Username cannot contain more than ". $this->value('username.max') . " characters",
         'specialCharacters' => "Username cannot contain special characters",
     ]);
 }
@@ -701,6 +716,7 @@ public function registerAction(): void
     if ($this->request->isPost() && $this->request->hasPostNames($names)) {
         $data = $this->request->postParams($names);
         $data['avatar'] = self::$config->get('default.path.avatar');
+        $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
         if ($this->model->register($data)) {
             $this->redirect(self::$route->get('auth.login'), ['email' => $data['email']]);
@@ -1841,7 +1857,7 @@ private static $rules = [
     ],
 
     'form' => [
-        'checkbox' => ['id', 'name', 'label', 'checked'],
+        'checkbox' => ['id', 'name', 'label'],
         'input' => ['type', 'name'],
         'select' => ['name', 'options', 'selected', 'show', 'label'],
         'submit' => ['text'],
@@ -1914,7 +1930,6 @@ Component::render('form.checkbox', [
     'id' => "regulations",
     'name' => "regulations",
     'label' => "I have read the regulations",
-    'checked' => false,
 ]);
 ```
 ![](readme_img/components/form.checbox.png)
@@ -2173,5 +2188,14 @@ public function queryString(): string
 public function file(string $name, $default = null)
 {
     return $this->files[$name] ?? $default;
+}
+```
+
+### Checkbox
+* **get**: Method returns 1 or 0 in dependens if checkbox exists.
+```
+public static function get($checkbox)
+{
+    if ($checkbox) {return 1;} else {return 0;}
 }
 ```
