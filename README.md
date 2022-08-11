@@ -17,10 +17,7 @@ The project is a complete file package to create applications in PHP technology.
 5. Configure your `./config/config.php` file
 6. Import tables from file `./sql/database.sql` to your database
 
-## Tree directory
-   - 📄 [README.md](README.md)        
-   - 📄 [composer.json](composer.json)
-   - 📄 [composer.lock](composer.lock)
+## Tree directory   
    - 📂 __config__
      - 📄 [config\_dist.php](config/config_dist.php)
    - 📄 [index.php](index.php)
@@ -133,6 +130,7 @@ The project is a complete file package to create applications in PHP technology.
        - 📂 __avatar__
 
 ## Table of contents
+- [Screen shots](#screen-shots)
 - [Routing](#routing)
   - [How to create new routing](#how-to-create-new-routing)
   - [How use routing](#how-use-routing)
@@ -167,11 +165,32 @@ The project is a complete file package to create applications in PHP technology.
   - [Methods](#methods)
   - [Component rules](#component-rules)
   - [Avaiable components](#available-components)
-- [Screen shots](#screen-shots)
 - [Helpers](#helpers)
   - [Session](#session)
   - [Request](#request)
   - [Checkbox](#checkbox)
+
+## Screen shots
+* **register**
+
+![](readme_img/project/register.png)
+
+* **login**
+
+![](readme_img/project/login.png)
+
+* **profile**
+
+![](readme_img/project/profile.png)
+
+* **guest menu**
+
+![](readme_img/project/menu.guest.png)
+
+* **user menu**
+
+![](readme_img/project/menu.user.png)
+
 ## Routing
 ### How to create new routing
 Create a new route in `routes/routes.php` by method `group()`.
@@ -710,11 +729,7 @@ final protected function requireAdmin(): void
 ```
 public function registerAction(): void
 {
-    View::set(['title' => "Register"]);
-    $names = ['username', 'email', 'password', 'repeat_password'];
-
-    if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-        $data = $this->request->postParams($names);
+    if ($data = $this->request->isPost(['username', 'email', 'password', 'repeat_password'])) {
         $data['avatar'] = self::$config->get('default.path.avatar');
         $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
@@ -734,12 +749,7 @@ public function registerAction(): void
 ```
 public function loginAction(): void
 {
-    View::set(['title' => "Login"]);
-    $names = ['email', 'password'];
-
-    if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-        $data = $this->request->postParams($names);
-
+    if ($data = $this->request->isPost(['email', 'password'])) {
         if ($this->model->login($data)) {
             $this->redirect(self::$config->get('default.route.home'));
         } else {
@@ -762,8 +772,7 @@ public function loginAction(): void
 ```
 public function forgotPasswordAction(): void
 {
-    View::set(['title' => "Password reminder"]);
-    if ($this->request->isPost() && $email = $this->request->postParam('email')) {
+    if ($email = $this->request->isPost(['email'])) {
         if ($this->auth->existsEmail($email)) {
             $username = $this->model->find(['email' => $email])->username;
             $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
@@ -781,13 +790,8 @@ public function forgotPasswordAction(): void
 ```
 public function resetPasswordAction()
 {
-  View::set(['title' => "Password reset"]);
-  $names = ['password', 'repeat_password', 'code'];
-
-  if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-      $data = $this->request->postParams($names);
-      $code = $data['code'];
-      $this->checkCodeToResetPassword($code);
+  if ($data = $this->request->isPost(['password', 'repeat_password', 'code'])) {
+      $this->checkCodeToResetPassword($code = $data['code']);
 
       if ($this->auth->resetPassword($data, $code)) {
           $this->redirect(self::$route->get('auth.login'), ['email' => $user->email]);
@@ -840,7 +844,6 @@ public function logoutAction(): void
 ```
 public function profileAction()
 {
-  View::set(['title' => "User profile", 'style' => "profile"]);
   $this->view->render('user/profile');
 }
 ```
@@ -849,9 +852,7 @@ public function profileAction()
 ```
 public function updateAction(): void
 {
-    if ($this->request->isPost()) {
-        $toUpdate = $this->request->postParam('update');
-
+    if ($toUpdate = $this->request->isPost(['update'])) {
         if (in_array($toUpdate, ['username', 'password', 'avatar'])) {
             $action = "update" . ucfirst($toUpdate);
             $this->$action();
@@ -866,9 +867,8 @@ public function updateAction(): void
 ```
 private function updateUsername(): void
 {
-    if ($this->request->hasPostName('username')) {
-        $data = ['username' => $this->request->postParam('username')];
-        $this->user->updateUsername($data);
+    if ($username = $this->request->hasPostName('username')) {
+        $this->user->updateUsername(['username' => $username]);
     }
 }
 ```
@@ -877,10 +877,7 @@ private function updateUsername(): void
 ```
 private function updatePassword(): void
 {
-    $names = ['current_password', 'password', 'repeat_password'];
-
-    if ($this->request->hasPostNames($names)) {
-        $data = $this->request->postParams($names);
+    if ($data = $this->request->hasPostNames(['current_password', 'password', 'repeat_password'])) {
         $this->user->updatePassword($data);
     }
 }
@@ -1963,28 +1960,6 @@ Component::render('form.select', [
 
 ![](readme_img/components/form.select.data.png)
 
-## Screen shots
-* **register**
-
-![](readme_img/template/register.png)
-
-* **login**
-
-![](readme_img/template/login.png)
-
-* **profile**
-
-![](readme_img/template/profile.png)
-
-* **guest menu**
-
-![](readme_img/menu/guest.png)
-
-* **user menu**
-
-![](readme_img/menu/user.png)
-
-
 ## Helpers
 ### Session
 + **has($name): bool**: Method checks if exists session with given name.
@@ -2084,19 +2059,20 @@ public function param(string $name, $default = null)
 }
 ```
 
-* **hasPost(): bool**: Method checks if exists any post params.
+* **isPost()**: Method checks if request method is post. If input parameter $names is not empty, method require to exists post parameters in $names and returns values of them.
 ```
-public function hasPost(): bool
+public function isPost(array $names = [])
 {
-    return !empty($this->post);
-}
-```
-
-* **postParam(string $name, $default = null)**: Method returns post value of request with given name.
-```
-public function postParam(string $name, $default = null)
-{
-    return $this->post[$name] ?? $default;
+    if ($status = $this->server['REQUEST_METHOD'] === 'POST') {
+        if (!empty($names) && ($status = $this->hasPostNames($names, false))) {
+            if (count($data = $this->postParams($names)) == 1) {
+                return $data[$names[0]];
+            } else {
+                return $data;
+            }
+        }
+    }
+    return $status;
 }
 ```
 
@@ -2104,36 +2080,72 @@ public function postParam(string $name, $default = null)
 ```
 public function postParams(array $names)
 {
-    $output = [];
-
     foreach ($names as $name) {
         $output[$name] = $this->postParam($name);
     }
 
-    return $output;
+    return $output ?? [];
 }
 ```
 
-* **hasPostName(string $name): bool**: Method checks if exists post parameter with given name.
+* **postParam(string $name, $default = null)**: Method returns post value of request with given name.
+
 ```
-public function hasPostName(string $name): bool
+public function postParam(string $name, $default = null)
 {
-    if (!isset($this->post[$name])) {return false;}
-    return true;
+    return $this->post[$name] ?? $default;
 }
 ```
 
-* **hasPostNames(array $names): bool**: Method checks if exists post parameters with given names.
+* **hasPostNames(array $names, bool $returnData = true)**: Method checks if exists post parameters with given names. If input parameter $returnData is set to true, method returns values of post parameters from $names.
 ```
-public function hasPostNames(array $names): bool
+public function hasPostNames(array $names, bool $returnData = true)
 {
     foreach ($names as $name) {
-        if (!isset($this->post[$name])) {
+        if ($this->hasPostName($name, false) === false) {
             return false;
         }
     }
 
-    return true;
+    return $returnData ? $this->postParams($names) : true;
+}
+```
+
+* **hasPostName(string $name)**: Method checks if exists post parameter with given name. If input parameter $returnData is set to true, method returns value of post parameter of $name.
+```
+public function hasPostName(string $name, bool $returnData = true)
+{
+    if (!isset($this->post[$name])) {return false;}
+    return $returnData ? $this->postParam($name) : true;
+}
+```
+
+* **isGet(): bool**:  Method checks if request method is get. If input parameter $names is not empty, method require to exists get parameters in $names and returns values of them.
+```
+public function isGet(array $names = []): bool
+{
+    if ($status = $this->server['REQUEST_METHOD'] === 'GET') {
+        if (!empty($names) && ($status = $this->hasGetNames($names, false))) {
+            if (count($data = $this->getParams($names)) == 1) {
+                return $data[$names[0]];
+            } else {
+                return $data;
+            }
+        }
+    }
+    return $status;
+}
+```
+
+* **getParams(array $names)**: Method returns get values of request with given names as array.
+```
+public function getParams(array $names)
+{
+    foreach ($names as $name) {
+        $output[$name] = $this->getParam($name);
+    }
+
+    return $output ?? [];
 }
 ```
 
@@ -2145,33 +2157,26 @@ public function getParam(string $name, $default = null)
 }
 ```
 
-* **getParams(array $names)**: Method returns get values of request with given names as array.
+* **hasGetNames(array $names, bool $returnData = true)**: Method checks if exists get parameters with given names. If input parameter $returnData is set to true, method returns values of get parameters from $names.
 ```
-public function getParams(array $names)
+public function hasGetNames(array $names, bool $returnData = true)
 {
-    $output = [];
-
     foreach ($names as $name) {
-        $output[$name] = $this->getParam($name);
+        if ($this->hasGetName($name, false) === false) {
+            return false;
+        }
     }
 
-    return $output;
+    return $returnData ? $this->getParams($names) : true;
 }
 ```
 
-* **isPost(): bool**: Method checks if request method is post.
+* **hasGetName(string $name, bool $returnData = true)**: Method checks if exists get parameter with given name. If input parameter $returnData is set to true, method returns value of get parameter from $name.
 ```
-public function isPost(): bool
+public function hasGetName(string $name, bool $returnData = true)
 {
-    return $this->server['REQUEST_METHOD'] === 'POST';
-}
-```
-
-* **isGet(): bool**: Method checks if request method is get.
-```
-public function isGet(): bool
-{
-    return $this->server['REQUEST_METHOD'] === 'GET';
+    if (!isset($this->get[$name])) {return false;}
+    return $returnData ? $this->getParam($name) : true;
 }
 ```
 
