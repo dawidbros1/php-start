@@ -31,9 +31,7 @@ class UserController extends Controller
 
     public function updateAction(): void
     {
-        if ($this->request->isPost()) {
-            $toUpdate = $this->request->postParam('update');
-
+        if ($toUpdate = $this->request->isPost(['update'])) {
             if (in_array($toUpdate, ['username', 'password', 'avatar'])) {
                 $action = "update" . ucfirst($toUpdate);
                 $this->$action();
@@ -45,18 +43,14 @@ class UserController extends Controller
 
     private function updateUsername(): void
     {
-        if ($this->request->hasPostName('username')) {
-            $data = ['username' => $this->request->postParam('username')];
-            $this->user->updateUsername($data);
+        if ($username = $this->request->hasPostName('username')) {
+            $this->user->updateUsername(['username' => $username]);
         }
     }
 
     private function updatePassword(): void
     {
-        $names = ['current_password', 'password', 'repeat_password'];
-
-        if ($this->request->hasPostNames($names)) {
-            $data = $this->request->postParams($names);
+        if ($data = $this->request->hasPostNames(['current_password', 'password', 'repeat_password'])) {
             $this->user->updatePassword($data);
         }
     }

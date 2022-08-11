@@ -26,10 +26,8 @@ class AuthController extends Controller
     public function registerAction(): void
     {
         View::set(['title' => "Rejestracja"]);
-        $names = ['username', 'email', 'password', 'repeat_password'];
 
-        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-            $data = $this->request->postParams($names);
+        if ($data = $this->request->isPost(['username', 'email', 'password', 'repeat_password'])) {
             $data['avatar'] = self::$config->get('default.path.avatar');
             $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
@@ -47,11 +45,8 @@ class AuthController extends Controller
     public function loginAction(): void
     {
         View::set(['title' => "Logowanie"]);
-        $names = ['email', 'password'];
 
-        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-            $data = $this->request->postParams($names);
-
+        if ($data = $this->request->isPost(['email', 'password'])) {
             if ($this->model->login($data)) {
                 $this->redirect(self::$config->get('default.route.home'));
             } else {
@@ -72,7 +67,7 @@ class AuthController extends Controller
     public function forgotPasswordAction(): void
     {
         View::set(['title' => "Przypomnienie hasła"]);
-        if ($this->request->isPost() && $email = $this->request->postParam('email')) {
+        if ($email = $this->request->isPost(['email'])) {
             if ($this->model->existsEmail($email)) {
                 $username = $this->model->find(['email' => $email])->username;
                 $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
@@ -88,12 +83,9 @@ class AuthController extends Controller
     public function resetPasswordAction(): void
     {
         View::set(['title' => "Reset hasła"]);
-        $names = ['password', 'repeat_password', 'code'];
 
-        if ($this->request->isPost() && $this->request->hasPostNames($names)) {
-            $data = $this->request->postParams($names);
-            $code = $data['code'];
-            $this->checkCodeToResetPassword($code);
+        if ($data = $this->request->isPost(['password', 'repeat_password', 'code'])) {
+            $this->checkCodeToResetPassword($code = $data['code']);
 
             if ($user = $this->model->resetPassword($data, $code)) {
                 $this->redirect('auth.login', ['email' => $user->email]);
@@ -102,7 +94,7 @@ class AuthController extends Controller
             }
         }
 
-        if ($this->request->isGet() && $code = $this->request->getParam('code')) {
+        if ($code = $this->request->isGet(['code'])) {
             $this->checkCodeToResetPassword($code);
             $this->view->render('auth/resetPassword', ['email' => Session::get($code), 'code' => $code]);
         } else {
