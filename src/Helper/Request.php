@@ -46,13 +46,11 @@ class Request
 
     public function postParams(array $names)
     {
-        $output = [];
-
         foreach ($names as $name) {
             $output[$name] = $this->postParam($name);
         }
 
-        return $output;
+        return $output ?? [];
     }
 
     public function postParam(string $name, $default = null)
@@ -94,13 +92,11 @@ class Request
 
     public function getParams(array $names)
     {
-        $output = [];
-
         foreach ($names as $name) {
             $output[$name] = $this->getParam($name);
         }
 
-        return $output;
+        return $output ?? [];
     }
 
     public function getParam(string $name, $default = null)
