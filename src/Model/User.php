@@ -34,7 +34,7 @@ class User extends Model
     public function updatePassword($data)
     {
         if (!$same = ($this->password == $this->hash($data['current_password']))) {
-            Session::set("w:current_password:same", "Podane hasło jest nieprawidłowe");
+            Session::set("error:current_password:same", "Podane hasło jest nieprawidłowe");
         }
 
         if ($this->validate($data) && $same) {
