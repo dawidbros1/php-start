@@ -130,7 +130,7 @@ The project is a complete file package to create applications in PHP technology.
        - 📂 __avatar__
 
 ## Table of contents
-- [Screen shots](#screen-shots)
+- [Screenshots](#screenshots)
 - [Routing](#routing)
   - [How to create new routing](#how-to-create-new-routing)
   - [How use routing](#how-use-routing)
@@ -170,24 +170,14 @@ The project is a complete file package to create applications in PHP technology.
   - [Request](#request)
   - [Checkbox](#checkbox)
 
-## Screen shots
-* **register**
-
+## Screenshots
 ![](readme_img/project/register.png)
-
-* **login**
 
 ![](readme_img/project/login.png)
 
-* **profile**
-
 ![](readme_img/project/profile.png)
 
-* **guest menu**
-
 ![](readme_img/project/menu.guest.png)
-
-* **user menu**
 
 ![](readme_img/project/menu.user.png)
 
