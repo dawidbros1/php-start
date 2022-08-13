@@ -11,7 +11,6 @@ abstract class Model
 {
     protected static $validator = null;
     protected static $hashMethod = null;
-    protected $rules;
 
     public static function initConfiguration($hashMethod)
     {
@@ -19,43 +18,19 @@ abstract class Model
         self::$hashMethod = $hashMethod;
     }
 
-    public function find(array $input, string $options = "")
+    public function __construct(array $data = [], bool $onlyFillable = false)
     {
-        if ($data = $this->repository->get($input, $options)) {
-            $this->set($data);
-            return $this;
+        $className = $this->getClassName();
+
+        if ($onlyFillable == false) {
+            $rules = "App\Rules\\" . $className . "Rules";
+            $repository = "App\Repository\\" . $className . "Repository";
+
+            $this->rules = new $rules;
+            $this->repository = new $repository;
         }
 
-        return null;
-    }
-
-    public function findById($id)
-    {
-        return $this->find(['id' => $id]);
-    }
-
-    public function findAll(array $input, string $options = "")
-    {
-        $output = [];
-        $data = $this->repository->getAll($input, $options);
-
-        if ($data) {
-            foreach ($data as $item) {
-                array_push($output, $this->object($item));
-            }
-        }
-
-        return $output;
-    }
-
-    protected function validate($data)
-    {
-        return self::$validator->validate($data, $this->rules);
-    }
-
-    protected function validateImage($FILE, $type)
-    {
-        return self::$validator->validateImage($FILE, $this->rules, $type);
+        $this->set($data);
     }
 
     public function set($data)
@@ -67,6 +42,55 @@ abstract class Model
         }
     }
 
+    public function find(array $input, string $options = "", bool $onlyFillable = false)
+    {
+        if ($data = $this->repository->get($input, $options)) {
+            return $this->createObject($data, $onlyFillable);
+        }
+
+        return null;
+    }
+
+    public function findById($id)
+    {
+        return $this->find(['id' => $id]);
+    }
+
+    public function findAll(array $input, string $options = "", bool $onlyFillable = true)
+    {
+        $output = [];
+        $data = $this->repository->getAll($input, $options);
+        $className = $this->getClassName();
+        $model = "App\Model\\" . $className;
+
+        if ($data) {
+            foreach ($data as $item) {
+                $output[] = $this->createObject($item, $onlyFillable);
+            }
+        }
+
+        return $output;
+    }
+
+    private function createObject($data, $onlyFillable)
+    {
+        $className = $this->getClassName();
+        $model = "App\Model\\" . $className;
+        return new $model($data, $onlyFillable);
+    }
+
+    // Validation
+    protected function validate($data)
+    {
+        return self::$validator->validate($data, $this->rules);
+    }
+
+    protected function validateImage($FILE, $type)
+    {
+        return self::$validator->validateImage($FILE, $this->rules, $type);
+    }
+
+    // CRUD
     public function create(array $data, $validate = true)
     {
         $data['user_id'] = User::ID();
@@ -93,8 +117,10 @@ abstract class Model
 
             $this->escape();
             $this->repository->update($data);
-            Session::success('Dane zostały zaktualizowane');
+            Session::success('Dane zostały zaktualizowane'); // Default value
+            return true;
         }
+        return false;
     }
 
     public function delete(?int $id = null)
@@ -106,6 +132,7 @@ abstract class Model
         }
     }
 
+    // OTHER
     public function getArray($array)
     {
         $properties = get_object_vars($this);
@@ -155,11 +182,10 @@ abstract class Model
         }
     }
 
-    private function object($data)
+    private function getClassName()
     {
-        $this->set($data);
-        $object = clone $this;
-        unset($object->rules);
-        return $object;
+        $path = explode('\\', get_class($this));
+        $className = array_pop($path);
+        return $className;
     }
 }
