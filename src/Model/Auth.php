@@ -6,18 +6,10 @@ namespace App\Model;
 
 use App\Helper\Session;
 use App\Model\Model;
-use App\Repository\AuthRepository;
-use App\Rules\AuthRules;
 
 class Auth extends Model
 {
     public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
-
-    public function __construct()
-    {
-        $this->repository = new AuthRepository();
-        $this->rules = new AuthRules();
-    }
 
     public function register(array $data)
     {
