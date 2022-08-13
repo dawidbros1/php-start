@@ -5,9 +5,8 @@ declare (strict_types = 1);
 namespace App\Model;
 
 use App\Helper\Session;
-use App\Model\Model;
 
-class Mail extends Model
+class Mail
 {
     protected $config = [];
 
