@@ -5,18 +5,10 @@ declare (strict_types = 1);
 namespace App\Model;
 
 use App\Helper\Session;
-use App\Repository\UserRepository;
-use App\Rules\UserRules;
 
 class User extends Model
 {
     public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
-
-    public function __construct()
-    {
-        $this->rules = new UserRules();
-        $this->repository = new UserRepository();
-    }
 
     public function logout()
     {

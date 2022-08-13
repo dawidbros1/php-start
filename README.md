@@ -999,13 +999,42 @@ public static function initConfiguration($hashMethod)
 }
 ```
 
+* **__construct(array $data = [], bool $onlyFillable = false)**: Creates rules and repository if needs and sets data if is not empty.
+```
+public function __construct(array $data = [], bool $onlyFillable = false)
+{
+    $className = $this->getClassName();
+
+    if ($onlyFillable == false) {
+        $rules = "App\Rules\\" . $className . "Rules";
+        $repository = "App\Repository\\" . $className . "Repository";
+
+        $this->rules = new $rules;
+        $this->repository = new $repository;
+    }
+
+    $this->set($data);
+}
+```
+
+* **set($data)**: Method sets all fillable properties in object.
+```
+public function set($data)
+{
+    foreach ($data as $key => $value) {
+        if (in_array($key, $this->fillable)) {
+            $this->$key = $value;
+        }
+    }
+}
+```
+
 * **find(array $input, string $options = "")**: Method returns one record from database as object.
 ```
-public function find(array $input, string $options = "")
+public function find(array $input, string $options = "", bool $onlyFillable = false)
 {
     if ($data = $this->repository->get($input, $options)) {
-        $this->set($data);
-        return $this;
+        return $this->createObject($data, $onlyFillable);
     }
 
     return null;
@@ -1022,18 +1051,30 @@ public function findById($id)
 
 * **findAll(array $input, string $options = "")**: Method returns many records from database as array of object.
 ```
-public function findAll(array $input, string $options = "")
+public function findAll(array $input, string $options = "", bool $onlyFillable = true)
 {
     $output = [];
     $data = $this->repository->getAll($input, $options);
+    $className = $this->getClassName();
+    $model = "App\Model\\" . $className;
 
     if ($data) {
         foreach ($data as $item) {
-            array_push($output, $this->object($item));
+            $output[] = $this->createObject($item, $onlyFillable);
         }
     }
 
     return $output;
+}
+```
+
+* **createObject($data, $onlyFillable)**: Method returns object with initialized data.
+```
+private function createObject($data, $onlyFillable)
+{
+    $className = $this->getClassName();
+    $model = "App\Model\\" . $className;
+    return new $model($data, $onlyFillable);
 }
 ```
 
@@ -1050,18 +1091,6 @@ protected function validate($data)
 protected function validateImage($FILE, $type)
 {
     return self::$validator->validateImage($FILE, $this->rules, $type);
-}
-```
-
-* **set($data)**: Method sets all fillable properties in object.
-```
-public function set($data)
-{
-    foreach ($data as $key => $value) {
-        if (in_array($key, $this->fillable)) {
-            $this->$key = $value;
-        }
-    }
 }
 ```
 
@@ -1192,14 +1221,13 @@ protected function hashFile($file)
 }
 ```
 
-* **object($data)**: Method fills object with **$data** and next returns it.
+* **getClassName()** Method returns name of class for current object.
 ```
-private function object($data)
+private function getClassName()
 {
-    $this->set($data);
-    $object = clone $this;
-    unset($object->rules);
-    return $object;
+    $path = explode('\\', get_class($this));
+    $className = array_pop($path);
+    return $className;
 }
 ```
 
@@ -1477,7 +1505,7 @@ private function validateConfig(array $config): void
 private function createConnection(array $config): void
 {
   $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
-  $this->pdo = new PDO($dsn, $config['user'], $config['password'], [
+  self::$pdo = new PDO($dsn, $config['user'], $config['password'], [
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
   ]);
 }
@@ -1488,7 +1516,7 @@ private function createConnection(array $config): void
 public function get(array $input, $options)
 {
     $conditions = $this->getConditions($input);
-    $stmt = $this->pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
+    $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
     $stmt->execute($input);
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
     return $data;
@@ -1500,7 +1528,7 @@ public function get(array $input, $options)
 public function getAll(array $input, $options): ?array
 {
     $conditions = $this->getConditions($input);
-    $stmt = $this->pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
+    $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
     $stmt->execute($input);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $data;
@@ -1540,7 +1568,7 @@ public function create($object)
 
     try {
         $sql = "INSERT INTO $this->table ($params) VALUES ($values)";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = self::$pdo->prepare($sql);
         $stmt->execute($data);
     } catch (Throwable $e) {
         throw new StorageException('Nie udało się dodać nowej zawartości', 400, $e);
@@ -1560,7 +1588,7 @@ public function update($data)
     }
 
     $sql = "UPDATE $this->table SET $params WHERE id=:id";
-    $stmt = $this->pdo->prepare($sql);
+    $stmt = self::$pdo->prepare($sql);
     $stmt->execute($data);
 }
 ```
@@ -1570,7 +1598,7 @@ public function update($data)
 public function delete(int $id)
 {
     $sql = "DELETE FROM $this->table WHERE id = :id";
-    $this->pdo->prepare($sql)->execute(['id' => $id]);
+    self::pdo->prepare($sql)->execute(['id' => $id]);
 }
 ```
 
@@ -1579,7 +1607,7 @@ public function delete(int $id)
 ```
 public function getEmails(): array
 {
-    $stmt = $this->pdo->prepare("SELECT email FROM users");
+    $stmt = self::$pdo->prepare("SELECT email FROM users");
     $stmt->execute();
     $emails = $stmt->fetchAll(PDO::FETCH_COLUMN, 'email');
     return $emails;
