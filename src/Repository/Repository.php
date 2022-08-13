@@ -11,9 +11,8 @@ use PDOException;
 
 abstract class Repository
 {
-    protected $pdo;
+    protected static $pdo;
     protected static $config;
-    protected static $user_id;
     protected $table;
 
     public static function initConfiguration($config)
@@ -34,7 +33,7 @@ abstract class Repository
     private function createConnection(array $config): void
     {
         $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
-        $this->pdo = new PDO($dsn, $config['user'], $config['password'], [
+        self::$pdo = new PDO($dsn, $config['user'], $config['password'], [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         ]);
     }
@@ -56,7 +55,7 @@ abstract class Repository
     public function get(array $input, $options)
     {
         $conditions = $this->getConditions($input);
-        $stmt = $this->pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
+        $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
         $stmt->execute($input);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         return $data;
@@ -65,7 +64,7 @@ abstract class Repository
     public function getAll(array $input, $options): ?array
     {
         $conditions = $this->getConditions($input);
-        $stmt = $this->pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
+        $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
         $stmt->execute($input);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $data;
@@ -88,7 +87,7 @@ abstract class Repository
 
         try {
             $sql = "INSERT INTO $this->table ($params) VALUES ($values)";
-            $stmt = $this->pdo->prepare($sql);
+            $stmt = self::$pdo->prepare($sql);
             $stmt->execute($data);
         } catch (Throwable $e) {
             throw new StorageException('Nie udało się dodać nowej zawartości', 400, $e);
@@ -105,14 +104,14 @@ abstract class Repository
         }
 
         $sql = "UPDATE $this->table SET $params WHERE id=:id";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = self::$pdo->prepare($sql);
         $stmt->execute($data);
     }
 
     public function delete(int $id)
     {
         $sql = "DELETE FROM $this->table WHERE id = :id";
-        $this->pdo->prepare($sql)->execute(['id' => $id]);
+        self::$pdo->prepare($sql)->execute(['id' => $id]);
     }
 
     private function getConditions(array $input)
