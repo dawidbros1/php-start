@@ -13,7 +13,7 @@ The project is a complete file package to create applications in PHP technology.
 1. Run `git clone https://github.com/dawidbros1/php-start.git`
 2. Run `componser install`
 3. Create a MySQL database for the project
-4. From the project root folder run `cd .\config\` and next `rename config_dist.php config.php`
+4. From the project root folder run `cd .\config\` and next `copy config_dist.php config.php`npm 
 5. Configure your `./config/config.php` file
 6. Import tables from file `./sql/database.sql` to your database
 
