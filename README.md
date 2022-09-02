@@ -171,6 +171,8 @@ The project is a complete file package to create applications in PHP technology.
   - [Checkbox](#checkbox)
 
 ## Screenshots
+<kbd>
+
 ![](readme_img/project/register.png)
 
 ![](readme_img/project/login.png)
@@ -180,6 +182,8 @@ The project is a complete file package to create applications in PHP technology.
 ![](readme_img/project/menu.guest.png)
 
 ![](readme_img/project/menu.user.png)
+
+</kbd>
 
 ## Routing
 ### How to create new routing
