@@ -4,8 +4,6 @@ declare (strict_types = 1);
 
 namespace App\Repository;
 
-use PDO;
-
 class AuthRepository extends Repository
 {
     public function __construct()
@@ -18,7 +16,7 @@ class AuthRepository extends Repository
     {
         $stmt = self::$pdo->prepare("SELECT email FROM users");
         $stmt->execute();
-        $emails = $stmt->fetchAll(PDO::FETCH_COLUMN, 'email');
+        $emails = $stmt->fetchAll();
         return $emails;
     }
 }

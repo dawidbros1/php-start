@@ -21,11 +21,11 @@ abstract class Controller extends Validator
 {
     protected static $config = [];
     protected static $route = [];
-
     protected $request;
     protected $view;
     protected $user = null;
     protected $mail;
+    private $userModel;
 
     public static function initConfiguration(Config $config, Route $route): void
     {
@@ -39,8 +39,9 @@ abstract class Controller extends Validator
             throw new ConfigurationException('Configuration error');
         }
 
-        Model::initConfiguration(self::$config->get('hash.method'));
+        Model::initConfiguration(self::$config);
         Repository::initConfiguration(self::$config->get('db'));
+        User::initConfiguration(self::$config);
 
         $this->mail = new Mail(self::$config->get('mail'));
         $this->userModel = new User();
@@ -59,7 +60,7 @@ abstract class Controller extends Validator
             $action = $this->action() . 'Action';
             if (!method_exists($this, $action)) {
                 Session::error('Akcja do której chciałeś otrzymać dostęp nie istnieje');
-                $this->redirect("./");
+                $this->redirect("home");
             }
 
             $this->$action();
@@ -89,7 +90,7 @@ abstract class Controller extends Validator
         exit();
     }
 
-    final private function action(): string
+    final protected function action(): string
     {
         return $this->request->getParam('action', "home");
     }

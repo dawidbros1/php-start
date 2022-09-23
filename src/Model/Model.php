@@ -12,10 +12,10 @@ abstract class Model
     protected static $validator = null;
     protected static $hashMethod = null;
 
-    public static function initConfiguration($hashMethod)
+    public static function initConfiguration(Config $config)
     {
         self::$validator = new Validator();
-        self::$hashMethod = $hashMethod;
+        self::$hashMethod = $config->get("default.hash.method");
     }
 
     public function __construct(array $data = [], bool $onlyFillable = false)

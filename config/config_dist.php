@@ -29,9 +29,9 @@ return new Config(
                 'home' => 'home', // page after login
                 'logout' => 'auth.login', // page after logout
             ],
-        ],
-        'hash' => [
-            'method' => 'sha256', // sha25 || md5 ...
+            'hash' => [
+                'method' => 'sha256', // sha25 || md5 ...
+            ],
         ],
         'reCAPTCHA' => [
             'key' => [

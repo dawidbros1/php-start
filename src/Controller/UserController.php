@@ -58,10 +58,9 @@ class UserController extends Controller
     private function updateAvatar(): void
     {
         $path = self::$config->get('upload.path.avatar');
-        $defaultAvatar = self::$config->get('default.path.avatar');
 
         if ($file = $this->request->file('avatar')) {
-            $this->user->updateAvatar($file, $path, $defaultAvatar);
+            $this->user->updateAvatar($file, $path);
         }
     }
 }
