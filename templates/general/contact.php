@@ -2,7 +2,7 @@
 
 <?php
 
-use App\Component;
+use App\Component\Component;
 use App\Helper\Session;
 
 ?>
@@ -70,7 +70,7 @@ use App\Helper\Session;
 
                 <?php Component::render('error', ['type' => "reCAPTCHA", 'names' => ['robot']])?>
 
-                <button class = "mt-1">Wyślij wiadomość</button>
+                <button class = "mt-2">Wyślij wiadomość</button>
             </form>
         </div>
     </div>

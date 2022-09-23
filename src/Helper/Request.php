@@ -76,7 +76,7 @@ class Request
     }
 
     // =============== GET =============== //
-    public function isGet(array $names = []): bool
+    public function isGet(array $names = [])
     {
         if ($status = $this->server['REQUEST_METHOD'] === 'GET') {
             if (!empty($names) && ($status = $this->hasGetNames($names, false))) {
