@@ -8,6 +8,14 @@ use App\Helper\Session;
 
 class User extends Model
 {
+    public static $defaultAvatar;
+    public static $uploadedLocation;
+
+    public static function initConfiguration(Config $config)
+    {
+        self::$defaultAvatar = $config->get('default.path.avatar');
+        self::$uploadedLocation = $config->get('upload.path.avatar');
+    }
     public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
 
     public function logout()
@@ -37,17 +45,15 @@ class User extends Model
         }
     }
 
-    public function updateAvatar($file, $path, $defaultAvatar)
+    public function updateAvatar($file, $path)
     {
         if ($this->validateImage($file, 'avatar')) {
             $file = $this->hashFile($file);
 
             if ($this->uploadFile($path, $file)) {
-                if ($this->avatar != $defaultAvatar) {
-                    $this->deleteAvatar();
-                }
+                $this->deleteAvatar();
 
-                if ($this->update(['avatar' => $path . $file['name']], ['avatar'], false)) {
+                if ($this->update(['avatar' => $file['name']], ['avatar'], false)) {
                     Session::success('Awatar został zaktualizowany');
                 }
             }
@@ -63,8 +69,16 @@ class User extends Model
 
     public function deleteAvatar()
     {
-        if (file_exists($this->avatar)) {
-            unlink($this->avatar);
+        if ($this->avatar != null && file_exists($this->getAvatar())) {
+            unlink($this->getAvatar());
+        }
+    }
+    public function getAvatar()
+    {
+        if ($this->avatar == null) {
+            return $this->avatar ?? self::$defaultAvatar;
+        } else {
+            return self::$uploadedLocation . $this->avatar;
         }
     }
 
