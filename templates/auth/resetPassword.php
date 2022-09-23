@@ -16,7 +16,7 @@ use App\Helper\Session;
             <div class="p-4">
                 <form action="<?=$route->get('auth.resetPassword')?>" method="post">
 
-                    <?php Component::render('form.input', ['mt' => "mt-1", 'value' => $params['email'] ?? "", 'disabled' => 'disabled'])?>
+                    <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", 'value' => $params['email'] ?? "", 'disabled' => 'disabled'])?>
 
                     <?php Component::render('form.input', ['type' => "password", 'name' => "password", 'description' => "Nowe hasło"])?>
                     <?php Component::render('error', ['type' => "password", 'names' => ['between']])?>
@@ -26,7 +26,7 @@ use App\Helper\Session;
 
                     <input type = "hidden" name = "code" value = "<?=$params['code']?>">
 
-                    <?php Component::render('form.button', ['text' => "Przypomnij hasło"])?>
+                    <?php Component::render('form.submit', ['text' => "Przypomnij hasło"])?>
                 </form>
             </div>
         </div>

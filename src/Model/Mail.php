@@ -6,7 +6,7 @@ namespace App\Model;
 
 use App\Helper\Session;
 
-class Mail
+class Mail extends Model
 {
     protected $config = [];
 
