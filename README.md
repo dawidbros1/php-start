@@ -13,9 +13,29 @@ The project is a complete file package to create applications in PHP technology.
 1. Run `git clone https://github.com/dawidbros1/php-start.git`
 2. Run `componser install`
 3. Create a MySQL database for the project
-4. From the project root folder run `cd .\config\` and next `rename config_dist.php config.php`
+4. From the project root folder run `cd .\config\` and next `copy config_dist.php config.php`
 5. Configure your `./config/config.php` file
 6. Import tables from file `./sql/database.sql` to your database
+
+## Config
+* **db**: Set your connection to database
+* **Mail**: Create email on your hosting server and fill field [email]. This email is use to send message by contact form.
+* **upload**: This is a place where uploaded files will be send.
+* **default**: There are a default value for system like a
+    * path.avatar it is basic user avatar
+    * path.medium it is a place where are location social media icons
+    * route.home it is route after login
+    * route.logout it is route after logout
+    * hash.method it is a default method which is you to hash()
+* **hash.method**: This is a method which will be use to hash user password
+* **Google reCAPTCHA**
+You can take keys from https://www.google.com/recaptcha/about/
+
+![](readme_img/config/recaptcha.png)
+
+![](readme_img/config/recaptcha_admin.png)
+
+![](readme_img/config/recaptcha_admin_site_settings.png)
 
 ## Tree directory   
    - 📂 __config__
