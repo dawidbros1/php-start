@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Phantom\Model;
 
+use Phantom\Exception\AppException;
 use Phantom\Helper\Session;
 use Phantom\Validator\Validator;
 
@@ -32,10 +33,17 @@ abstract class Model
             $this->repository = new $repository;
         }
 
-        $this->set($data);
+        $this->setArray($data);
     }
 
-    public function set($data)
+    public function set($property, $value)
+    {
+        if ($this->propertyExists($property)) {
+            $this->$property = $value;
+        }
+    }
+
+    public function setArray($data)
     {
         foreach ($data as $key => $value) {
             if (in_array($key, $this->fillable)) {
@@ -44,6 +52,33 @@ abstract class Model
         }
     }
 
+    // OTHER
+    public function getArray($array)
+    {
+        $properties = get_object_vars($this);
+
+        foreach ($properties as $key => $value) {
+            if (!in_array($key, $array)) {
+                unset($properties[$key]);
+            }
+        }
+
+        return $properties;
+    }
+
+    /* Method starts data validation */
+    protected function validate($data)
+    {
+        return self::$validator->validate($data, $this->rules);
+    }
+
+    /* Method starts image validation */
+    protected function validateImage($FILE, $type)
+    {
+        return self::$validator->validateImage($FILE, $this->rules, $type);
+    }
+
+    // DATABASE => FIND
     public function find(array $input, string $options = "", bool $onlyFillable = false)
     {
         if ($data = $this->repository->get($input, $options)) {
@@ -72,30 +107,13 @@ abstract class Model
         return $output;
     }
 
-    private function createObject($data, $onlyFillable)
-    {
-        $namaspace = $this->getNamespace();
-        return new $namaspace($data, $onlyFillable);
-    }
-
-    // Validation
-    protected function validate($data)
-    {
-        return self::$validator->validate($data, $this->rules);
-    }
-
-    protected function validateImage($FILE, $type)
-    {
-        return self::$validator->validateImage($FILE, $this->rules, $type);
-    }
-
-    // CRUD
+    // DATABASE => SAVE
     public function create(array $data, $validate = true)
     {
         $data['user_id'] = User::ID();
 
         if (($validate === true && $this->validate($data)) || $validate === false) {
-            $this->set($data);
+            $this->setArray($data);
             $this->repository->create($this);
             return true;
         }
@@ -103,25 +121,39 @@ abstract class Model
         return false;
     }
 
-    public function update(array $data, array $toUpdate = [], $validate = true)
+    public function update($toUpdate = [], $validate = true)
     {
+        $data = $this->getArray($toUpdate);
+
         if (($validate === true && $this->validate($data)) || $validate === false) {
-            $this->set($data);
-
-            if (empty($toUpdate)) {
-                $data = $this->getArray($this->fillable);
-            } else {
-                $data = $this->getArray(['id', ...$toUpdate]);
-            }
-
             $this->escape();
-            $this->repository->update($data);
+            $this->repository->update($this);
             Session::success('Dane zostały zaktualizowane'); // Default value
             return true;
         }
         return false;
     }
 
+    // public function update(array $data, array $toUpdate = [], $validate = true)
+    // {
+    //     if (($validate === true && $this->validate($data)) || $validate === false) {
+    //         $this->setArray($data);
+
+    //         if (empty($toUpdate)) {
+    //             $data = $this->getArray($this->fillable);
+    //         } else {
+    //             $data = $this->getArray(['id', ...$toUpdate]);
+    //         }
+
+    //         $this->escape();
+    //         $this->repository->update($data);
+    //         Session::success('Dane zostały zaktualizowane'); // Default value
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    // DATABASE => DELETE
     public function delete(?int $id = null)
     {
         if ($id !== null) {
@@ -132,19 +164,6 @@ abstract class Model
     }
 
     // OTHER
-    public function getArray($array)
-    {
-        $properties = get_object_vars($this);
-
-        foreach ($properties as $key => $value) {
-            if (!in_array($key, $array)) {
-                unset($properties[$key]);
-            }
-        }
-
-        return $properties;
-    }
-
     public function escape()
     {
         foreach ($this->fillable as $index => $key) {
@@ -181,11 +200,10 @@ abstract class Model
         }
     }
 
-    private function getClassName()
+    private function createObject($data, $onlyFillable)
     {
-        $path = explode('\\', get_class($this));
-        $className = array_pop($path);
-        return $className;
+        $namaspace = $this->getNamespace();
+        return new $namaspace($data, $onlyFillable);
     }
 
     private function getNamespace(bool $toArray = false): array | string
@@ -204,5 +222,16 @@ abstract class Model
          */
 
         return $namaspace;
+    }
+
+    private function propertyExists($name)
+    {
+        $properties = get_object_vars($this);
+
+        if (array_key_exists($name, (array) $properties)) {
+            return true;
+        } else {
+            throw new AppException("Property [" . $name . "] doesn't exists");
+        }
     }
 }
