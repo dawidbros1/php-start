@@ -26,7 +26,6 @@ class UserController extends Controller
     {
         View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
         $this->view->render('user/profile');
-
     }
 
     public function updateAction(): void
@@ -44,7 +43,8 @@ class UserController extends Controller
     private function updateUsername(): void
     {
         if ($username = $this->request->hasPostName('username')) {
-            $this->user->updateUsername(['username' => $username]);
+            $this->user->set('username', $username);
+            $this->user->updateUsername();
         }
     }
 

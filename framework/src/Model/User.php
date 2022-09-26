@@ -10,7 +10,6 @@ class User extends Model
 {
     public static $defaultAvatar;
     public static $uploadedLocation;
-
     public static function initConfiguration(Config $config)
     {
         self::$defaultAvatar = $config->get('default.path.avatar');
@@ -24,9 +23,9 @@ class User extends Model
         Session::success("Nastąpiło wylogowanie z systemu");
     }
 
-    public function updateUsername($data)
+    public function updateUsername()
     {
-        if ($this->update($data, ['username'])) {
+        if ($this->update(['username'])) {
             Session::success("Nazwa użytkownika została zmieniona");
         }
     }
@@ -38,8 +37,9 @@ class User extends Model
         }
 
         if ($this->validate($data) && $same) {
-            $data['password'] = $this->hash($data['password']);
-            if ($this->update($data, ['password'], false)) {
+            $this->set('password', $this->hash($data['password']));
+
+            if ($this->update([], false)) {
                 Session::success('Hasło zostało zaktualizowane');
             }
         }
@@ -52,8 +52,9 @@ class User extends Model
 
             if ($this->uploadFile($path, $file)) {
                 $this->deleteAvatar();
+                $this->set('avatar', $file['name']);
 
-                if ($this->update(['avatar' => $file['name']], ['avatar'], false)) {
+                if ($this->update([], false)) {
                     Session::success('Awatar został zaktualizowany');
                 }
             }
