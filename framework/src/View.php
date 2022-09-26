@@ -7,6 +7,7 @@ namespace Phantom;
 class View
 {
     private $user;
+    private $route;
     private static $style = null;
     private static $title = "Brak tytułu";
 
