@@ -8,6 +8,7 @@ use PDO;
 use PDOException;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Exception\StorageException;
+use Throwable;
 
 abstract class Repository
 {
@@ -76,6 +77,7 @@ abstract class Repository
     {
         $object->escape();
         $data = $object->getArray($object->fillable);
+
         $params = "";
         $values = "";
 
@@ -94,9 +96,10 @@ abstract class Repository
         }
     }
 
-    public function update($data)
+    public function update($object)
     {
         $params = "";
+        $data = $object->getArray($object->fillable);
 
         for ($i = 0; $i < count($data); $i++) {
             $params = $params . key($data) . "=:" . key($data) . ($i == count($data) - 1 ? "" : ", ");
