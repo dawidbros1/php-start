@@ -2,8 +2,8 @@
 
 declare (strict_types = 1);
 
-use App\Component\Component;
-use App\Helper\Session;
+use Phantom\Component\Component;
+use Phantom\Helper\Session;
 
 $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
 

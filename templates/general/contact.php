@@ -2,8 +2,8 @@
 
 <?php
 
-use App\Component\Component;
-use App\Helper\Session;
+use Phantom\Component\Component;
+use Phantom\Helper\Session;
 
 ?>
 
