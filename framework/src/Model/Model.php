@@ -11,7 +11,9 @@ abstract class Model
 {
     protected static $validator = null;
     protected static $hashMethod = null;
-
+    protected $rules;
+    protected $repository;
+    protected $fillable;
     public static function initConfiguration(Config $config)
     {
         self::$validator = new Validator();
@@ -20,11 +22,11 @@ abstract class Model
 
     public function __construct(array $data = [], bool $onlyFillable = false)
     {
-        $className = $this->getClassName();
-
         if ($onlyFillable == false) {
-            $rules = "Phantom\Rules\\" . $className . "Rules";
-            $repository = "Phantom\Repository\\" . $className . "Repository";
+            $namaspace = $this->getNamespace(true);
+
+            $rules = $namaspace[0] . "\Rules\\" . $namaspace[2] . "Rules";
+            $repository = $namaspace[0] . "\Repository\\" . $namaspace[2] . "Repository";
 
             $this->rules = new $rules;
             $this->repository = new $repository;
@@ -60,7 +62,6 @@ abstract class Model
     {
         $output = [];
         $data = $this->repository->getAll($input, $options);
-        $className = $this->getClassName();
 
         if ($data) {
             foreach ($data as $item) {
@@ -73,9 +74,8 @@ abstract class Model
 
     private function createObject($data, $onlyFillable)
     {
-        $className = $this->getClassName();
-        $model = "Phantom\Model\\" . $className;
-        return new $model($data, $onlyFillable);
+        $namaspace = $this->getNamespace();
+        return new $namaspace($data, $onlyFillable);
     }
 
     // Validation
@@ -186,5 +186,23 @@ abstract class Model
         $path = explode('\\', get_class($this));
         $className = array_pop($path);
         return $className;
+    }
+
+    private function getNamespace(bool $toArray = false): array | string
+    {
+        $r = new \ReflectionClass($this);
+        $namaspace = $r->getName();
+
+        if ($toArray == true) {
+            $namaspace = explode("\\", $r->getName());
+        }
+
+        /*
+        0 => [ App | Phantom]
+        1 => Model
+        2 => Name of model
+         */
+
+        return $namaspace;
     }
 }

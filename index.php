@@ -26,8 +26,16 @@ $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 try {
     Controller::initConfiguration($config, $route);
     $type = $request->getParam('type', 'general');
-    $controller = "\Phantom\Controller\\" . ucfirst($type) . "Controller";
-    (new $controller($request))->run();
+    $phantom = "\Phantom\Controller\\" . ucfirst($type) . "Controller";
+    $app = "\App\Controller\\" . ucfirst($type) . "Controller";
+
+    if (class_exists($app)) {
+        (new $app($request))->run();
+    } else if (class_exists($phantom)) {
+        (new $phantom($request))->run();
+    } else {
+        //TODO Controller doen't exists
+    }
 
 } catch (ConfigurationException $e) {
     echo '<h1>Wystąpił błąd w aplikacji</h1>';
