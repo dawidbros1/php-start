@@ -9,8 +9,6 @@ use Phantom\Exception\AppException;
 class Component
 {
     private static $default_path = "/../../../templates/";
-    private static $input = [];
-
     public static function render(string $component, array $params = []): void
     {
         $namespace = "App\Component\\" . str_replace(".", "\\", $component);
@@ -30,6 +28,12 @@ class Component
         self::requireParams($component->require, $params);
 
         $styles = Component::getStyles($params);
+
+        foreach ($params as $key => $param) {
+            if (!in_array($key, ['class', 'mt', 'col'])) {
+                ${$key} = $param;
+            }
+        }
 
         include $path;
     }
