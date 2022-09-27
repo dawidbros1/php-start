@@ -15,17 +15,17 @@ abstract class Model
     protected static $config;
     protected $rules;
     protected $repository;
-    protected $fillable;
+    public $fillable;
     public static function initConfiguration(Config $config)
     {
         self::$validator = new Validator();
         self::$config = $config;
         self::$hashMethod = $config->get("default.hash.method");
     }
-
-    public function __construct(array $data = [], bool $onlyFillable = false)
+    /* rulesitory => Rules and Repository */
+    public function __construct(array $data = [], bool $rulesitory = true)
     {
-        if ($onlyFillable == false) {
+        if ($rulesitory == true) {
             $namaspace = $this->getNamespace(true);
 
             $rules = $namaspace[0] . "\Rules\\" . $namaspace[2] . "Rules";
@@ -51,6 +51,13 @@ abstract class Model
             if (in_array($key, $this->fillable)) {
                 $this->$key = $value;
             }
+        }
+    }
+
+    public function get($property)
+    {
+        if ($this->propertyExists($property)) {
+            return $this->$property;
         }
     }
 
@@ -110,9 +117,9 @@ abstract class Model
     }
 
     // DATABASE => SAVE
-    public function create($object, $validate = true)
+    public function create($validate = true)
     {
-        if (($validate === true && $this->validate($object)) || $validate === false) {
+        if (($validate === true && $this->validate($this)) || $validate === false) {
             $this->repository->create($this);
             return true;
         }
