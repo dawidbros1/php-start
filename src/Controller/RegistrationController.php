@@ -16,10 +16,10 @@ class RegistrationController extends Controller
     {
         parent::__construct($request);
         $this->guest();
-        $this->model = new Registration();
+        $this->model = new Registration([], false);
     }
 
-    public function index(): void
+    public function index()
     {
         View::set(['title' => "Rejestracja"]);
 
@@ -27,7 +27,7 @@ class RegistrationController extends Controller
             $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
             if ($this->model->register($data)) {
-                $this->redirect('auth.login', ['email' => $data['email']]);
+                $this->redirect('authorization.login', ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);
                 $this->redirect('registration', $data);

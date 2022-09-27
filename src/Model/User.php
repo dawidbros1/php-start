@@ -10,6 +10,7 @@ use Phantom\Model\Model;
 
 class User extends Model
 {
+    public $id, $username, $email, $password, $avatar, $role, $created;
     public static $defaultAvatar;
     public static $uploadedLocation;
     public static function initConfiguration(Config $config)
@@ -83,6 +84,11 @@ class User extends Model
         } else {
             return self::$uploadedLocation . $this->avatar;
         }
+    }
+
+    public function hashPassword()
+    {
+        $this->password = $this->hash($this->password);
     }
 
     public static function ID()

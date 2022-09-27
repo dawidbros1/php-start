@@ -12,24 +12,27 @@ class Registration extends Model
 {
     public function register(array $data)
     {
-        if ($status = ($this->validate($data)&!$this->isBusyEmail($data['email']))) {
+        $user = new User($data);
+
+        if ($status = ($user->validate($data)&!$this->isUnique($user))) {
+            unset($data);
             $data['avatar'] = self::$config->get('default.path.avatar');
-            $data['password'] = $this->hash($data['password']);
             $data['role'] = "user";
             $data['created'] = date('Y-m-d H:i:s');
 
-            $user = new User($data, true);
+            $user->setArray($data);
+            $user->hashPassword();
 
-            if ($this->create($user, false)) {
+            if ($user->create(false)) {
                 Session::success('Konto zostało utworzone');
             }
         }
 
         return $status;
     }
-    public function isBusyEmail($email)
+    public function isUnique($user)
     {
-        if (in_array($email, $this->repository->getEmails())) {
+        if (in_array($user->get('email'), $user->repository->getEmails())) {
             Session::set("error:email:unique", "Podany adres email jest zajęty");
             return true;
         }
