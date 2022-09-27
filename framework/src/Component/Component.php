@@ -4,30 +4,33 @@ declare (strict_types = 1);
 
 namespace Phantom\Component;
 
-use App\Component\Rules;
 use Phantom\Exception\AppException;
 
 class Component
 {
-    private static $default_path = "/../../../templates/component/";
+    private static $default_path = "/../../../templates/";
     private static $input = [];
 
     public static function render(string $component, array $params = []): void
     {
-        $path = __DIR__ . self::$default_path . str_replace(".", "/", $component) . ".php";
+        $namespace = "App\Component\\" . str_replace(".", "\\", $component);
+
+        if (!class_exists($namespace)) {
+            throw new AppException("Klasa [ $component ] nie istnieje");
+        }
+
+        $component = new $namespace;
+
+        $path = __DIR__ . self::$default_path . $component->template;
 
         if (!file_exists($path)) {
-            throw new AppException("Komponent [ $component ] nie istnieje");
+            throw new AppException("Plik [ $path ] nie istnieje");
         }
 
-        if (array_key_exists('description', $params)) {
-            $params['label'] = $params['description'];
-            $params['placeholder'] = $params['description'];
-            unset($params['description']);
-        }
+        self::requireParams($component->require, $params);
 
-        Component::requireParams($component, $params);
         $styles = Component::getStyles($params);
+
         include $path;
     }
 
@@ -40,13 +43,11 @@ class Component
         return "$mt $class $col";
     }
 
-    public static function requireParams(string $path, array $params)
+    public static function requireParams(array $require, array $params)
     {
-        $rules = Rules::get($path);
-
-        foreach ($rules ?? [] as $rule) {
-            if (!array_key_exists($rule, $params)) {
-                throw new AppException("Wymagany parametr [ $rule ] nie został wprowadzony");
+        foreach ($require ?? [] as $param) {
+            if (!array_key_exists($param, $params)) {
+                throw new AppException("Wymagany parametr [ $param ] nie został wprowadzony");
             }
         }
     }
