@@ -34,7 +34,7 @@ $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
                     <?php Component::render('form.submit', ['text' => "Utwórz konto", 'mt' => "mt-2"])?>
 
                     <p class="text-center mt-3">Masz już konto?
-                        <a href="<?=$route->get('auth.login')?>" class="link">Zaloguj się</a>
+                        <a href="<?=$route->get('authorization.login')?>" class="link">Zaloguj się</a>
                     </p>
                 </form>
             </div>

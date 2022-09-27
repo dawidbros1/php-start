@@ -8,11 +8,10 @@ use Phantom\Helper\Session;
 
 class Mail extends Model
 {
-    protected $config = [];
-
-    public function __construct(array $config)
+    private $mail;
+    public function __construct()
     {
-        $this->config = $config;
+        $this->mail = self::$config->get('mail');
     }
 
     public function contact(array $data)
@@ -27,7 +26,7 @@ class Mail extends Model
 
         $html = "<html> <head> </head> <body> <p>Imię i nazwisko: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
 
-        if ($this->send($this->config['email'], $data['subject'], $html, $headers)) {
+        if ($this->send($this->mail['email'], $data['subject'], $html, $headers)) {
             Session::success("Wiadomość została wysłana");
         }
     }
@@ -48,8 +47,8 @@ class Mail extends Model
         $data['username'] = $username;
 
         // === /
-        $headers = "From: " . strip_tags($this->config['email']) . "\r\n";
-        $headers .= "Reply-To: " . strip_tags($this->config['email']) . "\r\n";
+        $headers = "From: " . strip_tags($this->mail['email']) . "\r\n";
+        $headers .= "Reply-To: " . strip_tags($this->mail['email']) . "\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
