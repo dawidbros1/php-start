@@ -2,13 +2,11 @@
 
 declare (strict_types = 1);
 
-use Phantom\Helper\Session;
-
 ?>
 
 <div class="input-group <?=$styles?>">
     <?php if (array_key_exists('label', $params)): ?>
-        <div class = "col-12"><label class="labels"><?=$params['label']?></label></div>
+        <div class = "col-12"><label class="labels"><?=$label?></label></div>
     <?php endif;?>
 
     <?php $array = ['type', 'name', 'placeholder', 'disabled', 'value']?>
