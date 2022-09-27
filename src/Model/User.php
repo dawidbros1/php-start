@@ -2,9 +2,11 @@
 
 declare (strict_types = 1);
 
-namespace Phantom\Model;
+namespace App\Model;
 
 use Phantom\Helper\Session;
+use Phantom\Model\Config;
+use Phantom\Model\Model;
 
 class User extends Model
 {

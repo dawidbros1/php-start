@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Phantom\Controller;
 
+use App\Model\User;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Exception\StorageException;
 use Phantom\Helper\Request;
@@ -12,7 +13,6 @@ use Phantom\Model\Config;
 use Phantom\Model\Mail;
 use Phantom\Model\Model;
 use Phantom\Model\Route;
-use Phantom\Model\User;
 use Phantom\Repository\Repository;
 use Phantom\Validator\Validator;
 use Phantom\View;

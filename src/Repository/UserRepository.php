@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace Phantom\Repository;
+namespace App\Repository;
 
 use Phantom\Repository\Repository;
 

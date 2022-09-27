@@ -2,13 +2,13 @@
 
 declare (strict_types = 1);
 
-namespace Phantom\Controller;
+namespace App\Controller;
 
+use App\Model\Auth;
 use Phantom\Controller\Controller;
 use Phantom\Helper\Checkbox;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
-use Phantom\Model\Auth;
 use Phantom\Model\Mail;
 use Phantom\View;
 

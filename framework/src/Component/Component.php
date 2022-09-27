@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Phantom\Component;
 
-use Phantom\Component\Rules;
+use App\Component\Rules;
 use Phantom\Exception\AppException;
 
 class Component

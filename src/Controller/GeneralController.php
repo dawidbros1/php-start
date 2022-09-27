@@ -2,8 +2,9 @@
 
 declare (strict_types = 1);
 
-namespace Phantom\Controller;
+namespace App\Controller;
 
+use Phantom\Controller\Controller;
 use Phantom\Helper\Session;
 use Phantom\Model\Mail;
 use Phantom\View;

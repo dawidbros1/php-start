@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace Phantom\Model;
+namespace App\Model;
 
 use Phantom\Helper\Session;
 use Phantom\Model\Model;

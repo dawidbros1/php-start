@@ -2,9 +2,9 @@
 
 declare (strict_types = 1);
 
-namespace Phantom\Rules;
+namespace App\Rules;
 
-use Phantom\Rules\AuthRules;
+use App\Rules\AuthRules;
 
 class UserRules extends AuthRules
 {

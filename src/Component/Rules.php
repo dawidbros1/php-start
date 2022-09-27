@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace Phantom\Component;
+namespace App\Component;
 
 use Phantom\Exception\AppException;
 
