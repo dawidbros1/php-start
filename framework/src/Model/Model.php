@@ -88,10 +88,10 @@ abstract class Model
     }
 
     // DATABASE => FIND
-    public function find(array $input, string $options = "", bool $onlyFillable = false)
+    public function find(array $input, string $options = "", bool $rulesitory = true)
     {
         if ($data = $this->repository->get($input, $options)) {
-            return $this->createObject($data, $onlyFillable);
+            return $this->createObject($data, $rulesitory);
         }
 
         return null;
@@ -102,14 +102,14 @@ abstract class Model
         return $this->find(['id' => $id]);
     }
 
-    public function findAll(array $input, string $options = "", bool $onlyFillable = true)
+    public function findAll(array $input, string $options = "", bool $rulesitory = true)
     {
         $output = [];
         $data = $this->repository->getAll($input, $options);
 
         if ($data) {
             foreach ($data as $item) {
-                $output[] = $this->createObject($item, $onlyFillable);
+                $output[] = $this->createObject($item, $rulesitory);
             }
         }
 
@@ -206,10 +206,10 @@ abstract class Model
         }
     }
 
-    private function createObject($data, $onlyFillable)
+    private function createObject($data, $rulesitory)
     {
         $namaspace = $this->getNamespace();
-        return new $namaspace($data, $onlyFillable);
+        return new $namaspace($data, $rulesitory);
     }
 
     private function getNamespace(bool $toArray = false): array | string
