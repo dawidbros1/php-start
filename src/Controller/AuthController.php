@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Model\Auth;
 use Phantom\Controller\Controller;
-use Phantom\Helper\Checkbox;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
 use Phantom\Model\Mail;
@@ -22,26 +21,6 @@ class AuthController extends Controller
         $this->guest();
         $this->model = new Auth();
     }
-
-    public function registerAction(): void
-    {
-        View::set(['title' => "Rejestracja"]);
-
-        if ($data = $this->request->isPost(['username', 'email', 'password', 'repeat_password'])) {
-            $data['avatar'] = self::$config->get('default.path.avatar');
-            $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
-
-            if ($this->model->register($data)) {
-                $this->redirect('auth.login', ['email' => $data['email']]);
-            } else {
-                unset($data['password'], $data['repeat_password']);
-                $this->redirect('auth.register', $data);
-            }
-        } else {
-            $this->view->render('auth/register', $this->request->getParams(['username', 'email']));
-        }
-    }
-
     public function loginAction(): void
     {
         View::set(['title' => "Logowanie"]);

@@ -3,7 +3,6 @@
 declare (strict_types = 1);
 
 use Phantom\Component\Component;
-use Phantom\Helper\Session;
 
 $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
 
@@ -16,7 +15,7 @@ $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
                 <h3 class="text-primary">Rejestracja</h3>
             </div>
             <div class="p-4">
-                <form action="<?=$route->get('auth.register')?>" method="post">
+                <form action="<?=$route->get('registration')?>" method="post">
                     <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['sanitize', 'validate', 'unique']])?>
 
@@ -27,7 +26,7 @@ $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
                     <?php Component::render('error', ['type' => "password", 'names' => ['between']])?>
 
                     <?php Component::render('form.input', ['type' => "password", 'name' => "repeat_password", "placeholder" => "Powtórz hasło"])?>
-                    <?php Component::render('error', ['type' => "repeat_password", 'names' => ['same']])?>
+                    <?php Component::render('error', ['type' => "password", 'names' => ['same']])?>
 
                     <?php Component::render('form.checkbox', ['id' => "regulations", 'mt' => "mt-2", 'name' => "regulations", 'label' => "Zapoznałem się i akceptuję $regulations"])?>
                     <?php Component::render('error', ['type' => "regulations", 'names' => ['require']])?>

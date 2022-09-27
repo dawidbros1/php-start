@@ -10,22 +10,6 @@ use Phantom\Model\Model;
 class Auth extends Model
 {
     public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
-
-    public function register(array $data)
-    {
-        if ($status = ($this->validate($data)&!$this->isBusyEmail($data['email']))) {
-            $data['password'] = $this->hash($data['password']);
-            $data['role'] = "user";
-            $data['created'] = date('Y-m-d H:i:s');
-
-            if ($this->create($data, false)) {
-                Session::success('Konto zostało utworzone');
-            }
-        }
-
-        return $status;
-    }
-
     public function login(array $data)
     {
         $data['password'] = $this->hash($data['password']);
