@@ -14,7 +14,7 @@ use Phantom\Helper\Session;
                 <h3 class="text-primary">Ustaw nowe hasło</h3>
             </div>
             <div class="p-4">
-                <form action="<?=$route->get('auth.resetPassword')?>" method="post">
+                <form action="<?=$route->get('authorization.resetPassword')?>" method="post">
 
                     <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", 'value' => $params['email'] ?? "", 'disabled' => 'disabled'])?>
 

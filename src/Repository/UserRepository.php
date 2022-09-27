@@ -13,4 +13,12 @@ class UserRepository extends Repository
         $this->table = "users";
         parent::__construct();
     }
+
+    public function getEmails(): array
+    {
+        $stmt = self::$pdo->prepare("SELECT email FROM users");
+        $stmt->execute();
+        $emails = $stmt->fetchAll();
+        return $emails;
+    }
 }

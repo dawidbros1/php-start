@@ -6,7 +6,7 @@ namespace App\Repository;
 
 use Phantom\Repository\Repository;
 
-class AuthRepository extends Repository
+class AuthorizationRepository extends Repository
 {
     public function __construct()
     {

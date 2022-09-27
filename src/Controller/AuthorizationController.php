@@ -4,22 +4,20 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use App\Model\Auth;
+use App\Model\Authorization;
 use Phantom\Controller\Controller;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
 use Phantom\Model\Mail;
 use Phantom\View;
 
-class AuthController extends Controller
+class AuthorizationController extends Controller
 {
-    private $auth;
-
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->guest();
-        $this->model = new Auth();
+        $this->model = new Authorization();
     }
     public function loginAction(): void
     {
@@ -35,11 +33,11 @@ class AuthController extends Controller
                     Session::set("error:email:null", "Podany adres email nie istnieje");
                 }
                 unset($data['password']);
-                $this->redirect('auth.login', $data);
+                $this->redirect('authorization.login', $data);
             }
 
         } else {
-            $this->view->render('auth/login', ['email' => $this->request->getParam('email')]);
+            $this->view->render('authorization/login', ['email' => $this->request->getParam('email')]);
         }
     }
 
@@ -49,13 +47,13 @@ class AuthController extends Controller
         if ($email = $this->request->isPost(['email'])) {
             if ($this->model->existsEmail($email)) {
                 $username = $this->model->find(['email' => $email])->username;
-                $this->mail->forgotPassword($email, self::$route->get('auth.resetPassword'), $username);
+                $this->mail->forgotPassword($email, self::$route->get('authorization.resetPassword'), $username);
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
             }
-            $this->redirect('auth.forgotPassword');
+            $this->redirect('authorization.forgotPassword');
         } else {
-            $this->view->render('auth/forgotPassword');
+            $this->view->render('authorization/forgotPassword');
         }
     }
 
@@ -67,18 +65,18 @@ class AuthController extends Controller
             $this->checkCodeToResetPassword($code = $data['code']);
 
             if ($user = $this->model->resetPassword($data, $code)) {
-                $this->redirect('auth.login', ['email' => $user->email]);
+                $this->redirect('authorization.login', ['email' => $user->email]);
             } else {
-                $this->redirect('auth.resetPassword', ['code' => $code]);
+                $this->redirect('authorization.resetPassword', ['code' => $code]);
             }
         }
 
         if ($code = $this->request->isGet(['code'])) {
             $this->checkCodeToResetPassword($code);
-            $this->view->render('auth/resetPassword', ['email' => Session::get($code), 'code' => $code]);
+            $this->view->render('authorization/resetPassword', ['email' => Session::get($code), 'code' => $code]);
         } else {
             Session::set('error', 'Kod resetu hasła nie został podany');
-            $this->redirect('auth.forgotPassword');
+            $this->redirect('authorization.forgotPassword');
         }
     }
 
@@ -90,11 +88,11 @@ class AuthController extends Controller
             if ((time() - Session::get("created:" . $code)) > 86400) {
                 Session::set('error', 'Link do zresetowania hasła stracił ważność');
                 Session::clearArray($names);
-                $this->redirect('auth.forgotPassword');
+                $this->redirect('authorization.forgotPassword');
             }
         } else {
             Session::set('error', 'Nieprawidłowy kod resetu hasła');
-            $this->redirect('auth.forgotPassword');
+            $this->redirect('authorization.forgotPassword');
         }
     }
 }

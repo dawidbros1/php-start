@@ -7,7 +7,7 @@ namespace App\Model;
 use Phantom\Helper\Session;
 use Phantom\Model\Model;
 
-class Auth extends Model
+class Authorization extends Model
 {
     public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
     public function login(array $data)

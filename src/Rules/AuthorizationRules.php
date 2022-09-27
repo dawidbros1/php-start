@@ -6,7 +6,7 @@ namespace App\Rules;
 
 use Phantom\Model\Rules;
 
-class AuthRules extends Rules
+class AuthorizationRules extends Rules
 {
     public function rules()
     {
