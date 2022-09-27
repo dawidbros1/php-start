@@ -58,7 +58,8 @@ abstract class Controller extends Validator
     public function run(): void
     {
         try {
-            $action = $this->action() . 'Action';
+            $action = $this->action();
+
             if (!method_exists($this, $action)) {
                 Session::error('Akcja do której chciałeś otrzymać dostęp nie istnieje');
                 $this->redirect("home");
@@ -91,9 +92,11 @@ abstract class Controller extends Validator
         exit();
     }
 
-    final protected function action(): string
+    protected function action(): string
     {
-        return $this->request->getParam('action', "home");
+        $action = $this->request->getParam('action', "index");
+        $action = ($action == "index") ? $action : $action . "Action";
+        return $action;
     }
 
     // ===== ===== ===== ===== =====
