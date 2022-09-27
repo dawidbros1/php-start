@@ -24,6 +24,10 @@ class Route
         } else {
             $this->routes[$prefix][$name] = "?type=$prefix&action=$name";
         }
+
+        if (strlen($name) == 0) {
+            $this->routes[$prefix] = "?type=$prefix";
+        }
     }
 
     public function get($path)
