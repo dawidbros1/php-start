@@ -4,6 +4,6 @@ namespace App\Component\Form;
 
 class Select
 {
-    public $require = ['name', 'options', 'selected', 'show', 'label'];
+    public $require = ['label', 'name', 'options', 'show', 'value', 'selected'];
     public $template = "components/form/select.php";
 }
