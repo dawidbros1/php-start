@@ -12,12 +12,14 @@ abstract class Model
 {
     protected static $validator = null;
     protected static $hashMethod = null;
+    protected static $config;
     protected $rules;
     protected $repository;
     protected $fillable;
     public static function initConfiguration(Config $config)
     {
         self::$validator = new Validator();
+        self::$config = $config;
         self::$hashMethod = $config->get("default.hash.method");
     }
 
@@ -108,12 +110,9 @@ abstract class Model
     }
 
     // DATABASE => SAVE
-    public function create(array $data, $validate = true)
+    public function create($object, $validate = true)
     {
-        $data['user_id'] = User::ID();
-
-        if (($validate === true && $this->validate($data)) || $validate === false) {
-            $this->setArray($data);
+        if (($validate === true && $this->validate($object)) || $validate === false) {
             $this->repository->create($this);
             return true;
         }
