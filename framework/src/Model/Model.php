@@ -26,7 +26,7 @@ abstract class Model
     public function __construct(array $data = [], bool $rulesitory = true)
     {
         if ($rulesitory == true) {
-            $namaspace = $this->getNamespace(true);
+            $namaspace = explode("\\", $this::class);
 
             $rules = $namaspace[0] . "\Rules\\" . $namaspace[2] . "Rules";
             $repository = $namaspace[0] . "\Repository\\" . $namaspace[2] . "Repository";
@@ -88,28 +88,36 @@ abstract class Model
     }
 
     // DATABASE => FIND
-    public function find(array $input, string $options = "", bool $rulesitory = true)
+    public function find(array $input, string $options = "", bool $rulesitory = true, $namaspace = null)
     {
+        if ($namaspace == null) {
+            $namaspace = $this::class;
+        }
+
         if ($data = $this->repository->get($input, $options)) {
-            return $this->createObject($data, $rulesitory);
+            return new $namaspace($data, $rulesitory);
         }
 
         return null;
     }
 
-    public function findById($id)
+    public function findById($id, string $options = "", bool $rulesitory = true, $namaspace = null)
     {
-        return $this->find(['id' => $id]);
+        return $this->find(['id' => $id], $options, $rulesitory, $namaspace);
     }
 
-    public function findAll(array $input, string $options = "", bool $rulesitory = true)
+    public function findAll(array $input, string $options = "", bool $rulesitory = true, $namaspace = null)
     {
         $output = [];
         $data = $this->repository->getAll($input, $options);
 
+        if ($namaspace == null) {
+            $namaspace = $this::class;
+        }
+
         if ($data) {
             foreach ($data as $item) {
-                $output[] = $this->createObject($item, $rulesitory);
+                $output[] = new $namaspace($item, $rulesitory);
             }
         }
 
@@ -139,25 +147,6 @@ abstract class Model
         }
         return false;
     }
-
-    // public function update(array $data, array $toUpdate = [], $validate = true)
-    // {
-    //     if (($validate === true && $this->validate($data)) || $validate === false) {
-    //         $this->setArray($data);
-
-    //         if (empty($toUpdate)) {
-    //             $data = $this->getArray($this->fillable);
-    //         } else {
-    //             $data = $this->getArray(['id', ...$toUpdate]);
-    //         }
-
-    //         $this->escape();
-    //         $this->repository->update($data);
-    //         Session::success('Dane zostały zaktualizowane'); // Default value
-    //         return true;
-    //     }
-    //     return false;
-    // }
 
     // DATABASE => DELETE
     public function delete(?int $id = null)
@@ -204,30 +193,6 @@ abstract class Model
             Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
             return false;
         }
-    }
-
-    private function createObject($data, $rulesitory)
-    {
-        $namaspace = $this->getNamespace();
-        return new $namaspace($data, $rulesitory);
-    }
-
-    private function getNamespace(bool $toArray = false): array | string
-    {
-        $r = new \ReflectionClass($this);
-        $namaspace = $r->getName();
-
-        if ($toArray == true) {
-            $namaspace = explode("\\", $r->getName());
-        }
-
-        /*
-        0 => [ App | Phantom]
-        1 => Model
-        2 => Name of model
-         */
-
-        return $namaspace;
     }
 
     private function propertyExists($name)
