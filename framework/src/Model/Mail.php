@@ -71,11 +71,19 @@ class Mail extends Model
 
     private function send($email, $subject, $html, $headers)
     {
+        // $this->showMessage($html);
+
         if (mail($email, $subject, $html, $headers)) {
             return true;
         } else {
             Session::set('error', "Wystąpił problem podczas wysyłania wiadomości, prosimy spróbować później");
             return false;
         }
+    }
+
+    private function showMessage($html)
+    {
+        dump($html);
+        die();
     }
 }
