@@ -27,7 +27,7 @@ class RegistrationController extends Controller
             $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
             if ($this->model->register($data)) {
-                $this->redirect('authorization.login', ['email' => $data['email']]);
+                $this->redirect('authorization', ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);
                 $this->redirect('registration', $data);

@@ -60,7 +60,7 @@
                     <div class = "d-sm-none border-top"></div>
                     <div class = "d-sm-flex <?=$margin?>">
                         <li class="nav-item"> <a class="nav-link" href="<?=$route->get('registration')?>">Zarejestruj się</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?=$route->get('authorization.login')?>">Zaloguj się</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?=$route->get('authorization')?>">Zaloguj się</a></li>
                     </div>
                 <?php endif;?>
 

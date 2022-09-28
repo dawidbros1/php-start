@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Repository;
 
+use PDO;
 use Phantom\Repository\Repository;
 
 class UserRepository extends Repository
@@ -18,7 +19,7 @@ class UserRepository extends Repository
     {
         $stmt = self::$pdo->prepare("SELECT email FROM users");
         $stmt->execute();
-        $emails = $stmt->fetchAll();
+        $emails = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $emails;
     }
 }
