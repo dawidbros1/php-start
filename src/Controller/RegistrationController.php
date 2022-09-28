@@ -33,7 +33,9 @@ class RegistrationController extends Controller
                 $this->redirect('registration', $data);
             }
         } else {
-            $this->view->render('registration/registration', $this->request->getParams(['username', 'email']));
+            return $this->render('registration/registration',
+                $this->request->getParams(['username', 'email'])
+            );
         }
     }
 }

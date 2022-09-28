@@ -52,7 +52,6 @@ abstract class Controller extends Validator
         }
 
         $this->request = $request;
-        $this->view = new View($this->user, self::$route);
     }
 
     public function run(): void
@@ -65,7 +64,15 @@ abstract class Controller extends Validator
                 $this->redirect("home");
             }
 
-            $this->$action();
+            $result = $this->$action();
+
+            switch ($result::class) {
+                case "Phantom\View":{
+                        $result->render();
+                        break;
+                    }
+            }
+
         } catch (StorageException $e) {
             $this->view->render('error', ['message' => $e->getMessage()]);
         }
@@ -125,5 +132,10 @@ abstract class Controller extends Validator
             Session::error("Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
             $this->redirect('home');
         }
+    }
+
+    protected function render(string $page, array $params = [])
+    {
+        return new View($this->user, self::$route, $page, $params);
     }
 }

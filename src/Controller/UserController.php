@@ -16,19 +16,19 @@ class UserController extends Controller
         $this->requireLogin();
     }
 
-    public function logoutAction(): void
+    public function logoutAction()
     {
         $this->user->logout();
         $this->redirect(self::$config->get('default.route.logout'), ['email' => $this->user->email]);
     }
 
-    public function profileAction(): void
+    public function profileAction()
     {
         View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
-        $this->view->render('user/profile');
+        return $this->render('user/profile');
     }
 
-    public function updateAction(): void
+    public function updateAction()
     {
         if ($toUpdate = $this->request->isPost(['update'])) {
             if (in_array($toUpdate, ['username', 'password', 'avatar'])) {
@@ -40,7 +40,7 @@ class UserController extends Controller
         $this->redirect('user.profile');
     }
 
-    private function updateUsername(): void
+    private function updateUsername()
     {
         if ($username = $this->request->hasPostName('username')) {
             $this->user->set('username', $username);
@@ -48,14 +48,14 @@ class UserController extends Controller
         }
     }
 
-    private function updatePassword(): void
+    private function updatePassword()
     {
         if ($data = $this->request->hasPostNames(['current_password', 'password', 'repeat_password'])) {
             $this->user->updatePassword($data);
         }
     }
 
-    private function updateAvatar(): void
+    private function updateAvatar()
     {
         $path = self::$config->get('upload.path.avatar');
 

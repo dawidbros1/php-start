@@ -4,17 +4,21 @@ declare (strict_types = 1);
 
 namespace Phantom;
 
+use App\Model\User;
+use Phantom\Model\Route;
+
 class View
 {
-    private $user;
-    private $route;
+    private $user, $route, $page, $params;
     private static $style = null;
     private static $title = "Brak tytułu";
 
-    public function __construct($user, $route)
+    public function __construct(User | null $user, Route $route, string $page, array $params)
     {
         $this->user = $user;
         $this->route = $route;
+        $this->page = $page;
+        $this->params = $params;
     }
 
     public static function set($data)
@@ -28,14 +32,15 @@ class View
         }
     }
 
-    public function render(string $page, array $params = []): void
+    public function render()
     {
         $user = $this->user;
         $route = $this->route;
+        $page = $this->page;
         $style = self::$style;
         $title = self::$title;
 
-        foreach ($params as $key => $param) {
+        foreach ($this->params as $key => $param) {
             ${$key} = $param;
         }
 

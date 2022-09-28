@@ -20,7 +20,7 @@ class PasswordRecoveryController extends Controller
         $this->model = new PasswordRecovery([], true, "User");
     }
 
-    public function forgotAction(): void
+    public function forgotAction()
     {
         View::set(['title' => "Przypomnienie hasła"]);
 
@@ -33,11 +33,11 @@ class PasswordRecoveryController extends Controller
             }
             $this->redirect('passwordRecovery.forgot');
         } else {
-            $this->view->render('passwordRecovery/forgot');
+            return $this->render('passwordRecovery/forgot');
         }
     }
 
-    public function resetAction(): void
+    public function resetAction()
     {
         View::set(['title' => "Reset hasła"]);
 
@@ -53,14 +53,14 @@ class PasswordRecoveryController extends Controller
 
         if ($code = $this->request->isGet(['code'])) {
             $this->checkCodeToResetPassword($code);
-            $this->view->render('passwordRecovery/reset', ['email' => Session::get($code), 'code' => $code]);
+            return $this->render('passwordRecovery/reset', ['email' => Session::get($code), 'code' => $code]);
         } else {
             Session::set('error', 'Kod resetu hasła nie został podany');
             $this->redirect('passwordRecovery.forgot');
         }
     }
 
-    private function checkCodeToResetPassword($code): void
+    private function checkCodeToResetPassword($code)
     {
         $names = [$code, "created:" . $code];
 

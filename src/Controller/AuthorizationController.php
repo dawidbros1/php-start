@@ -18,7 +18,7 @@ class AuthorizationController extends Controller
         $this->guest();
         $this->model = new Authorization([], true, "User");
     }
-    public function index(): void
+    public function index()
     {
         View::set(['title' => "Logowanie"]);
 
@@ -35,7 +35,9 @@ class AuthorizationController extends Controller
                 $this->redirect('authorization', $data);
             }
         } else {
-            $this->view->render('authorization/login', ['email' => $this->request->getParam('email')]);
+            return $this->render('authorization/login', [
+                'email' => $this->request->getParam('email'),
+            ]);
         }
     }
 }

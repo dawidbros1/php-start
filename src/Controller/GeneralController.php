@@ -11,25 +11,25 @@ use Phantom\View;
 
 class GeneralController extends Controller
 {
-    public function homeAction(): void
+    public function homeAction()
     {
         View::set(['title' => "Strona główna", "style" => "home"]);
-        $this->view->render('general/home');
+        return $this->render('general/home');
     }
 
-    public function policyAction(): void
+    public function policyAction()
     {
         View::set(['title' => "Polityka prywatności"]);
-        $this->view->render('general/policy');
+        return $this->render('general/policy');
     }
 
-    public function regulationsAction(): void
+    public function regulationsAction()
     {
         View::set(['title' => "Regulamin"]);
-        $this->view->render('general/regulations');
+        return $this->render('general/regulations');
     }
 
-    public function contactAction(): void
+    public function contactAction()
     {
         View::set(['title' => "Strona kontaktowa", 'style' => "contact"]);
         $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
@@ -56,6 +56,9 @@ class GeneralController extends Controller
         }
 
         $path = self::$config->get('default.path.medium') ?? "";
-        $this->view->render('general/contact', ['path' => $path, 'sideKey' => self::$config->get('reCAPTCHA.key.side')]);
+        return $this->render('general/contact', [
+            'path' => $path,
+            'sideKey' => self::$config->get('reCAPTCHA.key.side'),
+        ]);
     }
 }
