@@ -23,10 +23,12 @@ abstract class Model
         self::$hashMethod = $config->get("default.hash.method");
     }
     /* rulesitory => Rules and Repository */
-    public function __construct(array $data = [], bool $rulesitory = true)
+    public function __construct(array $data = [], bool $rulesitory = true, $model = null)
     {
         if ($rulesitory == true) {
             $namaspace = explode("\\", $this::class);
+
+            $namaspace[2] = $model ?? $namaspace[2];
 
             $rules = $namaspace[0] . "\Rules\\" . $namaspace[2] . "Rules";
             $repository = $namaspace[0] . "\Repository\\" . $namaspace[2] . "Repository";
