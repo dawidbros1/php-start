@@ -23,7 +23,7 @@
     <div class="container-fluid">
 
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand ms-2 ms-md-3" href="./">Strona główna</a>
+            <a class="navbar-brand ms-2 ms-md-3" href="<?=$route->get('home')?>">Strona główna</a>
 
             <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <!-- Trigger -->
