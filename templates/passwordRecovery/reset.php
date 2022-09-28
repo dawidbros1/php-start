@@ -14,19 +14,19 @@ use Phantom\Helper\Session;
                 <h3 class="text-primary">Ustaw nowe hasło</h3>
             </div>
             <div class="p-4">
-                <form action="<?=$route->get('authorization.resetPassword')?>" method="post">
+                <form action="<?=$route->get('passwordRecovery.reset')?>" method="post">
 
                     <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", 'value' => $params['email'] ?? "", 'disabled' => 'disabled'])?>
 
-                    <?php Component::render('form.input', ['type' => "password", 'name' => "password", 'description' => "Nowe hasło"])?>
+                    <?php Component::render('form.input', ['type' => "password", 'name' => "password", 'placeholder' => "Nowe hasło"])?>
                     <?php Component::render('error', ['type' => "password", 'names' => ['between']])?>
 
-                    <?php Component::render('form.input', ['type' => "password", 'name' => "repeat_password", 'description' => "Powtórz nowe hasło"])?>
+                    <?php Component::render('form.input', ['type' => "password", 'name' => "repeat_password", 'placeholder' => "Powtórz nowe hasło"])?>
                     <?php Component::render('error', ['type' => "password", 'names' => ['same']])?>
 
                     <input type = "hidden" name = "code" value = "<?=$params['code']?>">
 
-                    <?php Component::render('form.submit', ['text' => "Przypomnij hasło"])?>
+                    <?php Component::render('form.submit', ['text' => "Ustaw nowe hasło"])?>
                 </form>
             </div>
         </div>

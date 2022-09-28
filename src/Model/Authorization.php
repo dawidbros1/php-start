@@ -9,38 +9,16 @@ use Phantom\Model\Model;
 
 class Authorization extends Model
 {
-    public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
     public function login(array $data)
     {
         $data['password'] = $this->hash($data['password']);
 
-        if ($user = $this->find(['email' => $data['email'], 'password' => $data['password']])) {
+        if ($user = $this->find(['email' => $data['email'], 'password' => $data['password']], "", false, User::class)) {
             Session::set('user:id', $user->id);
         }
 
         return $user;
     }
-
-    public function resetPassword($data, $code)
-    {
-        if ($status = $this->validate($data)) {
-            $user = $this->find(['email' => Session::get($code)]);
-            $user->update(['password' => $this->hash($data['password'])], ['password'], false);
-            Session::clearArray([$code, "created:" . $code]);
-            Session::success('Hasło do konta zostało zmienione');
-        }
-        return $user ?? null;
-    }
-
-    public function isBusyEmail($email)
-    {
-        if ($this->existsEmail($email)) {
-            Session::set("error:email:unique", "Podany adres email jest zajęty");
-            return true;
-        }
-        return false;
-    }
-
     public function existsEmail($email)
     {
         return in_array($email, $this->repository->getEmails());

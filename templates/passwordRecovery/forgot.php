@@ -14,7 +14,7 @@ use Phantom\Helper\Session;
                 <h3 class="text-primary">Resetowanie hasła</h3>
             </div>
             <div class="p-4">
-                <form action="<?=$route->get('authorization.forgotPassword')?>" method="post">
+                <form action="<?=$route->get('passwordRecovery.forgot')?>" method="post">
 
                     <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>

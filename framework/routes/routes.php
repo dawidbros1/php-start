@@ -6,8 +6,10 @@ use Phantom\Model\Route;
 
 $route = new Route();
 $route->group('', ['home', 'policy', 'contact', 'regulations']);
-$route->group('authorization', ['login', 'forgotPassword', 'resetPassword']);
-$route->group('user', ['logout', 'profile', 'update']);
+
 $route->register("registration", '');
+$route->register("authorization", '');
+$route->group('user', ['logout', 'profile', 'update']);
+$route->group('passwordRecovery', ['forgot', 'reset']);
 
 return $route;

@@ -13,7 +13,7 @@ use Phantom\Component\Component;
                 <h3 class="text-primary">Logowanie</h3>
             </div>
             <div class="p-4">
-                <form action="<?=$route->get('authorization.login')?>" method="post">
+                <form action="<?=$route->get('authorization')?>" method="post">
                     <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
@@ -27,7 +27,7 @@ use Phantom\Component\Component;
                             <a href="<?=$route->get('registration')?>" class="link">Zarejestruj się</a>
                         </div>
                         <div> Zapomniałeś hasła?
-                            <a href="<?=$route->get('authorization.forgotPassword')?>" class="link">Przypomnij hasło</a>
+                            <a href="<?=$route->get('passwordRecovery.forgot')?>" class="link">Przypomnij hasło</a>
                         </div>
                     </div>
                 </form>
