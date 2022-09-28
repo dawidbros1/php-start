@@ -16,10 +16,10 @@ $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
             </div>
             <div class="p-4">
                 <form action="<?=$route->get('registration')?>" method="post">
-                    <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
+                    <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $email])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['sanitize', 'validate', 'unique']])?>
 
-                    <?php Component::render('form.input', ['type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'value' => $params['username'] ?? ''])?>
+                    <?php Component::render('form.input', ['type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'value' => $username])?>
                     <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
                     <?php Component::render('form.input', ['type' => "password", 'name' => "password", "placeholder" => "Hasło"])?>

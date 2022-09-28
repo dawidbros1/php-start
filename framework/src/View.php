@@ -34,6 +34,11 @@ class View
         $route = $this->route;
         $style = self::$style;
         $title = self::$title;
+
+        foreach ($params as $key => $param) {
+            ${$key} = $param;
+        }
+
         require_once 'templates/layout/main.php';
     }
 

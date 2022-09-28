@@ -14,7 +14,7 @@ use Phantom\Component\Component;
             </div>
             <div class="p-4">
                 <form action="<?=$route->get('authorization')?>" method="post">
-                    <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $params['email'] ?? ''])?>
+                    <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $email])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
                     <?php Component::render('form.input', ['type' => "password", 'name' => "password", "placeholder" => "Hasło"])?>
