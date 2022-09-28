@@ -8,6 +8,7 @@ use App\Model\Authorization;
 use Phantom\Controller\Controller;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
+use Phantom\RedirectToRoute;
 use Phantom\View;
 
 class AuthorizationController extends Controller
@@ -18,13 +19,13 @@ class AuthorizationController extends Controller
         $this->guest();
         $this->model = new Authorization([], true, "User");
     }
-    public function index()
+    public function index(): View | RedirectToRoute
     {
         View::set(['title' => "Logowanie"]);
 
         if ($data = $this->request->isPost(['email', 'password'])) {
             if ($this->model->login($data)) {
-                $this->redirect(self::$config->get('default.route.home'));
+                return $this->redirect(self::$config->get('default.route.home'));
             } else {
                 if ($this->model->existsEmail($data['email'])) {
                     Session::set("error:password:incorrect", "Wprowadzone hasło jest nieprawidłowe");
@@ -32,7 +33,7 @@ class AuthorizationController extends Controller
                     Session::set("error:email:null", "Podany adres email nie istnieje");
                 }
                 unset($data['password']);
-                $this->redirect('authorization', $data);
+                return $this->redirect('authorization', $data);
             }
         } else {
             return $this->render('authorization/login', [

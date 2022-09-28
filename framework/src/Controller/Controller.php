@@ -13,6 +13,7 @@ use Phantom\Model\Config;
 use Phantom\Model\Mail;
 use Phantom\Model\Model;
 use Phantom\Model\Route;
+use Phantom\RedirectToRoute;
 use Phantom\Repository\Repository;
 use Phantom\Validator\Validator;
 use Phantom\View;
@@ -61,7 +62,7 @@ abstract class Controller extends Validator
 
             if (!method_exists($this, $action)) {
                 Session::error('Akcja do której chciałeś otrzymać dostęp nie istnieje');
-                $this->redirect("home");
+                $this->redirect("home")->redirect();
             }
 
             $result = $this->$action();
@@ -71,32 +72,15 @@ abstract class Controller extends Validator
                         $result->render();
                         break;
                     }
+                case "Phantom\RedirectToRoute":{
+                        $result->redirect();
+                        break;
+                    }
             }
 
         } catch (StorageException $e) {
             $this->view->render('error', ['message' => $e->getMessage()]);
         }
-    }
-
-    protected function redirect(string $to, array $params = []): void
-    {
-        $location = self::$route->get($to);
-
-        if (count($params)) {
-            $queryParams = [];
-            foreach ($params as $key => $value) {
-                if (gettype($value) == "integer") {
-                    $queryParams[] = urlencode($key) . '=' . $value;
-                } else {
-                    $queryParams[] = urlencode($key) . '=' . urlencode($value);
-                }
-            }
-
-            $location .= ($queryParams = "&" . implode('&', $queryParams));
-        }
-
-        header("Location: " . $location);
-        exit();
     }
 
     protected function action(): string
@@ -134,8 +118,13 @@ abstract class Controller extends Validator
         }
     }
 
-    protected function render(string $page, array $params = [])
+    protected function render(string $page, array $params = []): View
     {
         return new View($this->user, self::$route, $page, $params);
+    }
+
+    protected function redirect(string $to, array $params = []): RedirectToRoute
+    {
+        return new RedirectToRoute(self::$route, $to, $params);
     }
 }

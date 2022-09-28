@@ -8,6 +8,7 @@ use App\Model\Registration;
 use Phantom\Controller\Controller;
 use Phantom\Helper\Checkbox;
 use Phantom\Helper\Request;
+use Phantom\RedirectToRoute;
 use Phantom\View;
 
 class RegistrationController extends Controller
@@ -19,7 +20,7 @@ class RegistrationController extends Controller
         $this->model = new Registration([], false);
     }
 
-    public function index()
+    public function index(): View | RedirectToRoute
     {
         View::set(['title' => "Rejestracja"]);
 
@@ -27,10 +28,10 @@ class RegistrationController extends Controller
             $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
 
             if ($this->model->register($data)) {
-                $this->redirect('authorization', ['email' => $data['email']]);
+                return $this->redirect('authorization', ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);
-                $this->redirect('registration', $data);
+                return $this->redirect('registration', $data);
             }
         } else {
             return $this->render('registration/registration',

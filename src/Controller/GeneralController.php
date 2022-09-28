@@ -7,29 +7,30 @@ namespace App\Controller;
 use Phantom\Controller\Controller;
 use Phantom\Helper\Session;
 use Phantom\Model\Mail;
+use Phantom\RedirectToRoute;
 use Phantom\View;
 
 class GeneralController extends Controller
 {
-    public function homeAction()
+    public function homeAction(): View
     {
         View::set(['title' => "Strona główna", "style" => "home"]);
         return $this->render('general/home');
     }
 
-    public function policyAction()
+    public function policyAction(): View
     {
         View::set(['title' => "Polityka prywatności"]);
         return $this->render('general/policy');
     }
 
-    public function regulationsAction()
+    public function regulationsAction(): View
     {
         View::set(['title' => "Regulamin"]);
         return $this->render('general/regulations');
     }
 
-    public function contactAction()
+    public function contactAction(): View | RedirectToRoute
     {
         View::set(['title' => "Strona kontaktowa", 'style' => "contact"]);
         $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
@@ -52,10 +53,11 @@ class GeneralController extends Controller
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }
 
-            $this->redirect('contact');
+            return $this->redirect('contact');
         }
 
         $path = self::$config->get('default.path.medium') ?? "";
+
         return $this->render('general/contact', [
             'path' => $path,
             'sideKey' => self::$config->get('reCAPTCHA.key.side'),

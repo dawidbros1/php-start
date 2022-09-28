@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Phantom\Controller\Controller;
 use Phantom\Helper\Request;
+use Phantom\RedirectToRoute;
 use Phantom\View;
 
 class UserController extends Controller
@@ -16,19 +17,21 @@ class UserController extends Controller
         $this->requireLogin();
     }
 
-    public function logoutAction()
+    public function logoutAction(): RedirectToRoute
     {
         $this->user->logout();
-        $this->redirect(self::$config->get('default.route.logout'), ['email' => $this->user->email]);
+        return $this->redirect(self::$config->get('default.route.logout'), [
+            'email' => $this->user->email,
+        ]);
     }
 
-    public function profileAction()
+    public function profileAction(): View
     {
         View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
         return $this->render('user/profile');
     }
 
-    public function updateAction()
+    public function updateAction(): RedirectToRoute
     {
         if ($toUpdate = $this->request->isPost(['update'])) {
             if (in_array($toUpdate, ['username', 'password', 'avatar'])) {
@@ -37,7 +40,7 @@ class UserController extends Controller
             }
         }
 
-        $this->redirect('user.profile');
+        return $this->redirect('user.profile');
     }
 
     private function updateUsername()

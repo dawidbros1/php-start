@@ -9,6 +9,7 @@ use App\Model\User;
 use Phantom\Controller\Controller;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
+use Phantom\RedirectToRoute;
 use Phantom\View;
 
 class PasswordRecoveryController extends Controller
@@ -20,7 +21,7 @@ class PasswordRecoveryController extends Controller
         $this->model = new PasswordRecovery([], true, "User");
     }
 
-    public function forgotAction()
+    public function forgotAction(): View | RedirectToRoute
     {
         View::set(['title' => "Przypomnienie hasła"]);
 
@@ -31,13 +32,13 @@ class PasswordRecoveryController extends Controller
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
             }
-            $this->redirect('passwordRecovery.forgot');
+            return $this->redirect('passwordRecovery.forgot');
         } else {
             return $this->render('passwordRecovery/forgot');
         }
     }
 
-    public function resetAction()
+    public function resetAction(): View | RedirectToRoute
     {
         View::set(['title' => "Reset hasła"]);
 
@@ -45,9 +46,9 @@ class PasswordRecoveryController extends Controller
             $this->checkCodeToResetPassword($code = $data['code']);
 
             if ($user = $this->model->resetPassword($data, $code)) {
-                $this->redirect('authorization', ['email' => $user->email]);
+                return $this->redirect('authorization', ['email' => $user->email]);
             } else {
-                $this->redirect('passwordRecovery.reset', ['code' => $code]);
+                return $this->redirect('passwordRecovery.reset', ['code' => $code]);
             }
         }
 
@@ -56,7 +57,7 @@ class PasswordRecoveryController extends Controller
             return $this->render('passwordRecovery/reset', ['email' => Session::get($code), 'code' => $code]);
         } else {
             Session::set('error', 'Kod resetu hasła nie został podany');
-            $this->redirect('passwordRecovery.forgot');
+            return $this->redirect('passwordRecovery.forgot');
         }
     }
 
@@ -68,11 +69,11 @@ class PasswordRecoveryController extends Controller
             if ((time() - Session::get("created:" . $code)) > 86400) {
                 Session::set('error', 'Link do zresetowania hasła stracił ważność');
                 Session::clearArray($names);
-                $this->redirect('passwordRecovery.forgot');
+                return $this->redirect('passwordRecovery.forgot');
             }
         } else {
             Session::set('error', 'Nieprawidłowy kod resetu hasła');
-            $this->redirect('passwordRecovery.forgot');
+            return $this->redirect('passwordRecovery.forgot');
         }
     }
 }
