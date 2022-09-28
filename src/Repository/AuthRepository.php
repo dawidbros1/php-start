@@ -16,7 +16,7 @@ class AuthRepository extends Repository
     {
         $stmt = self::$pdo->prepare("SELECT email FROM users");
         $stmt->execute();
-        $emails = $stmt->fetchAll();
+        $emails = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $emails;
     }
 }
