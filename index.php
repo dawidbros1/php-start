@@ -34,6 +34,7 @@ try {
     } else if (class_exists($phantom)) {
         (new $phantom($request))->run();
     } else {
+        dump("TODO [index.php]: Controller [" . $type . "] doen't exists");
         //TODO Controller doen't exists
     }
 
