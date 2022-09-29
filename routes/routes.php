@@ -4,14 +4,37 @@ declare (strict_types = 1);
 
 use Phantom\Model\Route;
 
-$route = new Route();
-$route->group('', ['home', 'policy', 'contact', 'regulations']);
+$route = new Route($location);
 
-$route->register("registration");
-$route->register("authorization");
-$route->group('user', ['logout', 'profile', 'update']);
-$route->group('passwordRecovery', ['forgot', 'reset']);
+// $route->group('general', ['home', 'policy', 'contact', 'regulations']);
 
-$route->group('test', ['select']); // For test
+// $route->register('', 'home', '');
+
+$route->homepage('home');
+
+$route->group('', [
+    'policy' => "/policy",
+    'contact' => "/contact",
+    'regulations' => "/regulations",
+]);
+
+$route->register("registration", "/register");
+$route->register("authorization", "/login");
+
+$route->group('user', [
+    'logout' => "/logout",
+    'profile' => "/user/profile",
+    'update' => "/user/profile/update",
+]);
+
+$route->group('passwordRecovery', [
+    'forgot' => "/password/forgot",
+    'reset' => "/password/reset",
+]);
+
+// dump($route);
+// die();
+
+// $route->group('test', ['select']); // For test
 
 return $route;

@@ -1,0 +1,14 @@
+Options FollowSymLinks
+RewriteEngine On
+
+RewriteRule DirectoryIndex ./?action=home [L] 
+RewriteRule ^policy$ ./?action=policy [L] 
+RewriteRule ^contact$ ./?action=contact [L] 
+RewriteRule ^regulations$ ./?action=regulations [L] 
+RewriteRule ^register$ ./?type=registration [L] 
+RewriteRule ^login$ ./?type=authorization [L] 
+RewriteRule ^logout$ ./?type=user&action=logout [L] 
+RewriteRule ^user/profile$ ./?type=user&action=profile [L] 
+RewriteRule ^user/profile/update$ ./?type=user&action=update [L] 
+RewriteRule ^password/forgot$ ./?type=passwordRecovery&action=forgot [L] 
+RewriteRule ^password/reset$ ./?type=passwordRecovery&action=reset [L] 

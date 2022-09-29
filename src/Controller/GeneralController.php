@@ -12,7 +12,7 @@ use Phantom\View;
 
 class GeneralController extends Controller
 {
-    public function homeAction(): View
+    public function index(): View
     {
         View::set(['title' => "Strona główna", "style" => "home"]);
         return $this->render('general/home');
