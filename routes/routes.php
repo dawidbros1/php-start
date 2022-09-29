@@ -2,6 +2,16 @@
 
 declare (strict_types = 1);
 
-$route = require_once "framework/routes/routes.php";
+use Phantom\Model\Route;
+
+$route = new Route();
+$route->group('', ['home', 'policy', 'contact', 'regulations']);
+
+$route->register("registration");
+$route->register("authorization");
+$route->group('user', ['logout', 'profile', 'update']);
+$route->group('passwordRecovery', ['forgot', 'reset']);
+
+$route->group('test', ['select']); // For test
 
 return $route;
