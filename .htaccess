@@ -1,3 +1,14 @@
 Options FollowSymLinks
 RewriteEngine On
 
+RewriteRule DirectoryIndex ./?action=home [QSA,L] 
+RewriteRule ^http://localhost/php-start/policy$ ./?action=policy [QSA,L] 
+RewriteRule ^http://localhost/php-start/contact$ ./?action=contact [QSA,L] 
+RewriteRule ^http://localhost/php-start/regulations$ ./?action=regulations [QSA,L] 
+RewriteRule ^http://localhost/php-start/register$ ./?type=registration [QSA,L] 
+RewriteRule ^http://localhost/php-start/login$ ./?type=authorization [QSA,L] 
+RewriteRule ^http://localhost/php-start/logout$ ./?type=user&action=logout [QSA,L] 
+RewriteRule ^http://localhost/php-start/user/profile$ ./?type=user&action=profile [QSA,L] 
+RewriteRule ^http://localhost/php-start/user/profile/update$ ./?type=user&action=update [QSA,L] 
+RewriteRule ^http://localhost/php-start/password/forgot$ ./?type=passwordRecovery&action=forgot [QSA,L] 
+RewriteRule ^http://localhost/php-start/password/reset$ ./?type=passwordRecovery&action=reset [QSA,L] 

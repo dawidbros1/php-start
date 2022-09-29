@@ -19,7 +19,7 @@ class AuthorizationController extends Controller
         $this->guest();
         $this->model = new Authorization([], true, "User");
     }
-    
+
     public function index(): View | RedirectToRoute
     {
         View::set(['title' => "Logowanie"]);
