@@ -28,7 +28,11 @@ class RedirectToRoute
                 }
             }
 
-            $location .= ($queryParams = "&" . implode('&', $queryParams));
+            $location .= ($queryParams = "?" . implode('&', $queryParams));
+        }
+
+        if ($location == "") {
+            $location = "."; // for homepage
         }
 
         header("Location: " . $location);
