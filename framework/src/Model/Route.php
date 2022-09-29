@@ -26,21 +26,21 @@ class Route
 
     public function register(string $prefix, string $url, string $action = "")
     {
-        $url = substr($url, 1);
+        $url = $this->location . $url;
 
         if (strlen($prefix) == 0) {
             $this->routes[$action] = $url;
-            $line = "RewriteRule ^$url$ ./?action=$action [L] \n";
+            $line = "RewriteRule ^$url$ ./?action=$action";
         }
 
         if (strlen($prefix) != 0 && strlen($action) == 0) {
             $this->routes[$prefix] = $url;
-            $line = "RewriteRule ^$url$ ./?type=$prefix [L] \n";
+            $line = "RewriteRule ^$url$ ./?type=$prefix";
         }
 
         if (strlen($prefix) != 0 && strlen($action) != 0) {
             $this->routes[$prefix][$action] = $url;
-            $line = "RewriteRule ^$url$ ./?type=$prefix&action=$action [L] \n";
+            $line = "RewriteRule ^$url$ ./?type=$prefix&action=$action";
         }
 
         $this->htaccess->write($line);
@@ -48,8 +48,8 @@ class Route
 
     public function homepage(string $name)
     {
-        $this->routes[$name] = "";
-        $this->htaccess->write("RewriteRule DirectoryIndex ./?action=home [L] \n");
+        $this->routes[$name] = $this->location;
+        $this->htaccess->write("RewriteRule DirectoryIndex ./?action=home");
     }
 
     public function get($path)
