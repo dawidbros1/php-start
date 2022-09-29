@@ -12,6 +12,7 @@ class View
     private $user, $route, $page, $params;
     private static $style = null;
     private static $title = "Brak tytułu";
+    private static $location;
 
     public function __construct(User | null $user, Route $route, string $page, array $params)
     {
@@ -30,6 +31,10 @@ class View
         if (array_key_exists('title', $data)) {
             self::$title = $data['title'] ?? null;
         }
+
+        if (array_key_exists('location', $data)) {
+            self::$location = $data['location'] ?? null;
+        }
     }
 
     public function render()
@@ -39,6 +44,7 @@ class View
         $page = $this->page;
         $style = self::$style;
         $title = self::$title;
+        $location = self::$location;
 
         foreach ($this->params as $key => $param) {
             ${$key} = $param;

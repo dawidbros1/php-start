@@ -16,6 +16,8 @@ class Htaccess
 
     public function write($line)
     {
+        $line .= " [QSA,L] \n";
+
         if (strpos($this->text, $line) === false) {
             file_put_contents($this->file, $line, FILE_APPEND);
         }

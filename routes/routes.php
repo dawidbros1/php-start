@@ -6,10 +6,6 @@ use Phantom\Model\Route;
 
 $route = new Route($location);
 
-// $route->group('general', ['home', 'policy', 'contact', 'regulations']);
-
-// $route->register('', 'home', '');
-
 $route->homepage('home');
 
 $route->group('', [
@@ -31,9 +27,6 @@ $route->group('passwordRecovery', [
     'forgot' => "/password/forgot",
     'reset' => "/password/reset",
 ]);
-
-// dump($route);
-// die();
 
 // $route->group('test', ['select']); // For test
 
