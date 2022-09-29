@@ -14,17 +14,27 @@ require_once 'framework/recaptchalib.php';
 require_once 'vendor/autoload.php';
 
 $config = require_once 'config/config.php';
-$route = require_once 'routes/routes.php';
+
+$location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'];
+$folder = $config->get('project.folder');
+if ($folder != "") {
+    $location = $location . "/" . $folder;
+}
+
+$route = require_once 'routes/routes.php'; // variable $location is require
 
 use Phantom\Controller\Controller;
 use Phantom\Exception\AppException;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Helper\Request;
+use Phantom\View;
 
 $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 
 try {
     Controller::initConfiguration($config, $route);
+    View::set(['location' => $location]);
+
     $type = $request->getParam('type', 'general');
     $phantom = "\Phantom\Controller\\" . ucfirst($type) . "Controller";
     $app = "\App\Controller\\" . ucfirst($type) . "Controller";
