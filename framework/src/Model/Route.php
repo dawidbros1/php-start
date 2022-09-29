@@ -17,7 +17,7 @@ class Route
         }
     }
 
-    public function register(string $prefix, string $name)
+    public function register(string $prefix, string $name = "")
     {
         if (strlen($prefix) == 0) {
             $this->routes[$name] = "?action=" . $name;
