@@ -80,10 +80,12 @@ class User extends Model
     public function getAvatar()
     {
         if ($this->avatar == null) {
-            return $this->avatar ?? self::$defaultAvatar;
+            $avatar = $this->avatar ?? self::$defaultAvatar;
         } else {
-            return self::$uploadedLocation . $this->avatar;
+            $avatar = self::$uploadedLocation . $this->avatar;
         }
+
+        return self::$config->get("project.location") . $avatar;
     }
 
     public function hashPassword()
