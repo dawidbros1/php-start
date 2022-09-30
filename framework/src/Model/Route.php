@@ -11,7 +11,7 @@ class Route
 {
     private $routes, $htaccess, $location;
 
-    public function __construct($location)
+    public function __construct(string $location)
     {
         $this->htaccess = new Htaccess();
         $this->location = $location;
@@ -26,20 +26,21 @@ class Route
 
     public function register(string $prefix, string $url, string $action = "")
     {
-        $url = $this->location . $url;
+        $url = substr($url, 1);
+        $fullUrl = $this->location . $url;
 
         if (strlen($prefix) == 0) {
-            $this->routes[$action] = $url;
+            $this->routes[$action] = $fullUrl;
             $line = "RewriteRule ^$url$ ./?action=$action";
         }
 
         if (strlen($prefix) != 0 && strlen($action) == 0) {
-            $this->routes[$prefix] = $url;
+            $this->routes[$prefix] = $fullUrl;
             $line = "RewriteRule ^$url$ ./?type=$prefix";
         }
 
         if (strlen($prefix) != 0 && strlen($action) != 0) {
-            $this->routes[$prefix][$action] = $url;
+            $this->routes[$prefix][$action] = $fullUrl;
             $line = "RewriteRule ^$url$ ./?type=$prefix&action=$action";
         }
 

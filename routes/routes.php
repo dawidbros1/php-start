@@ -18,7 +18,7 @@ $route->register("registration", "/register");
 $route->register("authorization", "/login");
 
 $route->group('user', [
-    'logout' => "/logout",
+    'logout' => "/user/logout",
     'profile' => "/user/profile",
     'update' => "/user/profile/update",
 ]);
