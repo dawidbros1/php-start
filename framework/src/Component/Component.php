@@ -8,26 +8,28 @@ use Phantom\Exception\AppException;
 
 class Component
 {
-    private static $default_path = "/../../../templates/";
-    public static function render(string $component, array $params = []): void
+    private static $path = "/../../../templates/";
+    # Method renders component
+    public static function render(string $template, array $params = []): void
     {
-        $namespace = "App\Component\\" . str_replace(".", "\\", $component);
+        $namespace = "App\Component\\" . str_replace(".", "\\", $template);
 
+        # Checks if class of component exists
         if (!class_exists($namespace)) {
-            throw new AppException("Klasa [ $component ] nie istnieje");
+            throw new AppException("Klasa [ $namespace ] nie istnieje");
         }
 
         $component = new $namespace;
+        $file = __DIR__ . self::$path . $component->template;
 
-        $path = __DIR__ . self::$default_path . $component->template;
-
-        if (!file_exists($path)) {
-            throw new AppException("Plik [ $path ] nie istnieje");
+        # Checks if template of component was created
+        if (!file_exists($file)) {
+            throw new AppException("Plik [ $file ] nie istnieje");
         }
 
-        self::requireParams($component->require, $params);
+        self::requireParams($component->require, $params); # Checks if required params was given
 
-        $styles = Component::getStyles($params);
+        $styles = Component::getStyles($params); # Loads styles
 
         foreach ($params as $key => $param) {
             if (!in_array($key, ['class', 'mt', 'col'])) {
@@ -35,7 +37,7 @@ class Component
             }
         }
 
-        include $path;
+        include $file;
     }
 
     private static function getStyles(array $params): string

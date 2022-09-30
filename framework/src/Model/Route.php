@@ -17,42 +17,54 @@ class Route
         $this->location = $location;
     }
 
-    public function group(string $prefix, array $array)
+    # Method register route on every element in $array
+    # array $array: [ 'action' => 'url', 'action' => 'url' ]
+    # Example: $array = [
+    #   'profile' => '/user/profile',
+    #   'list' => '/users/list'
+    # ]
+    public function group(string $name, array $array)
     {
         foreach ($array as $action => $url) {
-            $this->register($prefix, $url, $action);
+            $this->register($name, $url, $action);
         }
     }
 
-    public function register(string $prefix, string $url, string $action = "")
+    #string $name: It is controller name like a user|category. If is empty will be runs default type (general)
+    #string $url: It is url which will be see on address bar. Example: user/profile | users/list
+    #string $action: Which action from controller will be runs. If $action is empty will be run method index()
+    public function register(string $name, string $url, string $action = "")
     {
         $url = substr($url, 1);
         $fullUrl = $this->location . $url;
 
-        if (strlen($prefix) == 0) {
+        if (strlen($name) == 0) {
             $this->routes[$action] = $fullUrl;
             $line = "RewriteRule ^$url$ ./?action=$action";
         }
 
-        if (strlen($prefix) != 0 && strlen($action) == 0) {
-            $this->routes[$prefix] = $fullUrl;
-            $line = "RewriteRule ^$url$ ./?type=$prefix";
+        if (strlen($name) != 0 && strlen($action) == 0) {
+            $this->routes[$name] = $fullUrl;
+            $line = "RewriteRule ^$url$ ./?type=$name";
         }
 
-        if (strlen($prefix) != 0 && strlen($action) != 0) {
-            $this->routes[$prefix][$action] = $fullUrl;
-            $line = "RewriteRule ^$url$ ./?type=$prefix&action=$action";
+        if (strlen($name) != 0 && strlen($action) != 0) {
+            $this->routes[$name][$action] = $fullUrl;
+            $line = "RewriteRule ^$url$ ./?type=$name&action=$action";
         }
 
+        /* auto fill file .htaccess */
         $this->htaccess->write($line);
     }
 
+    # Special route for home page without setting $name and $action
     public function homepage(string $name)
     {
         $this->routes[$name] = $this->location;
-        $this->htaccess->write("RewriteRule DirectoryIndex ./?action=home");
+        $this->htaccess->write("RewriteRule DirectoryIndex .");
     }
 
+    # Method returns value (address) of route like a ./?type=user&action=list
     public function get($path)
     {
         $output = $this->routes;
