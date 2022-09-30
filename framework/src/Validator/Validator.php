@@ -6,11 +6,9 @@ namespace Phantom\Validator;
 
 use Phantom\Helper\Session;
 
-// use App\Excep
-
 class Validator
 {
-    // Metody walidacyjne wielokrotnego użytku
+    # Method check if string has length between $min and $max
     protected function strlenBetween(string $variable, int $min, int $max)
     {
         if (strlen($variable) > $min && strlen($variable) < $max) {
@@ -20,6 +18,7 @@ class Validator
         return false;
     }
 
+    # Method check if string has less that $max characters
     protected function strlenMax(string $input, int $max)
     {
         if (strlen($input) > $max) {
@@ -29,6 +28,7 @@ class Validator
         return true;
     }
 
+    # Method check if string has more that $min characters
     protected function strlenMin(string $input, int $min)
     {
         if (strlen($input) < $min) {
@@ -38,10 +38,17 @@ class Validator
         return true;
     }
 
+    # Method validate $data
+    # array $data: [
+    #   'username' => "abc"
+    #   'email' => "boom@example.com"
+    # ]
+    # $rules: object $rules
     public function validate(array $data, $rules)
     {
         $types = array_keys($data);
 
+        # password validate
         if (array_key_exists('password', $data) && array_key_exists('repeat_password', $data)) {
             if ($data['password'] != $data['repeat_password']) {
                 Session::set("error:password:same", "Hasła nie są jednakowe");
@@ -98,6 +105,7 @@ class Validator
         return $ok ?? true;
     }
 
+    # Method to validate image
     public function validateImage($FILE, $rules, $type)
     {
         $uploadOk = 1;
@@ -135,6 +143,8 @@ class Validator
         return $uploadOk;
     }
 
+    # Method to set error
+    # Eaxmple: "error:username:min"
     private function setError($type, $rule, $message)
     {
         Session::set("error:$type:$rule", $message);

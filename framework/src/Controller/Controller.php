@@ -28,7 +28,6 @@ abstract class Controller extends Validator
     protected $mail;
     private $userModel;
     protected $model;
-
     public static function initConfiguration(Config $config, Route $route): void
     {
         self::$config = $config;
@@ -55,17 +54,18 @@ abstract class Controller extends Validator
         $this->request = $request;
     }
 
+    # Method runs selected action form controller
     public function run(): void
     {
         try {
-            $action = $this->action();
+            $action = $this->action(); // get action
 
-            if (!method_exists($this, $action)) {
+            if (!method_exists($this, $action)) { // checks if action exists
                 Session::error('Akcja do której chciałeś otrzymać dostęp nie istnieje');
                 $this->redirect("home")->redirect();
             }
 
-            $result = $this->$action();
+            $result = $this->$action(); // run action
 
             switch ($result::class) {
                 case "Phantom\View":{
@@ -83,6 +83,7 @@ abstract class Controller extends Validator
         }
     }
 
+    # Method returns action from request
     protected function action(): string
     {
         $action = $this->request->getParam('action', "index");
@@ -90,9 +91,8 @@ abstract class Controller extends Validator
         return $action;
     }
 
-    // ===== ===== ===== ===== =====
-
-    final protected function guest(): void
+    # Method require to user was not logged in
+    protected function forGuest(): void
     {
         if ($this->user != null) {
             Session::error("Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
@@ -100,17 +100,18 @@ abstract class Controller extends Validator
         }
     }
 
-    final protected function requireLogin(): void
+    # Method require to user was logged in
+    protected function forLogged(): void
     {
         if ($this->user == null) {
             Session::error("Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
             $this->redirect('auth.login');
         }
     }
-
-    final protected function requireAdmin(): void
+    # Method required to logged in user has role admin
+    protected function forAdmin(): void
     {
-        $this->requireLogin();
+        $this->forLogged();
 
         if (!$this->user->isAdmin()) {
             Session::error("Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
@@ -118,11 +119,13 @@ abstract class Controller extends Validator
         }
     }
 
+    # Method returns View
     protected function render(string $page, array $params = []): View
     {
         return new View($this->user, self::$route, $page, $params);
     }
 
+    # Method returns RedirectToRoute
     protected function redirect(string $to, array $params = []): RedirectToRoute
     {
         return new RedirectToRoute(self::$route, $to, $params);

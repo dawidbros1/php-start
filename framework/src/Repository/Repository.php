@@ -31,6 +31,7 @@ abstract class Repository
         }
     }
 
+    # Method creates connection to database
     private function createConnection(array $config): void
     {
         $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
@@ -39,6 +40,7 @@ abstract class Repository
         ]);
     }
 
+    # Method validates $config
     private function validateConfig(array $config): void
     {
         if (
@@ -51,28 +53,31 @@ abstract class Repository
         }
     }
 
-    // ===== GETTERS ===== //
-
-    public function get(array $input, $options)
+    # Method returns records from database
+    # if (fetch == "one") one record => fetch()
+    # if (fetch == "all") all records => fetchAll()
+    public function get(array $conditions, $options, string $fetch = "one")
     {
-        $conditions = $this->getConditions($input);
-        $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
-        $stmt->execute($input);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $format = $this->formatConditions($conditions);
+        $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $format $options");
+        $stmt->execute($conditions);
+
+        if ($fetch == "one") {
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        } else if ($fetch == "all") {
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
         return $data;
     }
 
-    public function getAll(array $input, $options): ?array
+    # Method returns a lot of records from database
+    public function getAll(array $conditions, $options): ?array
     {
-        $conditions = $this->getConditions($input);
-        $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $conditions $options");
-        $stmt->execute($input);
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $data;
+        return $this->get($conditions, $options, "all");
     }
 
-    // ===== Create ===== //
-
+    # Method adds record to database
     public function create($object)
     {
         $object->escape();
@@ -81,6 +86,7 @@ abstract class Repository
         $params = "";
         $values = "";
 
+        # to right format params and $values
         for ($i = 0; $i < count($data); $i++) {
             $params = $params . "" . key($data) . ($i == count($data) - 1 ? "" : ", ");
             $values = $values . ":" . key($data) . ($i == count($data) - 1 ? "" : ", ");
@@ -96,36 +102,43 @@ abstract class Repository
         }
     }
 
+    # Method updates the record in the database by ID
+    # Method require that input parameter was object
     public function update($object)
     {
         $params = "";
-        $data = $object->getArray($object->fillable);
+        $data = $object->getArray($object->fillable); # From object will be get all data
 
-        for ($i = 0; $i < count($data); $i++) {
+        for ($i = 0; $i < count($data); $i++) { # and next $params will be prepare to right format
             $params = $params . key($data) . "=:" . key($data) . ($i == count($data) - 1 ? "" : ", ");
             next($data);
         }
 
-        $sql = "UPDATE $this->table SET $params WHERE id=:id";
+        $sql = "UPDATE $this->table SET $params WHERE id=:id"; # Condition is always id=:id
         $stmt = self::$pdo->prepare($sql);
         $stmt->execute($data);
     }
 
+    # Method deletes a record from the database by ID
     public function delete(int $id)
     {
         $sql = "DELETE FROM $this->table WHERE id = :id";
         self::$pdo->prepare($sql)->execute(['id' => $id]);
     }
 
-    private function getConditions(array $input)
+    # Method format conditions to WHERE in SELECT [ use in method get() ]
+    # from ['id' => 5, 'name' => "bike"] to "id=:id AND name=:name"
+    private function formatConditions(array $input)
     {
         $conditions = "";
 
         foreach ($input as $key => $value) {
-            $conditions .= $conditions . " " . $key . "=:" . $key . " AND";
+            $conditions .= $key . "=:" . $key . " AND ";
         }
 
-        $conditions .= " 1";
+        if ($conditions != "") {
+            $conditions = substr($conditions, 0, -5);
+        }
 
         return $conditions;
     }

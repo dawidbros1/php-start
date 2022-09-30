@@ -15,6 +15,7 @@ class Config
         $this->config = $configuration;
     }
 
+    # Method get value of config
     public function get($path)
     {
         $output = $this->config;

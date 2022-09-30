@@ -22,7 +22,10 @@ abstract class Model
         self::$config = $config;
         self::$hashMethod = $config->get("default.hash.method");
     }
-    /* rulesitory => Rules and Repository */
+    # Constructor sets object properties with $data
+    # Constructor can create $rules and $repository if (rulesitory == true)
+    # Constructor can get $rules and $repository from other model
+    # rulesitory => Rules and Repository
     public function __construct(array $data = [], bool $rulesitory = true, $model = null)
     {
         if ($rulesitory == true) {
@@ -40,14 +43,16 @@ abstract class Model
         $this->setArray($data);
     }
 
-    public function set($property, $value)
+    # Method sets single property
+    public function set(string $property, $value)
     {
         if ($this->propertyExists($property)) {
             $this->$property = $value;
         }
     }
 
-    public function setArray($data)
+    # Method sets a lot of properties
+    public function setArray(array $data)
     {
         foreach ($data as $key => $value) {
             if (in_array($key, $this->fillable)) {
@@ -56,15 +61,16 @@ abstract class Model
         }
     }
 
-    public function get($property)
+    # Method return value of single property
+    public function get(string $property)
     {
         if ($this->propertyExists($property)) {
             return $this->$property;
         }
     }
 
-    // OTHER
-    public function getArray($array)
+    # Method return values of a lot of properties
+    public function getArray(array $array)
     {
         $properties = get_object_vars($this);
 
@@ -77,41 +83,47 @@ abstract class Model
         return $properties;
     }
 
-    /* Method starts data validation */
-    protected function validate($data)
+    # Short method to validate $data
+    protected function validate(array $data)
     {
         return self::$validator->validate($data, $this->rules);
     }
 
-    /* Method starts image validation */
+    # Short method to validate image
     protected function validateImage($FILE, $type)
     {
         return self::$validator->validateImage($FILE, $this->rules, $type);
     }
 
-    // DATABASE => FIND
-    public function find(array $input, string $options = "", bool $rulesitory = true, $namaspace = null)
+    # Method to find one record from database
+    # array $conditions: ['id' => 5, 'name' => "bike"]
+    # string $options: ORDER BY column_name ASC|DESC
+    # bool $rulesitory: true|false => if created object need have access to $rules and $repository
+    # $namespace: which of class will be created object
+    public function find(array $conditions, string $options = "", bool $rulesitory = true, $namaspace = null)
     {
         if ($namaspace == null) {
             $namaspace = $this::class;
         }
 
-        if ($data = $this->repository->get($input, $options)) {
+        if ($data = $this->repository->get($conditions, $options)) {
             return new $namaspace($data, $rulesitory);
         }
 
         return null;
     }
 
+    # Method to find one record from database by ID
     public function findById($id, string $options = "", bool $rulesitory = true, $namaspace = null)
     {
         return $this->find(['id' => $id], $options, $rulesitory, $namaspace);
     }
 
-    public function findAll(array $input, string $options = "", bool $rulesitory = true, $namaspace = null)
+    # Method to find a lot of record from database
+    public function findAll(array $conditions, string $options = "", bool $rulesitory = true, $namaspace = null)
     {
         $output = [];
-        $data = $this->repository->getAll($input, $options);
+        $data = $this->repository->getAll($conditions, $options);
 
         if ($namaspace == null) {
             $namaspace = $this::class;
@@ -126,8 +138,9 @@ abstract class Model
         return $output;
     }
 
-    // DATABASE => SAVE
-    public function create($validate = true)
+    # Method adds record to database
+    # if object was validated earlier we can skip validate in this method
+    public function create(bool $validate = true)
     {
         if (($validate === true && $this->validate($this)) || $validate === false) {
             $this->repository->create($this);
@@ -137,9 +150,11 @@ abstract class Model
         return false;
     }
 
-    public function update($toUpdate = [], $validate = true)
+    # Method updates current object | we can skip validate
+    # array $toValidate: which properties will be validate
+    public function update(array $toValidate = [], bool $validate = true)
     {
-        $data = $this->getArray($toUpdate);
+        $data = $this->getArray($toValidate);
 
         if (($validate === true && $this->validate($data)) || $validate === false) {
             $this->escape();
@@ -150,7 +165,9 @@ abstract class Model
         return false;
     }
 
-    // DATABASE => DELETE
+    # Method delete record from database
+    # if property ID is sets this record will we deleted
+    # else current object will be deleted
     public function delete(?int $id = null)
     {
         if ($id !== null) {
@@ -160,7 +177,7 @@ abstract class Model
         }
     }
 
-    // OTHER
+    # Method do htmlentities on every property
     public function escape()
     {
         foreach ($this->fillable as $index => $key) {
@@ -170,11 +187,13 @@ abstract class Model
         }
     }
 
+    # Method hash parameter
     public function hash($param, $method = null): string
     {
         return hash($method ?? self::$hashMethod, $param);
     }
 
+    # Method hash name of file to create unique file name
     public function hashFile($file)
     {
         $type = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
@@ -183,13 +202,12 @@ abstract class Model
         return $file;
     }
 
+    # Method upload file on server
     protected function uploadFile($path, $FILE): bool
     {
-        $target_dir = $path;
-        $type = strtolower(pathinfo($FILE['name'], PATHINFO_EXTENSION));
-        $target_file = $target_dir . basename($FILE["name"]);
+        $location = $path . basename($FILE["name"]);
 
-        if (move_uploaded_file($FILE["tmp_name"], $target_file)) {
+        if (move_uploaded_file($FILE["tmp_name"], $location)) {
             return true;
         } else {
             Session::set('error', 'Przepraszamy, wystąpił problem w trakcie wysyłania pliku');
@@ -197,6 +215,7 @@ abstract class Model
         }
     }
 
+    # Method required to property exists
     private function propertyExists($name)
     {
         $properties = get_object_vars($this);

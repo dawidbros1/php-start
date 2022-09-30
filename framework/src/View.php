@@ -22,6 +22,9 @@ class View
         $this->params = $params;
     }
 
+    # Method set custom style, title and location
+    # style: profile | registration | authorization
+    # location of styles: public/css
     public static function set($data)
     {
         if (array_key_exists('style', $data)) {
@@ -37,6 +40,7 @@ class View
         }
     }
 
+    # Method renders view
     public function render()
     {
         $user = $this->user;
@@ -46,6 +50,10 @@ class View
         $title = self::$title;
         $location = self::$location;
 
+        $this->params = $this->escape($this->params);
+
+        # auto generate variables
+        # from $params['name'] to $name
         foreach ($this->params as $key => $param) {
             ${$key} = $param;
         }
@@ -53,12 +61,14 @@ class View
         require_once 'templates/layout/main.php';
     }
 
+    # Method do htmlentities on every $params
     private function escape(array $params): array
     {
         $clearParams = [];
+
         foreach ($params as $key => $param) {
 
-            if (gettype($params === "object")) {
+            if (gettype($param) === "object") {
                 $clearParams[$key] = $param;
                 continue;
             }

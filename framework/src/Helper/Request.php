@@ -19,7 +19,7 @@ class Request
         $this->files = $files;
     }
 
-    // =============== GENERAL =============== //
+    # Method returns value of parameter from request for current request method
     public function param(string $name, $default = null)
     {
         if ($this->isPost()) {
@@ -29,7 +29,8 @@ class Request
         }
     }
 
-    // =============== POST =============== //
+    # Method checks if request method is post
+    # If $names != [], method require to exists all post parameters in $names and next returns values of them
     public function isPost(array $names = [])
     {
         if ($status = $this->server['REQUEST_METHOD'] === 'POST') {
@@ -44,6 +45,7 @@ class Request
         return $status;
     }
 
+    # Method returns array of values from post request
     public function postParams(array $names)
     {
         foreach ($names as $name) {
@@ -53,11 +55,14 @@ class Request
         return $output ?? [];
     }
 
+    # Method returns value from post request
     public function postParam(string $name, $default = null)
     {
         return $this->post[$name] ?? $default;
     }
 
+    # Method checks if exists all parameters from post request contained in the variable "names"
+    # if (returnData == true) method returns values of parameters instead of status
     public function hasPostNames(array $names, bool $returnData = true)
     {
         foreach ($names as $name) {
@@ -69,13 +74,15 @@ class Request
         return $returnData ? $this->postParams($names) : true;
     }
 
+    # Method checks if exists input parameter in post request
+    # if (returnData == true) method returns value of parameter instead of status
     public function hasPostName(string $name, bool $returnData = true)
     {
         if (!isset($this->post[$name])) {return false;}
         return $returnData ? $this->postParam($name) : true;
     }
 
-    // =============== GET =============== //
+    # This same description to get methods
     public function isGet(array $names = [])
     {
         if ($status = $this->server['REQUEST_METHOD'] === 'GET') {
@@ -121,17 +128,19 @@ class Request
         return $returnData ? $this->getParam($name) : true;
     }
 
-    // =============== Other ===============
+    # Method returns QUERY_STRING
     public function queryString(): string
     {
         return $this->server['QUERY_STRING'];
     }
 
+    # Method returns file
     public function file(string $name, $default = null)
     {
         return $this->files[$name] ?? $default;
     }
 
+    # Method returns current url
     public function url()
     {
         return $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);

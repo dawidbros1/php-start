@@ -14,6 +14,7 @@ class Mail extends Model
         $this->mail = self::$config->get('mail');
     }
 
+    # Method sends email by contact form
     public function contact(array $data)
     {
         $headers = "From: " . strip_tags($data['from']) . "\r\n";
@@ -31,6 +32,7 @@ class Mail extends Model
         }
     }
 
+    # Method sends email by forgotPassword form
     public function forgotPassword($email, $route, $username)
     {
         $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
@@ -69,6 +71,7 @@ class Mail extends Model
         }
     }
 
+    # Method to send email
     private function send($email, $subject, $html, $headers)
     {
         // $this->showMessage($html);
@@ -81,6 +84,7 @@ class Mail extends Model
         }
     }
 
+    # Method was created for test to look on email which will be sent
     private function showMessage($html)
     {
         dump($html);

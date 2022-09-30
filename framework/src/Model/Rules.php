@@ -17,7 +17,12 @@ abstract class Rules
         $this->messages();
     }
 
-    // Basic methods to create rules and error messages
+    # Method to create rule
+    # string $type: type of rule => username|password|email
+    # array $rules => [
+    #   'min' => 5, 'max' => 16,
+    #   'sanitize' => true, 'validate' => true
+    # ]
     public function createRule(string $type, array $rules): void
     {
         foreach ($rules as $name => $value) {
@@ -25,6 +30,12 @@ abstract class Rules
         }
     }
 
+    # Method to create error message for rule
+    # string $type: type of rule => username|password|email
+    # array $rules => [
+    #   'min' => 'This field cannot containt less than x characters'
+    #   'sanitize' => 'The email address contains illegal characters'
+    # ]
     public function createMessages(string $type, array $rules): void
     {
         foreach ($rules as $name => $message) {
@@ -32,7 +43,11 @@ abstract class Rules
         }
     }
 
-    // ===== ===== USE IN NameRules like AuthRules ===== =====
+    # Method returns array of value rules as string.
+    # string $name: name of rule like a (avatar.types) <= It must be array
+    # Can be created as $rules = [
+    #    'types' => ['jpg', 'png', 'jpeg', 'gif'],
+    # ]
     public function arrayValue(string $name, bool $uppercase = false): string
     {
         $type = strtok($name, '.');
@@ -47,12 +62,14 @@ abstract class Rules
             $output .= $value . ', ';
         }
 
-        if ($uppercase) {$output = strtoupper($output);}
+        if ($uppercase) {
+            $output = strtoupper($output);
+        }
         $output = substr($output, 0, -2);
         return $output;
     }
 
-    // ===== ===== ===== ===== =====
+    # Method check if exists $this->rules with type
     public function hasType(string $type): bool
     {
         if (array_key_exists($type, $this->rules)) {
@@ -62,6 +79,11 @@ abstract class Rules
         }
     }
 
+    # Method set defaultType
+    # If defaultType is sets, we don't need send type of rules to methods like a value() or message();
+    # $this->setDefaultType("username")
+    # $this->value("min") // return x
+    # $this->message("min") // return "Username cannot contain less than x characters"
     public function setDefaultType(string $type): void
     {
         if (!$this->hasType($type)) {
@@ -70,18 +92,16 @@ abstract class Rules
         $this->defaultType = $type;
     }
 
+    # Method sets defaultType on null.
     public function clearDefaultType(): void
     {
         $this->defaultType = null;
     }
 
+    # Method returns rules of type.
+    # Eaxmple: $type = "username" will return { rules, messages } of type username
     public function getType(?string $type = null): array
     {
-        /*
-        === example: ===
-        input: type = username
-        return username:{ rules;  messages }
-         */
         if ($type === null) {
             if ($this->defaultType !== null) {
                 return $this->rules[$this->defaultType];
@@ -90,13 +110,17 @@ abstract class Rules
             }
         } else {
             if (!$this->hasType($type)) {
-                throw new AppException('Wybrany typ [' . $type . '] nie istnieje');
+                throw new AppException(
+                    'Wybrany typ [' . $type . '] nie istnieje'
+                );
             } else {
                 return $this->rules[$type];
             }
         }
     }
 
+    # Method check if exists $this->rules[$type] with all input rules.
+    # Eaxmple: $rules = ['min','max'] | $type = "username"
     public function typeHasRules(array $rules, ?string $type = null): bool
     {
         if ($this->defaultType != null) {
@@ -118,24 +142,29 @@ abstract class Rules
         return true;
     }
 
-    // ===== methods which use getRule() =====
+    # Short method to get value of rule
     public function value(?string $name = null)
     {
         return $this->getRule($name)['value'];
     }
 
+    # Short method that returns value of between rule
+    # example: password.min | password.max
     public function between(string $name)
     {
         $typeName = strtok($name, '.'); // TypeName
         $limit = substr($name, strpos($name, '.') + 1); // MIN || MAX
-        return $this->getRule($typeName . ".between")['value'][$limit];
+        return $this->getRule($typeName . '.between')['value'][$limit];
     }
 
+    # Short method to get error message of rule
     public function message(?string $name = null): ?string
     {
         return $this->getRule($name)['message'];
     }
 
+    # Method returns rule (value + message)
+    # Eaxmple: $name = "username.min" will returns { value, message }
     private function getRule(string $name): array
     {
         // example: return username.rules //

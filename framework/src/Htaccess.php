@@ -14,6 +14,7 @@ class Htaccess
         $this->text = file_get_contents($this->file);
     }
 
+    # Method writes a unique line to the .htaccess file
     public function write($line)
     {
         $line .= " [QSA,L] \n";

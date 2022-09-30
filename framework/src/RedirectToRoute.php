@@ -14,6 +14,12 @@ class RedirectToRoute
         $this->params = $params;
     }
 
+    # Method redirect to "$to" page
+    # $to: ./?type=registration
+    # $params: [
+    #   'email' => "email.example.com"
+    #   'username => "example"
+    # ]
     public function redirect(): void
     {
         $location = $this->route->get($this->to);
