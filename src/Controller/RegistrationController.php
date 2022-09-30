@@ -16,7 +16,7 @@ class RegistrationController extends Controller
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->guest();
+        $this->forGuest();
         $this->model = new Registration([], false);
     }
 

@@ -16,7 +16,7 @@ class AuthorizationController extends Controller
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->guest();
+        $this->forGuest();
         $this->model = new Authorization([], true, "User");
     }
 

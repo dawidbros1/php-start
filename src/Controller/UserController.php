@@ -14,7 +14,7 @@ class UserController extends Controller
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->requireLogin();
+        $this->forLogged();
     }
 
     public function logoutAction(): RedirectToRoute
