@@ -15,12 +15,7 @@ require_once 'vendor/autoload.php';
 
 $config = require_once 'config/config.php';
 
-$location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'];
-$folder = $config->get('project.folder');
-if ($folder != "") {
-    $location = $location . "/" . $folder;
-}
-
+$location = $config->get('project.location');
 $route = require_once 'routes/routes.php'; // variable $location is require
 
 use Phantom\Controller\Controller;

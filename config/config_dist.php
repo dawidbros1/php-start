@@ -2,10 +2,13 @@
 
 declare (strict_types = 1);
 
-use App\Model\Config;
+use Phantom\Model\Config;
 
 return new Config(
     [
+        'project' => [
+            'location' => "domain + folder if needs",
+        ],
         'db' => [
             'host' => 'localhost',
             'database' => '',
@@ -27,7 +30,7 @@ return new Config(
             ],
             'route' => [
                 'home' => 'home', // page after login
-                'logout' => 'auth.login', // page after logout
+                'logout' => 'authorization', // page after logout
             ],
             'hash' => [
                 'method' => 'sha256', // sha25 || md5 ...
