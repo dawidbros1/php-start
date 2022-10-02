@@ -12,6 +12,9 @@ abstract class Model
     protected static $validator = null;
     protected static $hashMethod = null;
 
+    protected $rules, $repository;
+    public $fillable;
+    
     public static function initConfiguration(Config $config)
     {
         self::$validator = new Validator();
@@ -148,11 +151,13 @@ abstract class Model
 
     public function escape()
     {
-        foreach ($this->fillable as $index => $key) {
-            if (property_exists($this, $key)) {
-                $this->$key = htmlentities((string) $this->$key);
+        foreach ($this->fillable as $index => $property) {
+            if (property_exists($this, $property)) {
+                $this->$property = htmlentities((string) $this->$property, ENT_QUOTES);
             }
         }
+
+        return $this;
     }
 
     public function hash($param, $method = null): string
