@@ -15,9 +15,10 @@ class UserRepository extends Repository
         parent::__construct();
     }
 
+    # Method returns all emails from "users" table
     public function getEmails(): array
     {
-        $stmt = self::$pdo->prepare("SELECT email FROM users");
+        $stmt = self::$pdo->prepare("SELECT email FROM $this->table");
         $stmt->execute();
         $emails = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $emails;
