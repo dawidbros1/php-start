@@ -20,6 +20,7 @@ class RegistrationController extends Controller
         $this->model = new Registration([], false);
     }
 
+    # Method adds new user
     public function index(): View | RedirectToRoute
     {
         View::set(['title' => "Rejestracja"]);

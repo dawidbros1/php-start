@@ -30,6 +30,7 @@ class GeneralController extends Controller
         return $this->render('general/regulations');
     }
 
+    # Method sends message to website admin by contact form
     public function contactAction(): View | RedirectToRoute
     {
         View::set(['title' => "Strona kontaktowa", 'style' => "contact"]);
@@ -56,10 +57,8 @@ class GeneralController extends Controller
             return $this->redirect('contact');
         }
 
-        $path = self::$config->get('default.path.medium') ?? "";
-
         return $this->render('general/contact', [
-            'path' => $path,
+            'path' => self::$config->get('default.path.medium') ?? "",
             'sideKey' => self::$config->get('reCAPTCHA.key.side'),
         ]);
     }

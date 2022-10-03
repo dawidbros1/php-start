@@ -21,6 +21,7 @@ class PasswordRecoveryController extends Controller
         $this->model = new PasswordRecovery([], true, "User");
     }
 
+    # Method sends email to user mail with link to reset password
     public function forgotAction(): View | RedirectToRoute
     {
         View::set(['title' => "Przypomnienie hasła"]);
@@ -38,14 +39,15 @@ class PasswordRecoveryController extends Controller
         }
     }
 
+    # Method updates user password
     public function resetAction(): View | RedirectToRoute
     {
         View::set(['title' => "Reset hasła"]);
 
         if ($data = $this->request->isPost(['password', 'repeat_password', 'code'])) {
-            $this->checkCodeToResetPassword($code = $data['code']);
+            $this->checkCodeToResetPassword($code = $data['code']); # Check if session code is correct and valid
 
-            if ($user = $this->model->resetPassword($data, $code)) {
+            if ($user = $this->model->resetPassword($data, $code)) { # Reset password
                 return $this->redirect('authorization', ['email' => $user->email]);
             } else {
                 return $this->redirect('passwordRecovery.reset', ['code' => $code]);

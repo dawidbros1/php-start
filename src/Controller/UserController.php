@@ -17,6 +17,7 @@ class UserController extends Controller
         $this->forLogged();
     }
 
+    # Method logouts user
     public function logoutAction(): RedirectToRoute
     {
         $this->user->logout();
@@ -25,12 +26,14 @@ class UserController extends Controller
         ]);
     }
 
+    # Method shows user profile
     public function profileAction(): View
     {
         View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
         return $this->render('user/profile');
     }
 
+    # Method runs method to update [ username | password | avatar ]
     public function updateAction(): RedirectToRoute
     {
         if ($toUpdate = $this->request->isPost(['update'])) {
@@ -43,6 +46,7 @@ class UserController extends Controller
         return $this->redirect('user.profile');
     }
 
+    # Method updates username
     private function updateUsername()
     {
         if ($username = $this->request->hasPostName('username')) {
@@ -51,6 +55,7 @@ class UserController extends Controller
         }
     }
 
+    # Method updates password
     private function updatePassword()
     {
         if ($data = $this->request->hasPostNames(['current_password', 'password', 'repeat_password'])) {
@@ -58,6 +63,7 @@ class UserController extends Controller
         }
     }
 
+    # Method updates avatar
     private function updateAvatar()
     {
         $path = self::$config->get('upload.path.avatar');

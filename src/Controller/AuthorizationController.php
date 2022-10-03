@@ -20,6 +20,7 @@ class AuthorizationController extends Controller
         $this->model = new Authorization([], true, "User");
     }
 
+    # Method login user
     public function index(): View | RedirectToRoute
     {
         View::set(['title' => "Logowanie"]);
