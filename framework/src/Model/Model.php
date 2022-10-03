@@ -26,7 +26,7 @@ abstract class Model
     # Constructor can create $rules and $repository if (rulesitory == true)
     # Constructor can get $rules and $repository from other model
     # rulesitory => Rules and Repository
-    public function __construct(array $data = [], bool $rulesitory = true, $model = null)
+    public function __construct(array $data = [], bool $rulesitory = true, ?string $model = null)
     {
         if ($rulesitory == true) {
             $namaspace = explode("\\", $this::class);

@@ -7,7 +7,7 @@ use Phantom\Model\Config;
 return new Config(
     [
         'project' => [
-            'location' => "domain + folder if needs",
+            'location' => "http://example.pl/folder/", // http://example.pl/
         ],
         'db' => [
             'host' => 'localhost',
@@ -16,7 +16,7 @@ return new Config(
             'password' => '',
         ],
         'mail' => [
-            'email' => 'websideEmail@domaina.com',
+            'email' => 'example@domain',
         ],
         'upload' => [
             'path' => [

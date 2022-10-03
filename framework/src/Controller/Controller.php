@@ -45,10 +45,9 @@ abstract class Controller extends Validator
         User::initConfiguration(self::$config);
 
         $this->mail = new Mail(self::$config->get('mail'));
-        $this->userModel = new User();
 
-        if ($id = Session::get('user:id')) {
-            $this->user = $this->userModel->findById(User::ID());
+        if (Session::get('user:id')) {
+            $this->user = (new User())->findById(User::ID());
         }
 
         $this->request = $request;

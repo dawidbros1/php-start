@@ -28,20 +28,23 @@ $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 
 try {
     Controller::initConfiguration($config, $route);
-    View::set(['location' => $location]);
+    View::initConfiguration($location);
 
     $type = $request->getParam('type', 'general');
     $phantom = "\Phantom\Controller\\" . ucfirst($type) . "Controller";
     $app = "\App\Controller\\" . ucfirst($type) . "Controller";
 
     if (class_exists($app)) {
-        (new $app($request))->run();
+        $controller = new $app($request);
     } else if (class_exists($phantom)) {
-        (new $phantom($request))->run();
+        $controller = new $phantom($request);
     } else {
         dump("TODO [index.php]: Controller [" . $type . "] doen't exists");
         //TODO Controller doen't exists
+        die();
     }
+
+    $controller->run();
 
 } catch (ConfigurationException $e) {
     echo '<h1>Wystąpił błąd w aplikacji</h1>';

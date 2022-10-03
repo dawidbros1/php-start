@@ -22,6 +22,11 @@ class View
         $this->params = $params;
     }
 
+    public static function initConfiguration(string $location)
+    {
+        self::$location = $location;
+    }
+
     # Method set custom style, title and location
     # style: profile | registration | authorization
     # location of styles: public/css
@@ -33,10 +38,6 @@ class View
 
         if (array_key_exists('title', $data)) {
             self::$title = $data['title'] ?? null;
-        }
-
-        if (array_key_exists('location', $data)) {
-            self::$location = $data['location'] ?? null;
         }
     }
 
