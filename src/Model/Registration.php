@@ -35,7 +35,7 @@ class Registration extends Model
     # Method checks if email is unique and return status
     public function isEmailUnique($user)
     {
-        if ($user->existsEmail($user->get('email'))) {
+        if (in_array($user->get('email'), $user->repository->getEmails())) {
             Session::set("error:email:unique", "Podany adres email jest zajęty");
             return false;
         }
