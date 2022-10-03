@@ -71,11 +71,11 @@ class PasswordRecoveryController extends Controller
             if ((time() - Session::get("created:" . $code)) > 86400) {
                 Session::set('error', 'Link do zresetowania hasła stracił ważność');
                 Session::clearArray($names);
-                return $this->redirect('passwordRecovery.forgot');
+                $this->redirect('passwordRecovery.forgot', [], true);
             }
         } else {
             Session::set('error', 'Nieprawidłowy kod resetu hasła');
-            return $this->redirect('passwordRecovery.forgot');
+            $this->redirect('passwordRecovery.forgot', [], true);
         }
     }
 }

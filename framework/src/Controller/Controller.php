@@ -126,8 +126,15 @@ abstract class Controller extends Validator
     }
 
     # Method returns RedirectToRoute
-    protected function redirect(string $to, array $params = []): RedirectToRoute
+    protected function redirect(string $to, array $params = [], bool $execute = false): RedirectToRoute
     {
-        return new RedirectToRoute(self::$route, $to, $params);
+        $redirectToRoute = new RedirectToRoute(self::$route, $to, $params);
+
+        if ($execute === true) {
+            $redirectToRoute->redirect();
+            exit();
+        }
+
+        return $redirectToRoute;
     }
 }
