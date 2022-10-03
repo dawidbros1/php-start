@@ -9,6 +9,7 @@ use Phantom\Model\Model;
 
 class Authorization extends Model
 {
+    # Method sets session user:id if there is a user with matching data [e-mail, password]
     public function login(array $data)
     {
         $data['password'] = $this->hash($data['password']);
@@ -19,6 +20,8 @@ class Authorization extends Model
 
         return $user;
     }
+
+    # Method checks if email exists and return status
     public function existsEmail($email)
     {
         return in_array($email, $this->repository->getEmails());

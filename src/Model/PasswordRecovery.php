@@ -9,11 +9,13 @@ use Phantom\Model\Model;
 
 class PasswordRecovery extends Model
 {
+    # Method sets new password for user
     public function resetPassword($data, $code)
     {
         if ($status = $this->validate($data)) {
             $user = $this->find(['email' => Session::get($code)], "", true, User::class);
-            $user->set('password', $this->hash($data['password']));
+            $user->set('password', $data['password']);
+            $user->hashPassword();
             $user->update([], false);
 
             Session::clearArray([$code, "created:" . $code]);
@@ -22,6 +24,7 @@ class PasswordRecovery extends Model
         return $user ?? null;
     }
 
+    # Method checks if email exists and return status
     public function existsEmail($email)
     {
         return in_array($email, $this->repository->getEmails());

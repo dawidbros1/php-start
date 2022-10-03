@@ -10,11 +10,12 @@ use Phantom\Model\Model;
 
 class Registration extends Model
 {
+    # Method adds new user
     public function register(array $data)
     {
         $user = new User($data);
 
-        if ($status = ($user->validate($data)&!$this->isUnique($user))) {
+        if ($status = ($user->validate($data)&($this->isEmailUnique($user)))) {
             unset($data);
             $data['avatar'] = self::$config->get('default.path.avatar');
             $data['role'] = "user";
@@ -30,12 +31,15 @@ class Registration extends Model
 
         return $status;
     }
-    public function isUnique($user)
+
+    # Method checks if email is unique and return status
+    public function isEmailUnique($user)
     {
-        if (in_array($user->get('email'), $user->repository->getEmails())) {
+        if ($user->existsEmail($user->get('email'))) {
             Session::set("error:email:unique", "Podany adres email jest zajęty");
-            return true;
+            return false;
         }
-        return false;
+
+        return true;
     }
 }
