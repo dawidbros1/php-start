@@ -5,9 +5,9 @@ declare (strict_types = 1);
 namespace App\Model;
 
 use Phantom\Helper\Session;
-use Phantom\Model\Model;
+use Phantom\Model\AbstractModel;
 
-class Authorization extends Model
+class Authorization extends AbstractModel
 {
     # Method sets session user:id if there is a user with matching data [e-mail, password]
     public function login(array $data)

@@ -9,16 +9,16 @@ use Phantom\Exception\ConfigurationException;
 use Phantom\Exception\StorageException;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
+use Phantom\Model\AbstractModel;
 use Phantom\Model\Config;
 use Phantom\Model\Mail;
-use Phantom\Model\Model;
 use Phantom\Model\Route;
 use Phantom\RedirectToRoute;
-use Phantom\Repository\Repository;
+use Phantom\Repository\AbstractRepository;
 use Phantom\Validator\Validator;
 use Phantom\View;
 
-abstract class Controller extends Validator
+abstract class AbstractController extends Validator
 {
     protected static $config = [];
     protected static $route = [];
@@ -40,8 +40,8 @@ abstract class Controller extends Validator
             throw new ConfigurationException('Configuration error');
         }
 
-        Model::initConfiguration(self::$config);
-        Repository::initConfiguration(self::$config->get('db'));
+        AbstractModel::initConfiguration(self::$config);
+        AbstractRepository::initConfiguration(self::$config->get('db'));
         User::initConfiguration(self::$config);
 
         $this->mail = new Mail(self::$config->get('mail'));

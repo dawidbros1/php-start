@@ -4,13 +4,13 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use Phantom\Controller\Controller;
+use Phantom\Controller\AbstractController;
 use Phantom\Helper\Session;
 use Phantom\Model\Mail;
 use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class GeneralController extends Controller
+class GeneralController extends AbstractController
 {
     public function index(): View
     {

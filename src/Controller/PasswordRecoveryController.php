@@ -6,13 +6,13 @@ namespace App\Controller;
 
 use App\Model\PasswordRecovery;
 use App\Model\User;
-use Phantom\Controller\Controller;
+use Phantom\Controller\AbstractController;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
 use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class PasswordRecoveryController extends Controller
+class PasswordRecoveryController extends AbstractController
 {
     public function __construct(Request $request)
     {

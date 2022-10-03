@@ -4,12 +4,12 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use Phantom\Controller\Controller;
+use Phantom\Controller\AbstractController;
 use Phantom\Helper\Request;
 use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
     public function __construct(Request $request)
     {

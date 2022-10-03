@@ -5,13 +5,13 @@ declare (strict_types = 1);
 namespace App\Controller;
 
 use App\Model\Registration;
-use Phantom\Controller\Controller;
+use Phantom\Controller\AbstractController;
 use Phantom\Helper\Checkbox;
 use Phantom\Helper\Request;
 use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class RegistrationController extends Controller
+class RegistrationController extends AbstractController
 {
     public function __construct(Request $request)
     {

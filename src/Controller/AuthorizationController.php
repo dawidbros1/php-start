@@ -5,13 +5,13 @@ declare (strict_types = 1);
 namespace App\Controller;
 
 use App\Model\Authorization;
-use Phantom\Controller\Controller;
+use Phantom\Controller\AbstractController;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
 use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class AuthorizationController extends Controller
+class AuthorizationController extends AbstractController
 {
     public function __construct(Request $request)
     {

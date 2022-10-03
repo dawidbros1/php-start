@@ -6,9 +6,9 @@ namespace App\Model;
 
 use App\Model\User;
 use Phantom\Helper\Session;
-use Phantom\Model\Model;
+use Phantom\Model\AbstractModel;
 
-class Registration extends Model
+class Registration extends AbstractModel
 {
     # Method adds new user
     public function register(array $data)

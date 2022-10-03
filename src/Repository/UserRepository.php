@@ -5,9 +5,9 @@ declare (strict_types = 1);
 namespace App\Repository;
 
 use PDO;
-use Phantom\Repository\Repository;
+use Phantom\Repository\AbstractRepository;
 
-class UserRepository extends Repository
+class UserRepository extends AbstractRepository
 {
     public function __construct()
     {

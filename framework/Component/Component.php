@@ -8,7 +8,7 @@ use Phantom\Exception\AppException;
 
 class Component
 {
-    private static $path = "/../../../templates/";
+    private static $path = "/../../templates/";
     # Method renders component
     public static function render(string $template, array $params = []): void
     {

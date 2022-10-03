@@ -8,7 +8,7 @@ use Phantom\Exception\AppException;
 use Phantom\Helper\Session;
 use Phantom\Validator\Validator;
 
-abstract class Model
+abstract class AbstractModel
 {
     protected static $validator = null;
     protected static $hashMethod = null;
@@ -22,6 +22,7 @@ abstract class Model
         self::$config = $config;
         self::$hashMethod = $config->get("default.hash.method");
     }
+
     # Constructor sets object properties with $data
     # Constructor can create $rules and $repository if (rulesitory == true)
     # Constructor can get $rules and $repository from other model

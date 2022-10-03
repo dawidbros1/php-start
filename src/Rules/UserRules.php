@@ -4,9 +4,9 @@ declare (strict_types = 1);
 
 namespace App\Rules;
 
-use Phantom\Model\Rules;
+use Phantom\Model\AbstractRules;
 
-class UserRules extends Rules
+class UserRules extends AbstractRules
 {
     public function rules()
     {

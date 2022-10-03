@@ -6,7 +6,7 @@ namespace Phantom\Model;
 
 use Phantom\Exception\AppException;
 
-abstract class Rules
+abstract class AbstractRules
 {
     protected $rules;
     protected $defaultType = null;

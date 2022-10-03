@@ -10,7 +10,7 @@ use Phantom\Exception\ConfigurationException;
 use Phantom\Exception\StorageException;
 use Throwable;
 
-abstract class Repository
+abstract class AbstractRepository
 {
     protected static $pdo;
     protected static $config;

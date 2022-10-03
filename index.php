@@ -9,8 +9,8 @@ ini_set('session.gc_divisor', '1');
 
 session_start();
 
-require_once 'framework/src/Utils/debug.php';
-require_once 'framework/recaptchalib.php';
+require_once 'framework/Utils/debug.php';
+require_once 'recaptchalib.php';
 require_once 'vendor/autoload.php';
 
 $config = require_once 'config/config.php';
@@ -18,7 +18,7 @@ $config = require_once 'config/config.php';
 $location = $config->get('project.location');
 $route = require_once 'routes/routes.php'; // variable $location is require
 
-use Phantom\Controller\Controller;
+use Phantom\Controller\AbstractController;
 use Phantom\Exception\AppException;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Helper\Request;
@@ -27,7 +27,7 @@ use Phantom\View;
 $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 
 try {
-    Controller::initConfiguration($config, $route);
+    AbstractController::initConfiguration($config, $route);
     View::initConfiguration($location);
 
     $type = $request->getParam('type', 'general');

@@ -6,7 +6,7 @@ namespace Phantom\Model;
 
 use Phantom\Helper\Session;
 
-class Mail extends Model
+class Mail extends AbstractModel
 {
     private $mail;
     public function __construct()

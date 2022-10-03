@@ -5,9 +5,9 @@ declare (strict_types = 1);
 namespace App\Model;
 
 use Phantom\Helper\Session;
-use Phantom\Model\Model;
+use Phantom\Model\AbstractModel;
 
-class PasswordRecovery extends Model
+class PasswordRecovery extends AbstractModel
 {
     # Method sets new password for user
     public function resetPassword($data, $code)

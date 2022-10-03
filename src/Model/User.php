@@ -5,10 +5,10 @@ declare (strict_types = 1);
 namespace App\Model;
 
 use Phantom\Helper\Session;
+use Phantom\Model\AbstractModel;
 use Phantom\Model\Config;
-use Phantom\Model\Model;
 
-class User extends Model
+class User extends AbstractModel
 {
     public $id, $username, $email, $password, $avatar, $role, $created;
     public static $defaultAvatar;
