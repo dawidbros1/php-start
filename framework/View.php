@@ -68,21 +68,18 @@ class View
         $clearParams = [];
 
         foreach ($params as $key => $param) {
-
-            if (gettype($param) === "object") {
-                $clearParams[$key] = $param;
-                continue;
-            }
-
             switch (true) {
                 case is_array($param):
                     $clearParams[$key] = $this->escape($param);
                     break;
-                case is_int($param):
-                    $clearParams[$key] = $param;
+                case gettype($param) === 'object':
+                    $clearParams[$key] = $param; // skip
+                    break;
+                case is_int($param) || is_bool($param):
+                    $clearParams[$key] = $param; // skip
                     break;
                 case $param:
-                    $clearParams[$key] = htmlentities($param);
+                    $clearParams[$key] = htmlentities($param, ENT_QUOTES);
                     break;
                 default:
                     $clearParams[$key] = $param;
