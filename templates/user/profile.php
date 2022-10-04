@@ -21,7 +21,7 @@ use Phantom\Helper\Session;
                     <form action = "<?=$route->get('user.update')?>" method = "post" enctype="multipart/form-data">
 
                         <div class = "position-relative mx-auto mt-5" id = "avatarBox">
-                            <img id = "avatar" class="rounded-circle" src="<?=$user->getAvatar()?>">
+                            <img id = "avatar" class="rounded-circle" src="<?=$user->getAvatar(true)?>">
                             <input type = "file" name = "avatar" class = "rounded-circle" id = "file">
                         </div>
 

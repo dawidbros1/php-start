@@ -91,7 +91,7 @@ class User extends AbstractModel
     }
 
     # Method gets avatar
-    public function getAvatar()
+    public function getAvatar(bool $toView = false)
     {
         if ($this->avatar == null) {
             # if avatar is not sets -> get path to default avatar
@@ -101,7 +101,11 @@ class User extends AbstractModel
             $avatar = self::$uploadedLocation . $this->avatar;
         }
 
-        return self::$config->get("project.location") . $avatar;
+        if ($toView === true) {
+            $avatar = $this->getLocation() . $avatar;
+        }
+
+        return $avatar;
     }
 
     # Method hash password
