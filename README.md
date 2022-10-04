@@ -176,8 +176,9 @@ If you change something in your routing you need remove old route from file and 
 ```
 Options FollowSymLinks
 RewriteEngine On
-# Enter
-# Fucus Here
+
+ErrorDocument 404 http://localhost/php-start/templates/error/404.php
+
 ```
 More information about `Phantom\Model\Route` [Here](framework/Model/Route.php)
 

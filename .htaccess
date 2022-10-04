@@ -1,6 +1,8 @@
 Options FollowSymLinks
 RewriteEngine On
 
+ErrorDocument 404 http://localhost/php-start/templates/error/404.php
+
 RewriteRule DirectoryIndex . [QSA,L] 
 RewriteRule ^policy$ ./?action=policy [QSA,L] 
 RewriteRule ^contact$ ./?action=contact [QSA,L] 
