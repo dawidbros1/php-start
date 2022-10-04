@@ -23,7 +23,7 @@ class AuthorizationController extends AbstractController
     # Method login user
     public function index(): View | RedirectToRoute
     {
-        View::set(['title' => "Logowanie"]);
+        View::set("Logowanie");
 
         if ($data = $this->request->isPost(['email', 'password'])) {
             if ($this->model->login($data)) {

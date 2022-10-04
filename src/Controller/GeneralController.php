@@ -14,26 +14,26 @@ class GeneralController extends AbstractController
 {
     public function index(): View
     {
-        View::set(['title' => "Strona główna", "style" => "home"]);
+        View::set("Strona główna", "home");
         return $this->render('general/home');
     }
 
     public function policyAction(): View
     {
-        View::set(['title' => "Polityka prywatności"]);
+        View::set("Polityka prywatności");
         return $this->render('general/policy');
     }
 
     public function regulationsAction(): View
     {
-        View::set(['title' => "Regulamin"]);
+        View::set("Regulamin");
         return $this->render('general/regulations');
     }
 
     # Method sends message to website admin by contact form
     public function contactAction(): View | RedirectToRoute
     {
-        View::set(['title' => "Strona kontaktowa", 'style' => "contact"]);
+        View::set("Strona kontaktowa", "contact");
         $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {

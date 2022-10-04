@@ -24,7 +24,7 @@ class PasswordRecoveryController extends AbstractController
     # Method sends email to user mail with link to reset password
     public function forgotAction(): View | RedirectToRoute
     {
-        View::set(['title' => "Przypomnienie hasła"]);
+        View::set("Przypomnienie hasła");
 
         if ($email = $this->request->isPost(['email'])) {
             if ($this->model->existsEmail($email)) {
@@ -42,7 +42,7 @@ class PasswordRecoveryController extends AbstractController
     # Method updates user password
     public function resetAction(): View | RedirectToRoute
     {
-        View::set(['title' => "Reset hasła"]);
+        View::set("Reset hasła");
 
         if ($data = $this->request->isPost(['password', 'repeat_password', 'code'])) {
             $this->checkCodeToResetPassword($code = $data['code']); # Check if session code is correct and valid

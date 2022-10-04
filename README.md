@@ -310,10 +310,7 @@ if ($this->validate($data)) { ... }
 ## View
 Method **set()** is used for sets title and styles for page in controller
 ```
-View::set([
-    'title' => "myTitle", 
-    'style' => "filename"
-]);
+View::set("my title", "my_styles");
 ```
 Method **render()** is used for render view and securing unsafe user uploaded data
 ```

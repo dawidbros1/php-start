@@ -29,7 +29,7 @@ class UserController extends AbstractController
     # Method shows user profile
     public function profileAction(): View
     {
-        View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
+        View::set("Profil użytkownika", "profile");
         return $this->render('user/profile');
     }
 

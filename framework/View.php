@@ -12,6 +12,8 @@ class View
     private $user, $route, $page, $params;
     private static $style = null;
     private static $title = "Brak tytułu";
+
+    # location of styles: public/css
     private static $location;
 
     public function __construct(User | null $user, Route $route, string $page, array $params)
@@ -29,16 +31,10 @@ class View
 
     # Method set custom style, title and location
     # style: profile | registration | authorization
-    # location of styles: public/css
-    public static function set($data)
+    public static function set(string $title = null, string $style = null)
     {
-        if (array_key_exists('style', $data)) {
-            self::$style = $data['style'] ?? null;
-        }
-
-        if (array_key_exists('title', $data)) {
-            self::$title = $data['title'] ?? null;
-        }
+        self::$title = $title ?? self::$title;
+        self::$style = $style;
     }
 
     # Method renders view

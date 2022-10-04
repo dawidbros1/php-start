@@ -23,7 +23,7 @@ class RegistrationController extends AbstractController
     # Method adds new user
     public function index(): View | RedirectToRoute
     {
-        View::set(['title' => "Rejestracja"]);
+        View::set("Rejestracja");
 
         if ($data = $this->request->isPost(['username', 'email', 'password', 'repeat_password'])) {
             $data['regulations'] = Checkbox::get($this->request->postParam('regulations', false));
