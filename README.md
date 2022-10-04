@@ -172,6 +172,7 @@ RewriteRule ^test/show/([0-9]+)/(.)+/([0-9]+)$ ./?type=test&action=show2&id=$1&a
 ```
 
 **IMPORTANT**
+
 If you change something in your routing you need remove old route from file and enter to exists route ( example: homepage ) to refresh your .htaccess file or remove all route form file and leave this lines:
 ```
 Options FollowSymLinks
@@ -393,6 +394,7 @@ Component::render('button.dropdown', [
 <div class="text-center collapse target_class mt-2 fw-bold"> It works!</div>
 ```
 ![](readme_img/components/button.dropdown.show.png)
+
 ![](readme_img/components/button.dropdown.hide.png)
 
 * **form.input**: Component render input
@@ -454,6 +456,7 @@ Component::render('form.select', [
 ![](readme_img/components/form.select_2.png)
 
 **Array of fruits**:
+
 ![](readme_img/components/form.select.data.png)
 
 ## Helpers
