@@ -138,17 +138,17 @@ More information about `Phantom\Controler\AbstractController` [Here](framework/C
 ### Route
 Create a new route in `routes/routes.php` by method `group()`
 ```
-$route->group('user', [
-    'logout' => "/user/logout",
-    'profile' => "/user/profile",
-    'update' => "/user/profile/update",
+$route->group('user', '/user' [
+    'logout' => "/logout",
+    'profile' => "/profile",
+    'update' => "/profile/update",
 ]);
 ```
 or `register()`
 ```
-$route->register('user', 'logout', '/user/logut');
-$route->register('user', 'profile', '/user/profile');
-$route->register('user', 'update', '/user/profile/update');
+$route->register('user', "/user/logout", 'logout');
+$route->register('user', "/user/profile", 'profile');
+$route->register('user', "/user/profile/update", 'update');
 ```
 
 It will create in .htaccess
@@ -156,6 +156,28 @@ It will create in .htaccess
 RewriteRule ^user/logout$ ./?type=user&action=logout [QSA,L] 
 RewriteRule ^user/profile$ ./?type=user&action=profile [QSA,L] 
 RewriteRule ^user/profile/update$ ./?type=user&action=update [QSA,L] 
+```
+
+**Route with parameters** 
+```
+$route->group('test', "/test", [
+    'show' => "/show/{id}",
+    'show2' => "/show/{id}/{abc}/{category_id}",
+]);
+```
+It will create in .htaccess
+```
+RewriteRule ^test/show/([0-9]+)$ ./?type=test&action=show&id=$1 [QSA,L] 
+RewriteRule ^test/show/([0-9]+)/(.)+/([0-9]+)$ ./?type=test&action=show2&id=$1&abc=$2&category_id=$3 [QSA,L] 
+```
+
+**IMPORTANT**
+If you change something in your routing you need remove old route from file and enter to exists route ( example: homepage ) to refresh your .htaccess file or remove all route form file and leave this lines:
+```
+Options FollowSymLinks
+RewriteEngine On
+# Enter
+# Fucus Here
 ```
 More information about `Phantom\Model\Route` [Here](framework/Model/Route.php)
 
