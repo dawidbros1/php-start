@@ -23,37 +23,55 @@ class Route
     #   'profile' => '/user/profile',
     #   'list' => '/users/list'
     # ]
-    public function group(string $prefix, array $array)
+    public function group(string $type, string $prefix, array $array)
     {
         foreach ($array as $action => $url) {
-            $this->register($prefix, $url, $action);
+            $this->register($type, $prefix, $action, $url);
         }
     }
 
     # Method adds new route to $routes and adds RewriteRule to file .htaccess
     # string $prefix: It is prefix of controller name like a user|category. If is empty will be runs default type (general)
-    # string $url: It is url which will be see on address bar. Example: user/profile | users/list
     # string $action: Which action from controller will be runs. If $action is empty will be run method index()
-    public function register(string $prefix, string $url, string $action = "")
+    # string $url: It is url which will be see on address bar. Example: user/profile | users/list
+    public function register(string $type, string $prefix, string $action = "", string $url = "")
     {
+        $url = $prefix . $url;
         $url = substr($url, 1);
+        $array = explode("/", $url);
+        $index = 1;
+
+        foreach ($array as $string) {
+            if (preg_match("/^{.+}$/", $string)) {
+                if (str_contains($string, "_id") || $string == "{id}") {
+                    $replace = "([0-9]+)";
+                } else {
+                    $replace = "(.)+";
+                }
+
+                $url = str_replace($string, $replace, $url);
+                $name = substr($string, 1, -1);
+                $action .= "&$name=$" . $index++;
+            }
+        }
+
         $fullUrl = $this->location . $url;
 
         # actions in GeneralController
-        if (strlen($prefix) == 0) {
+        if (strlen($type) == 0) {
             $this->routes[$action] = $fullUrl;
             $line = "RewriteRule ^$url$ ./?action=$action";
         }
 
         # action index() in AnyController
-        if (strlen($prefix) != 0 && strlen($action) == 0) {
-            $this->routes[$prefix] = $fullUrl;
-            $line = "RewriteRule ^$url$ ./?type=$prefix";
+        if (strlen($type) != 0 && strlen($action) == 0) {
+            $this->routes[$type] = $fullUrl;
+            $line = "RewriteRule ^$url$ ./?type=$type";
         }
 
-        if (strlen($prefix) != 0 && strlen($action) != 0) {
-            $this->routes[$prefix][$action] = $fullUrl;
-            $line = "RewriteRule ^$url$ ./?type=$prefix&action=$action";
+        if (strlen($type) != 0 && strlen($action) != 0) {
+            $this->routes[$type][$action] = $fullUrl;
+            $line = "RewriteRule ^$url$ ./?type=$type&action=$action";
         }
 
         /* auto fill file .htaccess */

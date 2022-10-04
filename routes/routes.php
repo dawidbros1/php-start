@@ -8,7 +8,7 @@ $route = new Route($location);
 
 $route->homepage('home');
 
-$route->group('', [
+$route->group("", "", [
     'policy' => "/policy",
     'contact' => "/contact",
     'regulations' => "/regulations",
@@ -17,17 +17,20 @@ $route->group('', [
 $route->register("registration", "/register");
 $route->register("authorization", "/login");
 
-$route->group('user', [
-    'logout' => "/user/logout",
-    'profile' => "/user/profile",
-    'update' => "/user/profile/update",
+$route->group('user', "/user", [
+    'logout' => "/logout",
+    'profile' => "/profile",
+    'update' => "/profile/update",
 ]);
 
-$route->group('passwordRecovery', [
-    'forgot' => "/password/forgot",
-    'reset' => "/password/reset",
+$route->group('passwordRecovery', "/password", [
+    'forgot' => "/forgot",
+    'reset' => "/reset",
 ]);
 
-// $route->group('test', ['select']); // For test
+// $route->group('test', "/test", [
+//     'show' => "/show/{id}",
+//     'show2' => "/show/{id}/{abc}/{category_id}",
+// ]);
 
 return $route;
