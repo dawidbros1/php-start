@@ -4,33 +4,36 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use App\Helper\Session;
-use App\Model\Mail;
-use App\View;
+use Phantom\Controller\AbstractController;
+use Phantom\Helper\Session;
+use Phantom\Model\Mail;
+use Phantom\RedirectToRoute;
+use Phantom\View;
 
-class GeneralController extends Controller
+class GeneralController extends AbstractController
 {
-    public function homeAction(): void
+    public function index(): View
     {
-        View::set(['title' => "Strona główna", "style" => "home"]);
-        $this->view->render('general/home');
+        View::set("Strona główna", "home");
+        return $this->render('general/home');
     }
 
-    public function policyAction(): void
+    public function policyAction(): View
     {
-        View::set(['title' => "Polityka prywatności"]);
-        $this->view->render('general/policy');
+        View::set("Polityka prywatności");
+        return $this->render('general/policy');
     }
 
-    public function regulationsAction(): void
+    public function regulationsAction(): View
     {
-        View::set(['title' => "Regulamin"]);
-        $this->view->render('general/regulations');
+        View::set("Regulamin");
+        return $this->render('general/regulations');
     }
 
-    public function contactAction(): void
+    # Method sends message to website admin by contact form
+    public function contactAction(): View | RedirectToRoute
     {
-        View::set(['title' => "Strona kontaktowa", 'style' => "contact"]);
+        View::set("Strona kontaktowa", "contact");
         $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];
 
         if ($this->request->isPost() && $this->request->hasPostNames($names)) {
@@ -51,10 +54,12 @@ class GeneralController extends Controller
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }
 
-            $this->redirect('contact');
+            return $this->redirect('contact');
         }
 
-        $path = self::$config->get('default.path.medium') ?? "";
-        $this->view->render('general/contact', ['path' => $path, 'sideKey' => self::$config->get('reCAPTCHA.key.side')]);
+        return $this->render('general/contact', [
+            'path' => self::$config->get('default.path.medium') ?? "",
+            'sideKey' => self::$config->get('reCAPTCHA.key.side'),
+        ]);
     }
 }

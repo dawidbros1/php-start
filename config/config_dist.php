@@ -2,10 +2,13 @@
 
 declare (strict_types = 1);
 
-use App\Model\Config;
+use Phantom\Model\Config;
 
 return new Config(
     [
+        'project' => [
+            'location' => "http://example.pl/folder/", // http://example.pl/
+        ],
         'db' => [
             'host' => 'localhost',
             'database' => '',
@@ -13,7 +16,7 @@ return new Config(
             'password' => '',
         ],
         'mail' => [
-            'email' => 'websideEmail@domaina.com',
+            'email' => 'example@domain',
         ],
         'upload' => [
             'path' => [
@@ -27,7 +30,7 @@ return new Config(
             ],
             'route' => [
                 'home' => 'home', // page after login
-                'logout' => 'auth.login', // page after logout
+                'logout' => 'authorization', // page after logout
             ],
             'hash' => [
                 'method' => 'sha256', // sha25 || md5 ...

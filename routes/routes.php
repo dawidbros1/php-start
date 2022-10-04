@@ -2,11 +2,11 @@
 
 declare (strict_types = 1);
 
-use App\Model\Route;
+$route = require_once "basic.php";
 
-$route = new Route();
-$route->group('', ['home', 'policy', 'contact', 'regulations']);
-$route->group('auth', ['register', 'login', 'forgotPassword', 'resetPassword']);
-$route->group('user', ['logout', 'profile', 'update']);
+// $route->group('test', "/test", [
+//     'show' => "/show/{id}",
+//     'show2' => "/show/{id}/{abc}/{category_id}",
+// ]);
 
 return $route;

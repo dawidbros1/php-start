@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-use App\Helper\Session;
+use Phantom\Helper\Session;
 
 if ($message = Session::getNextClear('success')) {
     echo '<div class="alert alert-success py-2 text-center message-alert">

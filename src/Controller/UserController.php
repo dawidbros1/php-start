@@ -4,32 +4,37 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use App\Controller\Controller;
-use App\Helper\Request;
-use App\View;
+use Phantom\Controller\AbstractController;
+use Phantom\Helper\Request;
+use Phantom\RedirectToRoute;
+use Phantom\View;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->requireLogin();
+        $this->forLogged();
     }
 
-    public function logoutAction(): void
+    # Method logouts user
+    public function logoutAction(): RedirectToRoute
     {
         $this->user->logout();
-        $this->redirect(self::$config->get('default.route.logout'), ['email' => $this->user->email]);
+        return $this->redirect(self::$config->get('default.route.logout'), [
+            'email' => $this->user->email,
+        ]);
     }
 
-    public function profileAction(): void
+    # Method shows user profile
+    public function profileAction(): View
     {
-        View::set(['title' => "Profil użytkownika", 'style' => "profile"]);
-        $this->view->render('user/profile');
-
+        View::set("Profil użytkownika", "profile");
+        return $this->render('user/profile');
     }
 
-    public function updateAction(): void
+    # Method runs method to update [ username | password | avatar ]
+    public function updateAction(): RedirectToRoute
     {
         if ($toUpdate = $this->request->isPost(['update'])) {
             if (in_array($toUpdate, ['username', 'password', 'avatar'])) {
@@ -38,24 +43,28 @@ class UserController extends Controller
             }
         }
 
-        $this->redirect('user.profile');
+        return $this->redirect('user.profile');
     }
 
-    private function updateUsername(): void
+    # Method updates username
+    private function updateUsername()
     {
         if ($username = $this->request->hasPostName('username')) {
-            $this->user->updateUsername(['username' => $username]);
+            $this->user->set('username', $username);
+            $this->user->updateUsername();
         }
     }
 
-    private function updatePassword(): void
+    # Method updates password
+    private function updatePassword()
     {
         if ($data = $this->request->hasPostNames(['current_password', 'password', 'repeat_password'])) {
             $this->user->updatePassword($data);
         }
     }
 
-    private function updateAvatar(): void
+    # Method updates avatar
+    private function updateAvatar()
     {
         $path = self::$config->get('upload.path.avatar');
 

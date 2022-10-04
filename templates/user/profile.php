@@ -2,8 +2,8 @@
 
 declare (strict_types = 1);
 
-use App\Component\Component;
-use App\Helper\Session;
+use Phantom\Component\Component;
+use Phantom\Helper\Session;
 
 ?>
 
@@ -21,15 +21,15 @@ use App\Helper\Session;
                     <form action = "<?=$route->get('user.update')?>" method = "post" enctype="multipart/form-data">
 
                         <div class = "position-relative mx-auto mt-5" id = "avatarBox">
-                            <img id = "avatar" class="rounded-circle" src="<?=$user->getAvatar()?>">
+                            <img id = "avatar" class="rounded-circle" src="<?=$user->getAvatar(true)?>">
                             <input type = "file" name = "avatar" class = "rounded-circle" id = "file">
                         </div>
 
                         <?php Component::render('error', ['type' => "file", 'names' => ['empty', 'notImage', 'maxSize', 'types']])?>
 
                         <div>
-                            <div class="fw-bold"> <?=$user->username?></div>
-                            <div class="text-black-50"><?=$user->email?></div>
+                            <div class="fw-bold"> <?=$user->get('username')?></div>
+                            <div class="text-black-50"><?=$user->get('email')?></div>
                             <div class = "border-top w-100"></div>
                         </div>
 
@@ -52,7 +52,7 @@ use App\Helper\Session;
                 <!-- Adres email użytkownika -->
                 <div class="row mt-3 mb-3">
                     <div class="col-lg-12"><label class="labels">Adres email</label><input type="text" disabled
-                            class="form-control" value="<?=$user->email?>"></div>
+                            class="form-control" value="<?=$user->get('email')?>"></div>
                 </div>
 
                 <!--  Zmiana nazwy użytkownika  -->
@@ -62,7 +62,7 @@ use App\Helper\Session;
                     </div>
 
                     <form action="<?=$route->get('user.update')?>" method="post">
-                        <?php Component::render('form.input', ['class' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->username])?>
+                        <?php Component::render('form.input', ['class' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->get('username')])?>
                         <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
                         <input type = "hidden" name = "update" value = "username">

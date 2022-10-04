@@ -2,12 +2,10 @@
 
 <?php
 
-use App\Component\Component;
-use App\Helper\Session;
+use Phantom\Component\Component;
+use Phantom\Helper\Session;
 
 ?>
-
-<?php $path = $params['path']?>
 
 <div id="contact">
     <div class="contact">
@@ -66,7 +64,7 @@ use App\Helper\Session;
                 </div>
 
 
-                <div class="g-recaptcha" data-sitekey="<?=$params['sideKey']?>"></div>
+                <div class="g-recaptcha" data-sitekey="<?=$sideKey?>"></div>
 
                 <?php Component::render('error', ['type' => "reCAPTCHA", 'names' => ['robot']])?>
 

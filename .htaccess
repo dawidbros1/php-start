@@ -1,0 +1,16 @@
+Options FollowSymLinks
+RewriteEngine On
+
+ErrorDocument 404 http://localhost/php-start/templates/error/404.php
+
+RewriteRule DirectoryIndex . [QSA,L] 
+RewriteRule ^policy$ ./?action=policy [QSA,L] 
+RewriteRule ^contact$ ./?action=contact [QSA,L] 
+RewriteRule ^regulations$ ./?action=regulations [QSA,L] 
+RewriteRule ^register$ ./?type=registration [QSA,L] 
+RewriteRule ^login$ ./?type=authorization [QSA,L] 
+RewriteRule ^user/logout$ ./?type=user&action=logout [QSA,L] 
+RewriteRule ^user/profile$ ./?type=user&action=profile [QSA,L] 
+RewriteRule ^user/profile/update$ ./?type=user&action=update [QSA,L] 
+RewriteRule ^password/forgot$ ./?type=passwordRecovery&action=forgot [QSA,L] 
+RewriteRule ^password/reset$ ./?type=passwordRecovery&action=reset [QSA,L] 

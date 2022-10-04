@@ -9,21 +9,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link href="public/css/style.css" rel="stylesheet">
+    <link href="<?=$location?>/public/css/style.css" rel="stylesheet">
 
     <?php if ($style): ?>
-        <link href="public/css/<?=$style?>.css" rel="stylesheet">
+        <link href="<?=$location?>/public/css/<?=$style?>.css" rel="stylesheet">
     <?php endif;?>
 
     <script src='https://www.google.com/recaptcha/api.js'></script>
-    <script src="public/js/main.js"></script>
+    <script src="<?=$location?>/public/js/main.js"></script>
 </head>
 
 <body>
     <div class="container-fluid">
 
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand ms-2 ms-md-3" href="./">Strona główna</a>
+            <a class="navbar-brand ms-2 ms-md-3" href="<?=$route->get('home')?>">Strona główna</a>
 
             <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <!-- Trigger -->
@@ -59,8 +59,8 @@
                 <?php if (!$user): ?>
                     <div class = "d-sm-none border-top"></div>
                     <div class = "d-sm-flex <?=$margin?>">
-                        <li class="nav-item"> <a class="nav-link" href="<?=$route->get('auth.register')?>">Zarejestruj się</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?=$route->get('auth.login')?>">Zaloguj się</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="<?=$route->get('registration')?>">Zarejestruj się</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?=$route->get('authorization')?>">Zaloguj się</a></li>
                     </div>
                 <?php endif;?>
 
