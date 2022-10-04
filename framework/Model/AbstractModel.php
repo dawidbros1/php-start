@@ -227,4 +227,25 @@ abstract class AbstractModel
             throw new AppException("Property [" . $name . "] doesn't exists");
         }
     }
+
+    # $url - Project location as "/.."
+    public function getLocation()
+    {
+        # Project location => http://localhost/php-start/
+        $location = self::$config->get('project.location');
+
+        # Current URL => http://localhost/php-start/user/profile/update
+        $url = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+
+        # diff => user/profile/update
+        $diff = str_replace($location, "", $url);
+
+        $array = explode("/", $diff);
+        $array = array_map(fn($element) => "/..", $array);
+        array_pop($array); # We needs pop one element
+        $output = implode("", $array);
+        $output = ".$output/";
+
+        return $output;
+    }
 }
