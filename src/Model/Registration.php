@@ -17,7 +17,7 @@ class Registration extends AbstractModel
 
         if ($status = ($user->validate($data)&($this->isEmailUnique($user)))) {
             unset($data);
-            $data['avatar'] = self::$config->get('default.path.avatar');
+            $data['avatar'] = null;
             $data['role'] = "user";
             $data['created'] = date('Y-m-d H:i:s');
 
