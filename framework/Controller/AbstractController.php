@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Phantom\Controller;
 
 use App\Model\User;
+use Phantom\Exception\AppException;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Exception\StorageException;
 use Phantom\Helper\Request;
@@ -65,6 +66,10 @@ abstract class AbstractController extends Validator
             }
 
             $result = $this->$action(); // run action
+
+            if (gettype($result) !== "object") {
+                throw new AppException("Invalid type returned [" . gettype($result) . "]! Controller must return object.");
+            }
 
             switch ($result::class) {
                 case "Phantom\View":{
