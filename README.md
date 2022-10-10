@@ -2,7 +2,7 @@
 The project is a complete file package to create applications in PHP technology.
 
 ## Build with
-1. PHP 7.4
+1. PHP 8.1.6
 
 ## Features
 1. Registration / Login
