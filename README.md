@@ -11,7 +11,7 @@ The project is a complete file package to create applications in PHP technology.
 
 ## Installation Instructions
 1. Run `git clone https://github.com/dawidbros1/php-start.git`
-2. Run `componser install`
+2. Run `composer install`
 3. Create a MySQL database for the project
 4. From the project root folder run `cd .\config\` and next `copy config_dist.php config.php`
 5. Configure your `./config/config.php` file
