@@ -2,7 +2,7 @@
 The project is a complete file package to create applications in PHP technology.
 
 ## Build with
-1. PHP 7.4
+1. PHP 8.1.6
 
 ## Features
 1. Registration / Login
@@ -11,7 +11,7 @@ The project is a complete file package to create applications in PHP technology.
 
 ## Installation Instructions
 1. Run `git clone https://github.com/dawidbros1/php-start.git`
-2. Run `componser install`
+2. Run `composer install`
 3. Create a MySQL database for the project
 4. From the project root folder run `cd .\config\` and next `copy config_dist.php config.php`
 5. Configure your `./config/config.php` file
@@ -172,6 +172,7 @@ RewriteRule ^test/show/([0-9]+)/(.)+/([0-9]+)$ ./?type=test&action=show2&id=$1&a
 ```
 
 **IMPORTANT**
+
 If you change something in your routing you need remove old route from file and enter to exists route ( example: homepage ) to refresh your .htaccess file or remove all route form file and leave this lines:
 ```
 Options FollowSymLinks
@@ -393,6 +394,7 @@ Component::render('button.dropdown', [
 <div class="text-center collapse target_class mt-2 fw-bold"> It works!</div>
 ```
 ![](readme_img/components/button.dropdown.show.png)
+
 ![](readme_img/components/button.dropdown.hide.png)
 
 * **form.input**: Component render input
@@ -454,6 +456,7 @@ Component::render('form.select', [
 ![](readme_img/components/form.select_2.png)
 
 **Array of fruits**:
+
 ![](readme_img/components/form.select.data.png)
 
 ## Helpers
