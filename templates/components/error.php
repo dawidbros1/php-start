@@ -7,7 +7,7 @@ use Phantom\Helper\Session;
 ?>
 
 <?php foreach ($params['names'] as $name): ?>
-    <?php if ($message = Session::getNextClear('error:' . $params['type'] . ':' . $name)): ?>
+    <?php if ($message = Session::get('error:' . $params['type'] . ':' . $name, true)): ?>
             <div class="text-danger fs-mini ms-1"><?=$message?></div>
     <?php endif;?>
 <?php endforeach;?>
