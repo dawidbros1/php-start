@@ -58,8 +58,13 @@ abstract class AbstractRepository
     # if (fetch == "all") all records => fetchAll()
     public function get(array $conditions, $options, string $fetch = "one")
     {
-        $format = $this->formatConditions($conditions);
-        $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $format $options");
+        if (!empty($conditions)) {
+            $format = $this->formatConditions($conditions);
+            $stmt = self::$pdo->prepare("SELECT * FROM $this->table WHERE $format $options");
+        } else {
+            $stmt = self::$pdo->prepare("SELECT * FROM $this->table $options");
+        }
+
         $stmt->execute($conditions);
 
         if ($fetch == "one") {
