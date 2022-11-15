@@ -12,7 +12,7 @@ class PasswordRecovery extends AbstractModel
     # Method sets new password for user
     public function resetPassword($data, $code)
     {
-        if ($status = $this->validate($data)) {
+        if ($this->validate($data)) {
             $user = $this->find(['email' => Session::get($code)], "", true, User::class);
             $user->set('password', $data['password']);
             $user->hashPassword();

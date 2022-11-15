@@ -17,7 +17,7 @@ class AuthorizationController extends AbstractController
     {
         parent::__construct($request);
         $this->forGuest();
-        $this->model = new Authorization([], true, "User");
+        $this->model = new Authorization();
     }
 
     # Method login user

@@ -9,6 +9,11 @@ use Phantom\Model\AbstractModel;
 
 class Authorization extends AbstractModel
 {
+    public function __construct()
+    {
+        parent::__construct([], true, "User");
+    }
+
     # Method sets session user:id if there is a user with matching data [e-mail, password]
     public function login(array $data)
     {
