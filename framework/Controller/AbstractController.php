@@ -83,7 +83,9 @@ abstract class AbstractController extends Validator
             }
 
         } catch (StorageException $e) {
-            $this->view->render('error', ['message' => $e->getMessage()]);
+            // TODO
+            DUMP("ACTION ERROR in AbstractController->run()");
+            die();
         }
     }
 
@@ -140,5 +142,11 @@ abstract class AbstractController extends Validator
         }
 
         return $redirectToRoute;
+    }
+
+    protected function redirectToLastPage()
+    {
+        header("Location: " . $this->request->lastPage());
+        exit();
     }
 }
