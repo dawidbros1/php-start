@@ -21,6 +21,7 @@ $route = require_once 'routes/routes.php'; // variable $location is require
 use Phantom\Controller\AbstractController;
 use Phantom\Exception\AppException;
 use Phantom\Exception\ConfigurationException;
+use Phantom\Helper\Assets;
 use Phantom\Helper\Request;
 use Phantom\View;
 
@@ -29,6 +30,7 @@ $request = new Request($_GET, $_POST, $_SERVER, $_FILES);
 try {
     AbstractController::initConfiguration($config, $route);
     View::initConfiguration($location);
+    Assets::initConfiguration($location);
 
     $type = $request->getParam('type', 'general');
     $phantom = "\Phantom\Controller\\" . ucfirst($type) . "Controller";
