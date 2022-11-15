@@ -86,13 +86,12 @@ class Route
     }
 
     # Method returns value (address) of route like a ./?type=user&action=list
-    public function get($path)
+    public function get(string $path, $params = [])
     {
         $output = $this->routes;
         $array = explode(".", $path);
 
         foreach ($array as $name) {
-
             if (array_key_exists($name, $output)) {
                 $output = $output[$name];
             } else {
@@ -100,6 +99,23 @@ class Route
             }
         }
 
-        return $output;
+        if (!is_array($params)) {
+            $params = [$params];
+        }
+
+        $array = explode("/", $output);
+        $output = [];
+
+        foreach ($array as $string) {
+            $url = $string;
+
+            if (preg_match("/^{.+}$/", $string)) {
+                $url = str_replace($string, array_shift($params), $url);
+            }
+
+            $output[] = $url;
+        }
+
+        return implode("/", $output);
     }
 }
