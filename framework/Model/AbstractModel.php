@@ -121,7 +121,7 @@ abstract class AbstractModel
     }
 
     # Method to find a lot of record from database
-    public function findAll(array $conditions, string $options = "", bool $rulesitory = true, $namaspace = null)
+    public function findAll(array $conditions = [], string $options = "", bool $rulesitory = true, $namaspace = null)
     {
         $output = [];
         $data = $this->repository->getAll($conditions, $options);
