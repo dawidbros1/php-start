@@ -95,7 +95,7 @@ class User extends AbstractModel
     {
         if ($this->avatar == null) {
             # if avatar is not sets -> get path to default avatar
-            $avatar = $this->avatar ?? self::$defaultAvatar;
+            $avatar = $this->avatar == null ? self::$defaultAvatar : $this->avatar;
         } else {
             # if avatar is set -> get path to uploadedLocation avatar
             $avatar = self::$uploadedLocation . $this->avatar;
