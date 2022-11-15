@@ -10,6 +10,11 @@ use Phantom\Model\AbstractModel;
 
 class Registration extends AbstractModel
 {
+    public function __construct()
+    {
+        parent::__construct([], true, "User");
+    }
+
     # Method adds new user
     public function register(array $data)
     {

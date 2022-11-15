@@ -17,7 +17,7 @@ class RegistrationController extends AbstractController
     {
         parent::__construct($request);
         $this->forGuest();
-        $this->model = new Registration([], false);
+        $this->model = new Registration();
     }
 
     # Method adds new user
