@@ -1,4 +1,4 @@
-# PHP Start [ Version 2.0 ]
+# PHP Start [ Version 2.1 ]
 The project is a complete file package to create applications in PHP technology.
 
 ## Build with
