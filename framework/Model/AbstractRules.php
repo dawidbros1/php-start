@@ -10,7 +10,6 @@ abstract class AbstractRules
 {
     protected $rules;
     protected $defaultType = null;
-
     public function __construct()
     {
         $this->rules();
@@ -183,4 +182,23 @@ abstract class AbstractRules
             }
         }
     }
+
+    # # # # #
+
+    // # Short method to validate $data
+    // protected function validate(array $data, $rules)
+    // {
+    //     return self::$validator->validate($data, $rules);
+    // }
+
+    // protected function validatePassword(array $data, $rules)
+    // {
+    //     return self::$validator->validatePassword($data, $rules);
+    // }
+
+    // # Short method to validate image
+    // protected function validateImage($FILE, $type, $rules)
+    // {
+    //     return self::$validator->validateImage($FILE, $rules, $type);
+    // }
 }

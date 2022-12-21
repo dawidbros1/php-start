@@ -5,8 +5,9 @@ declare (strict_types = 1);
 namespace App\Controller;
 
 use Phantom\Controller\AbstractController;
-use Phantom\Helper\Request;
+use Phantom\Helper\Session;
 use Phantom\RedirectToRoute;
+use Phantom\Request\Request;
 use Phantom\View;
 
 class UserController extends AbstractController
@@ -20,7 +21,9 @@ class UserController extends AbstractController
     # Method logouts user
     public function logoutAction(): RedirectToRoute
     {
-        $this->user->logout();
+        Session::clear('user:id');
+        Session::success("Nastąpiło wylogowanie z systemu");
+
         return $this->redirect(self::$config->get('default.route.logout'), [
             'email' => $this->user->email,
         ]);
@@ -50,8 +53,7 @@ class UserController extends AbstractController
     private function updateUsername()
     {
         if ($username = $this->request->hasPostName('username')) {
-            $this->user->set('username', $username);
-            $this->user->updateUsername();
+            $this->user->updateUsername($username);
         }
     }
 

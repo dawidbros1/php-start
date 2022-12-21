@@ -65,8 +65,8 @@ use Phantom\Helper\Assets;
                 <?php if (!$user): ?>
                     <div class = "d-sm-none border-top"></div>
                     <div class = "d-sm-flex <?=$margin?>">
-                        <li class="nav-item"> <a class="nav-link" href="<?=$route->get('registration')?>">Zarejestruj się</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?=$route->get('authorization')?>">Zaloguj się</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="<?=$route->get('auth.register')?>">Zarejestruj się</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?=$route->get('auth.login')?>">Zaloguj się</a></li>
                     </div>
                 <?php endif;?>
 
@@ -76,7 +76,7 @@ use Phantom\Helper\Assets;
                         <!-- USERS -->
                         <li class="nav-item dropdown">
                             <a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?=$user->username?>
+                                <?=$user->getUsername()?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                                 <li><a class="dropdown-item" href="<?=$route->get('user.profile')?>">Profil</a></li>

@@ -15,7 +15,7 @@ $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
                 <h3 class="text-primary">Rejestracja</h3>
             </div>
             <div class="p-4">
-                <form action="<?=$route->get('registration')?>" method="post">
+                <form action="<?=$route->get('auth.register')?>" method="post">
                     <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $email])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['sanitize', 'validate', 'unique']])?>
 
@@ -34,7 +34,7 @@ $regulations = "<a href = " . $route->get('regulations') . ">regulamin</a>";
                     <?php Component::render('form.submit', ['text' => "Utwórz konto", 'mt' => "mt-2"])?>
 
                     <p class="text-center mt-3">Masz już konto?
-                        <a href="<?=$route->get('authorization')?>" class="link">Zaloguj się</a>
+                        <a href="<?=$route->get('auth.login')?>" class="link">Zaloguj się</a>
                     </p>
                 </form>
             </div>

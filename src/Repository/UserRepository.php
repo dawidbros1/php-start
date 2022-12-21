@@ -23,4 +23,18 @@ class UserRepository extends AbstractRepository
         $emails = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $emails;
     }
+
+    public function create($user)
+    {
+        $username = $user->getUsername();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+        $avatar = null;
+        $role = 'user';
+        $created_at = date('Y-m-d H:i:s');
+
+        $sql = "INSERT INTO users (username, email, password, avatar, role, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = self::$pdo->prepare($sql);
+        $stmt->execute([$username, $email, $password, $avatar, $role, $created_at]);
+    }
 }

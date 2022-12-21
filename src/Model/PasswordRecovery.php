@@ -7,6 +7,8 @@ namespace App\Model;
 use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
 
+// ! TODO IT
+
 class PasswordRecovery extends AbstractModel
 {
     # Method sets new password for user

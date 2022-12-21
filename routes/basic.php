@@ -14,8 +14,10 @@ $route->group("", "", [
     'regulations' => "/regulations",
 ]);
 
-$route->register("registration", "/register");
-$route->register("authorization", "/login");
+$route->group('auth', "/auth", [
+    'register' => "/register",
+    'login' => "/login",
+]);
 
 $route->group('user', "/user", [
     'logout' => "/logout",

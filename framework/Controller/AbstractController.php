@@ -8,7 +8,6 @@ use App\Model\User;
 use Phantom\Exception\AppException;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Exception\StorageException;
-use Phantom\Helper\Request;
 use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
 use Phantom\Model\Config;
@@ -16,10 +15,10 @@ use Phantom\Model\Mail;
 use Phantom\Model\Route;
 use Phantom\RedirectToRoute;
 use Phantom\Repository\AbstractRepository;
-use Phantom\Validator\Validator;
+use Phantom\Request\Request;
 use Phantom\View;
 
-abstract class AbstractController extends Validator
+abstract class AbstractController
 {
     protected static $config = [];
     protected static $route = [];
@@ -48,7 +47,7 @@ abstract class AbstractController extends Validator
         $this->mail = new Mail(self::$config->get('mail'));
 
         if (Session::get('user:id')) {
-            $this->user = (new User())->findById(User::ID());
+            $this->user = (new User())->findById(User::ID(), User::class);
         }
 
         $this->request = $request;

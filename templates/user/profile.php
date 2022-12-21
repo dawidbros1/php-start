@@ -28,8 +28,8 @@ use Phantom\Helper\Session;
                         <?php Component::render('error', ['type' => "file", 'names' => ['empty', 'notImage', 'maxSize', 'types']])?>
 
                         <div>
-                            <div class="fw-bold"> <?=$user->get('username')?></div>
-                            <div class="text-black-50"><?=$user->get('email')?></div>
+                            <div class="fw-bold"> <?=$user->getUsername()?></div>
+                            <div class="text-black-50"><?=$user->getEmail()?></div>
                             <div class = "border-top w-100"></div>
                         </div>
 
@@ -52,7 +52,7 @@ use Phantom\Helper\Session;
                 <!-- Adres email użytkownika -->
                 <div class="row mt-3 mb-3">
                     <div class="col-lg-12"><label class="labels">Adres email</label><input type="text" disabled
-                            class="form-control" value="<?=$user->get('email')?>"></div>
+                            class="form-control" value="<?=$user->getEmail()?>"></div>
                 </div>
 
                 <!--  Zmiana nazwy użytkownika  -->
@@ -62,7 +62,7 @@ use Phantom\Helper\Session;
                     </div>
 
                     <form action="<?=$route->get('user.update')?>" method="post">
-                        <?php Component::render('form.input', ['class' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->get('username')])?>
+                        <?php Component::render('form.input', ['class' => "mt-1", 'type' => "text", 'name' => "username", "placeholder" => "Nazwa użytkownika", 'label' => "Nazwa użytkownika", 'value' => $user->getUsername()])?>
                         <?php Component::render('error', ['type' => "username", 'names' => ['between', 'specialCharacters']])?>
 
                         <input type = "hidden" name = "update" value = "username">

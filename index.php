@@ -22,10 +22,10 @@ use Phantom\Controller\AbstractController;
 use Phantom\Exception\AppException;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Helper\Assets;
-use Phantom\Helper\Request;
+use Phantom\Request\Request;
 use Phantom\View;
 
-$request = new Request($_GET, $_POST, $_SERVER, $_FILES);
+$request = new Request();
 
 try {
     AbstractController::initConfiguration($config, $route);
@@ -42,7 +42,6 @@ try {
         $controller = new $phantom($request);
     } else {
         dump("TODO [index.php]: Controller [" . $type . "] doen't exists");
-        //TODO Controller doen't exists
         die();
     }
 

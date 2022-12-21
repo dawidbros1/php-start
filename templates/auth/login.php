@@ -13,7 +13,7 @@ use Phantom\Component\Component;
                 <h3 class="text-primary">Logowanie</h3>
             </div>
             <div class="p-4">
-                <form action="<?=$route->get('authorization')?>" method="post">
+                <form action="<?=$route->get('auth.login')?>" method="post">
                     <?php Component::render('form.input', ['mt' => "mt-1", 'type' => "email", 'name' => "email", "placeholder" => "Adres email", 'value' => $email])?>
                     <?php Component::render('error', ['type' => "email", 'names' => ['null']])?>
 
@@ -24,7 +24,7 @@ use Phantom\Component\Component;
 
                     <div class="text-center mt-3 w-100">
                         <div> Nie masz jeszcze konta?
-                            <a href="<?=$route->get('registration')?>" class="link">Zarejestruj się</a>
+                            <a href="<?=$route->get('auth.register')?>" class="link">Zarejestruj się</a>
                         </div>
                         <div> Zapomniałeś hasła?
                             <a href="<?=$route->get('passwordRecovery.forgot')?>" class="link">Przypomnij hasło</a>

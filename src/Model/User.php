@@ -4,72 +4,71 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Rules\UserRules;
 use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
 use Phantom\Model\Config;
+use Phantom\Validator\Validator;
 
 class User extends AbstractModel
 {
-    public $id, $username, $email, $password, $avatar, $role, $created;
+    private $id, $username, $email, $password, $avatar, $role, $created_at;
     public static $defaultAvatar;
     public static $uploadedLocation;
+    protected $table = "users";
     public static function initConfiguration(Config $config)
     {
         self::$defaultAvatar = $config->get('default.path.avatar');
         self::$uploadedLocation = $config->get('upload.path.avatar');
     }
-    public $fillable = ['id', 'username', 'email', 'password', 'avatar', 'role', 'created'];
-
-    # Method logouts user by unsets session user:id
-    public function logout()
-    {
-        Session::clear('user:id');
-        Session::success("Nastąpiło wylogowanie z systemu");
-    }
 
     # Method updates username
-    public function updateUsername()
+    public function updateUsername($username)
     {
-        if ($this->update(['username'])) {
+        $validator = new Validator(['username' => $username], new UserRules());
+
+        if ($validator->validate()) {
             Session::success("Nazwa użytkownika została zmieniona");
+            $this->setUsername($username);
+            $this->update(['username']);
         }
     }
 
     # Method updates password
     public function updatePassword($data)
     {
+        $validator = new Validator($data, new UserRules());
+
         # Checks if currunt password is corrent
-        if (!$same = ($this->password == $this->hash($data['current_password']))) {
+        if (!$same = ($this->password == hash('sha256', $data['current_password']))) {
             Session::set("error:current_password:same", "Podane hasło jest nieprawidłowe");
         }
 
         # Validate password and repeat_password
-        if ($this->validate($data) && $same) {
-            $this->set('password', $data['password']);
+        if ($validator->validate() && $same) {
+            $this->setPassword($data['password']);
             $this->hashPassword();
+            $this->update(['password']);
 
-            if ($this->update([], false)) {
-                Session::success('Hasło zostało zaktualizowane');
-            }
+            Session::success('Hasło zostało zaktualizowane');
         }
     }
 
     # Method updates avatar
     public function updateAvatar($file, $path)
     {
+        $validator = new Validator([], new UserRules());
+
         # Validate the image with the size and extension
-        if ($this->validateImage($file, 'avatar')) {
+        if ($validator->validateImage($file, 'avatar')) {
             $file = $this->hashFile($file); # Change file name to unique file name
 
             # Upload file to selected path from config
             if ($this->uploadFile($path, $file)) {
                 $this->deleteAvatar(); # Delete old avatar
-                $this->set('avatar', $file['name']);
-
-                # Update path to avatar in database
-                if ($this->update([], false)) {
-                    Session::success('Awatar został zaktualizowany');
-                }
+                $this->setAvatar($file['name']);
+                $this->update(['avatar']); # Update path to avatar in database
+                Session::success('Awatar został zaktualizowany');
             }
         }
     }
@@ -90,7 +89,75 @@ class User extends AbstractModel
         }
     }
 
-    # Method gets avatar
+    # Method hash password
+    public function hashPassword()
+    {
+        $this->password = hash('sha256', $this->password);
+    }
+
+    # Method returns id of logged user
+    public static function ID()
+    {
+        return Session::get('user:id', 0);
+    }
+
+    # GETTERS * SETTERS
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    # Method returns avatar
     public function getAvatar(bool $toView = false)
     {
         if ($this->avatar == null) {
@@ -102,21 +169,19 @@ class User extends AbstractModel
         }
 
         if ($toView === true) {
-            $avatar = $this->getLocation() . $avatar;
+            $avatar = $this->_getLocation() . $avatar;
         }
 
         return $avatar;
     }
 
-    # Method hash password
-    public function hashPassword()
+    public function getRole()
     {
-        $this->password = $this->hash($this->password);
+        return $this->role;
     }
 
-    # Method returns id of logged user
-    public static function ID()
+    public function getCreatedAt()
     {
-        return Session::get('user:id', 0);
+        return $this->created_at;
     }
 }
