@@ -8,7 +8,7 @@ $route = new Route($location);
 
 $route->homepage('home');
 
-$route->group("", "", [
+$route->group("", "", [#
     'policy' => "/policy",
     'contact' => "/contact",
     'regulations' => "/regulations",
@@ -19,9 +19,9 @@ $route->group('auth', "/auth", [
     'login' => "/login",
 ]);
 
-$route->group('user', "/user", [
+$route->group('user', "/user", [# controller: UserController | url_prefix: /user
     'logout' => "/logout",
-    'profile' => "/profile",
+    'profile' => "/profile", # action: profile on url .../user/profile
     'update' => "/profile/update",
 ]);
 
