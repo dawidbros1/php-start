@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Helper;
 
-class Data
+class Date
 {
     public static function time_elapsed_string($datetime)
     {
@@ -25,6 +25,7 @@ class Data
             'i' => 'minute',
             's' => 'second',
         );
+
         foreach ($string as $k => &$v) {
             if ($diff->$k) {
                 $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
