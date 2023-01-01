@@ -11,7 +11,6 @@ use Phantom\Exception\StorageException;
 use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
 use Phantom\Model\Config;
-use Phantom\Model\Mail;
 use Phantom\Model\Route;
 use Phantom\RedirectToRoute;
 use Phantom\Repository\AbstractRepository;
@@ -43,8 +42,6 @@ abstract class AbstractController
         AbstractModel::initConfiguration(self::$config);
         AbstractRepository::initConfiguration(self::$config->get('db'));
         User::initConfiguration(self::$config);
-
-        $this->mail = new Mail(self::$config->get('mail'));
 
         if (Session::get('user:id')) {
             $this->user = (new User())->findById(User::ID(), User::class);
@@ -101,7 +98,7 @@ abstract class AbstractController
     {
         if ($this->user != null) {
             Session::error("Strona, na którą próbowałeś się dostać, jest dostępna wyłącznie dla użytkowników nie zalogowanych.");
-            $this->redirect('home');
+            $this->redirect('home', [], true);
         }
     }
 
@@ -110,7 +107,7 @@ abstract class AbstractController
     {
         if ($this->user == null) {
             Session::error("Strona, na którą próbowałeś się dostać, wymaga zalogowania się");
-            $this->redirect('auth.login');
+            $this->redirect('auth.login', [], true);
         }
     }
     # Method required to logged in user has role admin
@@ -120,7 +117,7 @@ abstract class AbstractController
 
         if (!$this->user->isAdmin()) {
             Session::error("Nie posiadasz wystarczających uprawnień do akcji, którą chciałeś wykonać");
-            $this->redirect('home');
+            $this->redirect('home', [], true);
         }
     }
 
