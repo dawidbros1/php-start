@@ -25,7 +25,7 @@ class UserController extends AbstractController
         Session::success("Nastąpiło wylogowanie z systemu");
 
         return $this->redirect(self::$config->get('default.route.logout'), [
-            'email' => $this->user->email,
+            'email' => $this->user->getEmail(),
         ]);
     }
 
