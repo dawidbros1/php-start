@@ -8,9 +8,12 @@ use Phantom\Repository\StdRepository;
 
 class StdModel extends AbstractModel
 {
+    protected $repository;
+    protected $rules;
+
     public function __construct(?string $tableName = null, ?string $rulesNamaspace = null)
     {
-        parent::__construct([], false);
+        parent::__construct([]);
 
         if ($tableName != null) {
             $this->repository = new StdRepository($tableName);
