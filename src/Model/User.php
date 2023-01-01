@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Repository\UserRepository;
 use App\Rules\UserRules;
 use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
@@ -40,14 +41,14 @@ class User extends AbstractModel
         $validator = new Validator($data, new UserRules());
 
         # Checks if currunt password is corrent
-        if (!$same = ($this->password == hash('sha256', $data['current_password']))) {
+        if (!$same = ($this->password == $this->hash($data['current_password']))) {
             Session::set("error:current_password:same", "Podane hasło jest nieprawidłowe");
         }
 
         # Validate password and repeat_password
         if ($validator->validate() && $same) {
             $this->setPassword($data['password']);
-            $this->hashPassword();
+            $this->password = $this->hash($this->password);
             $this->update(['password']);
 
             Session::success('Hasło zostało zaktualizowane');
@@ -67,7 +68,7 @@ class User extends AbstractModel
             if ($this->uploadFile($path, $file)) {
                 $this->deleteAvatar(); # Delete old avatar
                 $this->setAvatar($file['name']);
-                $this->update(['avatar']); # Update path to avatar in database
+                (new UserRepository())->updateAvatar($this, $file['name']);
                 Session::success('Awatar został zaktualizowany');
             }
         }
@@ -87,12 +88,6 @@ class User extends AbstractModel
         if ($this->avatar != null && file_exists($this->getAvatar())) {
             unlink($this->getAvatar());
         }
-    }
-
-    # Method hash password
-    public function hashPassword()
-    {
-        $this->password = hash('sha256', $this->password);
     }
 
     # Method returns id of logged user
