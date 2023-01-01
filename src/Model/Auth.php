@@ -10,11 +10,13 @@ use Phantom\Model\AbstractModel;
 
 class Auth extends AbstractModel
 {
+    private $repository;
+
     private $id, $username, $email, $password;
     protected $table = "users";
     public function create()
     {
-        $this->password = hash('sha256', $this->password);
+        $this->password = $this->hash($this->password);
         (new UserRepository())->create($this);
         Session::success('Konto zostało utworzone');
     }
@@ -22,7 +24,7 @@ class Auth extends AbstractModel
     # Method sets session user:id if there is a user with matching data [e-mail, password]
     public function login(array $data)
     {
-        $data['password'] = hash('sha256', $data['password']);
+        $data['password'] = $this->hash($data['password']);
 
         if ($user = $this->find(['email' => $data['email'], 'password' => $data['password']], User::class)) {
             Session::set('user:id', $user->getId());
@@ -31,16 +33,10 @@ class Auth extends AbstractModel
         return $user;
     }
 
-    # Method checks if email exists and return status
-    public function existsEmail($email)
-    {
-        return in_array($email, $this->repository->getEmails());
-    }
-
     # Method checks if email is unique and return status
-    public function isEmailUnique($user)
+    public function isEmailUnique()
     {
-        if (in_array($user->get('email'), $user->repository->getEmails())) {
+        if ($this->existsEmail($this->email)) {
             Session::set("error:email:unique", "Podany adres email jest zajęty");
             return false;
         }
