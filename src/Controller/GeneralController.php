@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Phantom\Controller\AbstractController;
 use Phantom\Helper\Session;
+use Phantom\Model\Mail;
 use Phantom\RedirectToRoute;
 use Phantom\View;
 
@@ -48,7 +49,7 @@ class GeneralController extends AbstractController
             );
 
             if ($response != null && $response->success) {
-                $this->mail->contact($data);
+                (new Mail)->contact($data);
             } else {
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }

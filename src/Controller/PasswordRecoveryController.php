@@ -8,11 +8,10 @@ use App\Model\PasswordRecovery;
 use App\Model\User;
 use Phantom\Controller\AbstractController;
 use Phantom\Helper\Session;
+use Phantom\Model\Mail;
 use Phantom\RedirectToRoute;
 use Phantom\Request\Request;
 use Phantom\View;
-
-// ! TODO IT
 
 class PasswordRecoveryController extends AbstractController
 {
@@ -20,7 +19,7 @@ class PasswordRecoveryController extends AbstractController
     {
         parent::__construct($request);
         $this->forGuest();
-        $this->model = new PasswordRecovery([], true, "User");
+        $this->model = new PasswordRecovery();
     }
 
     # Method sends email to user mail with link to reset password
@@ -29,9 +28,10 @@ class PasswordRecoveryController extends AbstractController
         View::set("Przypomnienie hasła");
 
         if ($email = $this->request->isPost(['email'])) {
-            if ($this->model->existsEmail($email)) {
-                $username = $this->model->find(['email' => $email], "", false, User::class)->username;
-                $this->mail->forgotPassword($email, self::$route->get('passwordRecovery.reset'), $username);
+            $user = $this->model->find(['email' => $email], User::class);
+
+            if ($user) {
+                (new Mail())->forgotPassword($email, self::$route->get('passwordRecovery.reset'), $user->getUsername());
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
             }
@@ -50,7 +50,7 @@ class PasswordRecoveryController extends AbstractController
             $this->checkCodeToResetPassword($code = $data['code']); # Check if session code is correct and valid
 
             if ($user = $this->model->resetPassword($data, $code)) { # Reset password
-                return $this->redirect('authorization', ['email' => $user->email]);
+                return $this->redirect('auth.login', ['email' => $user->getEmail()]);
             } else {
                 return $this->redirect('passwordRecovery.reset', ['code' => $code]);
             }

@@ -4,31 +4,27 @@ declare (strict_types = 1);
 
 namespace App\Model;
 
+use App\Rules\UserRules;
 use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
-
-// ! TODO IT
+use Phantom\Validator\Validator;
 
 class PasswordRecovery extends AbstractModel
 {
+    protected $table = "users";
+
     # Method sets new password for user
     public function resetPassword($data, $code)
     {
-        if ($this->validate($data)) {
-            $user = $this->find(['email' => Session::get($code)], "", true, User::class);
-            $user->set('password', $data['password']);
-            $user->hashPassword();
-            $user->update([], false);
+        $validator = new Validator($data, new UserRules());
 
+        if ($validator->validate()) {
+            $user = $this->find(['email' => Session::get($code)], User::class);
+            $user->setPassword($this->hash($data['password']));
+            $user->update('password');
             Session::clearArray([$code, "created:" . $code]);
             Session::success('Hasło do konta zostało zmienione');
         }
         return $user ?? null;
-    }
-
-    # Method checks if email exists and return status
-    public function existsEmail($email)
-    {
-        return in_array($email, $this->repository->getEmails());
     }
 }

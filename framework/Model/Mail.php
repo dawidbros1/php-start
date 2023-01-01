@@ -25,7 +25,11 @@ class Mail extends AbstractModel
         $data['name'] = htmlentities($data['name']);
         $data['message'] = htmlentities($data['message']);
 
-        $html = "<html> <head> </head> <body> <p>Imię i nazwisko: " . $data['name'] . " </p> " . $data['message'] . " </body> </html>";
+        $message = "";
+        $message .= '<p>Imię i nazwisko:  ' . $data["name"] . '</p>';
+        $message .= '<div>' . $data["message"] . '</div>';
+
+        $html = '<html><head></head><body>' . $message . '</body></html>';
 
         if ($this->send($this->mail['email'], $data['subject'], $html, $headers)) {
             Session::success("Wiadomość została wysłana");
@@ -35,7 +39,7 @@ class Mail extends AbstractModel
     # Method sends email by forgotPassword form
     public function forgotPassword($email, $route, $username)
     {
-        $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+        // $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
         $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
         $hash = $this->hash($code, 'md5');
 
@@ -44,7 +48,7 @@ class Mail extends AbstractModel
 
         $data = [];
         $data['email'] = $email;
-        $data['link'] = $location . $route . "&code=$hash";
+        $data['link'] = $route . "?code=$hash";
         $data['subject'] = $_SERVER['HTTP_HOST'] . " - Reset hasła";
         $data['username'] = $username;
 
