@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Phantom\Model;
 
+use App\Repository\UserRepository;
 use Phantom\Helper\Session;
 use Phantom\Query\QueryModel;
 
@@ -75,11 +76,11 @@ abstract class AbstractModel extends QueryModel
         }
     }
 
-    // # Method hash parameter
-    // public function hash($param, $method = null): string
-    // {
-    //     return hash($method ?? self::$hashMethod, $param);
-    // }
+    # Method hash parameter
+    public function hash($param, $method = null): string
+    {
+        return hash($method ?? self::$hashMethod, $param);
+    }
 
     // # Method hash name of file to create unique file name
     public function hashFile($file)
@@ -123,6 +124,12 @@ abstract class AbstractModel extends QueryModel
 
         return $output;
     }
+
+        # Method checks if email exists and return status
+        public function existsEmail($email)
+        {
+            return in_array($email, (new UserRepository())->getEmails());
+        }
 
     private function convertToSnakeCase($string)
     {
