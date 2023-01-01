@@ -61,8 +61,14 @@ abstract class QueryModel
 
     # Method updates current object | we can skip validate
     # array $toValidate: which properties will be validate
-    public function update(array $update = [])
+    public function update(string | array $update = [])
     {
+        if (!is_array($update)) {
+            $copy = $update;
+            $update = [];
+            $update[0] = $copy;
+        }
+
         $this->escape();
         (new StdRepository($this->table))->update($this, $update);
         Session::success('Dane zostały zaktualizowane'); // Default value
