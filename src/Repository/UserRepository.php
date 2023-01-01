@@ -37,4 +37,13 @@ class UserRepository extends AbstractRepository
         $stmt = self::$pdo->prepare($sql);
         $stmt->execute([$username, $email, $password, $avatar, $role, $created_at]);
     }
+
+    public function updateAvatar($user, $name)
+    {
+        $sql = "UPDATE users SET avatar = :avatar WHERE id = :id";
+        $stmt = self::$pdo->prepare($sql);
+        $stmt->bindParam('avatar', $name, PDO::PARAM_STR);
+        $stmt->bindParam('id', $user->getId(), PDO::PARAM_INT);
+        $stmt->execute();
+    }
 }
