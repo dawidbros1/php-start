@@ -1,17 +1,17 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Model;
 
 use Phantom\Helper\Session;
 
-class Mail extends AbstractModel
+class Mail
 {
     private $mail;
-    public function __construct()
+    public function __construct(string $mail)
     {
-        $this->mail = self::$config->get('mail');
+        $this->mail = $mail;
     }
 
     # Method sends email by contact form
@@ -41,7 +41,7 @@ class Mail extends AbstractModel
     {
         // $location = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
         $code = rand(1, 1000000) . "_" . date('Y-m-d H:i:s');
-        $hash = $this->hash($code, 'md5');
+        $hash = hash($code, 'md5');
 
         Session::set($hash, $email);
         Session::set('created:' . $hash, time());

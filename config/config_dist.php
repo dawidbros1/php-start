@@ -42,5 +42,6 @@ return new Config(
                 'secret' => '',
             ],
         ],
+        'env' => "dev"
     ]
 );

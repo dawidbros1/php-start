@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Model;
 
@@ -31,19 +31,23 @@ class Route
     }
 
     # Method adds new route to $routes and adds RewriteRule to file .htaccess
-    # string $prefix: It is prefix of controller name like a user|category. If is empty will be runs default type (general)
+    # string $type: It is a prefix of controller name like a user|category. If is empty will be runs default type (general)
+    # string $prefix: Create url => prefix.url
     # string $action: Which action from controller will be runs. If $action is empty will be run method index()
     # string $url: It is url which will be see on address bar. Example: user/profile | users/list
-    public function register(string $type, string $prefix, string $action = "", string $url = "")
+    public function register(string $type, string $prefix = "", string $action = "index", string $url = "")
     {
         $url = $prefix . $url;
+        $routeAction = $action;
         $url = substr($url, 1);
+
+        $routeUrl = $this->location . $url;
         $array = explode("/", $url);
         $index = 1;
 
         foreach ($array as $string) {
             if (preg_match("/^{.+}$/", $string)) {
-                if (str_contains($string, "_id") || $string == "{id}") {
+                if (preg_match("/_id/", $string) || $string == "{id}") {
                     $replace = "([0-9]+)";
                 } else {
                     $replace = "(.)+";
@@ -55,22 +59,20 @@ class Route
             }
         }
 
-        $fullUrl = $this->location . $url;
-
         # actions in GeneralController
         if (strlen($type) == 0) {
-            $this->routes[$action] = $fullUrl;
+            $this->routes[$routeAction] = $routeUrl;
             $line = "RewriteRule ^$url$ ./?action=$action";
         }
 
         # action index() in AnyController
         if (strlen($type) != 0 && strlen($action) == 0) {
-            $this->routes[$type] = $fullUrl;
+            $this->routes[$type] = $routeUrl;
             $line = "RewriteRule ^$url$ ./?type=$type";
         }
 
         if (strlen($type) != 0 && strlen($action) != 0) {
-            $this->routes[$type][$action] = $fullUrl;
+            $this->routes[$type][$routeAction] = $routeUrl;
             $line = "RewriteRule ^$url$ ./?type=$type&action=$action";
         }
 
@@ -90,6 +92,10 @@ class Route
     {
         $output = $this->routes;
         $array = explode(".", $path);
+
+        if (count($array) == 1 && $path != "home") {
+            array_push($array, 'index');
+        }
 
         foreach ($array as $name) {
             if (array_key_exists($name, $output)) {

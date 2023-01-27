@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -23,7 +23,7 @@ class PasswordRecoveryController extends AbstractController
     }
 
     # Method sends email to user mail with link to reset password
-    public function forgotAction(): View | RedirectToRoute
+    public function forgotAction(): View|RedirectToRoute
     {
         View::set("Przypomnienie hasła");
 
@@ -31,7 +31,7 @@ class PasswordRecoveryController extends AbstractController
             $user = $this->model->find(['email' => $email], User::class);
 
             if ($user) {
-                (new Mail())->forgotPassword($email, self::$route->get('passwordRecovery.reset'), $user->getUsername());
+                (new Mail(self::$config->get('mail')))->forgotPassword($email, self::$route->get('passwordRecovery.reset'), $user->getUsername());
             } else {
                 Session::set("error:email:null", "Podany adres email nie istnieje");
             }
@@ -42,7 +42,7 @@ class PasswordRecoveryController extends AbstractController
     }
 
     # Method updates user password
-    public function resetAction(): View | RedirectToRoute
+    public function resetAction(): View|RedirectToRoute
     {
         View::set("Reset hasła");
 

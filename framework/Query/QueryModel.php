@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Query;
 
@@ -61,7 +61,7 @@ abstract class QueryModel
 
     # Method updates current object | we can skip validate
     # array $toValidate: which properties will be validate
-    public function update(string | array $update = [])
+    public function update(string|array $update = [])
     {
         if (!is_array($update)) {
             $copy = $update;
@@ -88,4 +88,9 @@ abstract class QueryModel
             $repository->delete((int) $this->getId());
         }
     }
+
+    // abstract method
+
+    public abstract function escape();
+    public abstract function getId();
 }

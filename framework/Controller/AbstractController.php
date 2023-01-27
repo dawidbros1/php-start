@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Controller;
 
@@ -19,13 +19,12 @@ use Phantom\View;
 
 abstract class AbstractController
 {
-    protected static $config = [];
-    protected static $route = [];
+    protected static Config $config;
+    protected static Route $route;
     protected $request;
     protected $view;
     protected $user = null;
     protected $mail;
-    private $userModel;
     protected $model;
     public static function initConfiguration(Config $config, Route $route): void
     {
@@ -68,19 +67,22 @@ abstract class AbstractController
             }
 
             switch ($result::class) {
-                case "Phantom\View":{
+                case "Phantom\View": {
                         $result->render();
                         break;
                     }
-                case "Phantom\RedirectToRoute":{
+                case "Phantom\RedirectToRoute": {
                         $result->redirect();
                         break;
                     }
             }
 
         } catch (StorageException $e) {
-            // TODO
-            DUMP("ACTION ERROR in AbstractController->run()");
+            if (self::$config->get('env') == "dev") {
+                dump($e);
+            } else {
+                dump($e->getMessage());
+            }
             die();
         }
     }
