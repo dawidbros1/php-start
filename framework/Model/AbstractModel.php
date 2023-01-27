@@ -1,17 +1,20 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Model;
 
 use App\Repository\UserRepository;
 use Phantom\Helper\Session;
+use Phantom\Query\Finder;
 use Phantom\Query\QueryModel;
+use Phantom\Repository\StdRepository;
 
-abstract class AbstractModel extends QueryModel
+abstract class AbstractModel
 {
     protected static $hashMethod = null;
     protected static $config;
+    protected $table;
 
     public static function initConfiguration(Config $config)
     {
@@ -125,11 +128,11 @@ abstract class AbstractModel extends QueryModel
         return $output;
     }
 
-        # Method checks if email exists and return status
-        public function existsEmail($email)
-        {
-            return in_array($email, (new UserRepository())->getEmails());
-        }
+    # Method checks if email exists and return status
+    public function existsEmail($email)
+    {
+        return in_array($email, (new UserRepository())->getEmails());
+    }
 
     private function convertToSnakeCase($string)
     {
@@ -142,4 +145,44 @@ abstract class AbstractModel extends QueryModel
         $string = ucwords($string, '_');
         return str_replace('_', '', $string);
     }
+
+    # Method adds record to database
+    # if object was validated earlier we can skip validate in this method
+    public function create()
+    {
+        (new StdRepository($this->table))->create($this);
+    }
+
+    # Method updates current object | we can skip validate
+    # array $toValidate: which properties will be validate
+    public function update(string|array $update = [])
+    {
+        if (!is_array($update)) {
+            $copy = $update;
+            $update = [];
+            $update[0] = $copy;
+        }
+
+        $this->escape();
+        (new StdRepository($this->table))->update($this, $update);
+        Session::success('Dane zostały zaktualizowane'); // Default value
+        return true;
+    }
+
+    # Method delete record from database
+    # if property ID is sets this record will we deleted
+    # else current object will be deleted
+    public function delete(?int $id = null)
+    {
+        $repository = new StdRepository($this->table);
+
+        if ($id !== null) {
+            $repository->delete((int) $id);
+        } else {
+            $repository->delete((int) $this->getId());
+        }
+    }
+
+    // abstract method
+    public abstract function getId();
 }
