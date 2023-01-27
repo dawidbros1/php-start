@@ -9,6 +9,7 @@ use App\Model\User;
 use Phantom\Controller\AbstractController;
 use Phantom\Helper\Session;
 use Phantom\Model\Mail;
+use Phantom\Repository\DBFinder;
 use Phantom\RedirectToRoute;
 use Phantom\Request\Request;
 use Phantom\View;
@@ -28,7 +29,7 @@ class PasswordRecoveryController extends AbstractController
         View::set("Przypomnienie hasła");
 
         if ($email = $this->request->isPost(['email'])) {
-            $user = $this->model->find(['email' => $email], User::class);
+            $user = (new DBFinder('users'))->find(['email' => $email], User::class);
 
             if ($user) {
                 (new Mail(self::$config->get('mail')))->forgotPassword($email, self::$route->get('passwordRecovery.reset'), $user->getUsername());

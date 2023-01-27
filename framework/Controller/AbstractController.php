@@ -12,6 +12,7 @@ use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
 use Phantom\Model\Config;
 use Phantom\Model\Route;
+use Phantom\Repository\DBFinder;
 use Phantom\RedirectToRoute;
 use Phantom\Repository\AbstractRepository;
 use Phantom\Request\Request;
@@ -43,7 +44,7 @@ abstract class AbstractController
         User::initConfiguration(self::$config);
 
         if (Session::get('user:id')) {
-            $this->user = (new User())->findById(User::ID(), User::class);
+            $this->user = DBFinder::getInstance('users')->findById(User::ID(), User::class);
         }
 
         $this->request = $request;

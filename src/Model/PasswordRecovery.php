@@ -1,15 +1,15 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Model;
 
 use App\Rules\UserRules;
 use Phantom\Helper\Session;
-use Phantom\Model\AbstractModel;
+use Phantom\Repository\DBFinder;
 use Phantom\Validator\Validator;
 
-class PasswordRecovery extends AbstractModel
+class PasswordRecovery
 {
     protected $table = "users";
 
@@ -19,8 +19,8 @@ class PasswordRecovery extends AbstractModel
         $validator = new Validator($data, new UserRules());
 
         if ($validator->validate()) {
-            $user = $this->find(['email' => Session::get($code)], User::class);
-            $user->setPassword($this->hash($data['password']));
+            $user = DBFinder::getInstance($this->table)->find(['email' => Session::get($code)], User::class);
+            $user->setPassword(hash('sha256', $data['password']));
             $user->update('password');
             Session::clearArray([$code, "created:" . $code]);
             Session::success('Hasło do konta zostało zmienione');

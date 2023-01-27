@@ -1,17 +1,16 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Model;
 
 use App\Repository\UserRepository;
 use Phantom\Helper\Session;
 use Phantom\Model\AbstractModel;
+use Phantom\Repository\DBFinder;
 
 class Auth extends AbstractModel
 {
-    private $repository;
-
     private $id, $username, $email, $password;
     protected $table = "users";
     public function create()
@@ -26,7 +25,7 @@ class Auth extends AbstractModel
     {
         $data['password'] = $this->hash($data['password']);
 
-        if ($user = $this->find(['email' => $data['email'], 'password' => $data['password']], User::class)) {
+        if ($user = DBFinder::getInstance($this->table)->find(['email' => $data['email'], 'password' => $data['password']], User::class)) {
             Session::set('user:id', $user->getId());
         }
 
