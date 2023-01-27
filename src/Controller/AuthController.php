@@ -1,10 +1,11 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Model\Auth;
+use App\Model\User;
 use App\Rules\UserRules;
 use Phantom\Controller\AbstractController;
 use Phantom\Helper\CheckBox;
@@ -19,6 +20,8 @@ class AuthController extends AbstractController
     {
         parent::__construct($request);
         $this->forGuest();
+
+        Auth::setHashMethod(self::$config->get('default.hash.method'));
     }
 
     public function registerAction()
@@ -28,10 +31,10 @@ class AuthController extends AbstractController
         if ($data = $this->request->isPost(['username', 'email', 'password', 'repeat_password'])) {
             $data['regulations'] = CheckBox::get($this->request->postParam('regulations', false));
             $validator = new Validator($data, new UserRules());
-            $auth = new Auth($data);
+            $auth = new Auth();
 
-            if ($validator->validate()&$validator->validatePassword()&$auth->isEmailUnique()) {
-                $auth->create();
+            if ($validator->validate()& $validator->validatePassword()& $auth->isEmailUnique($data['email'])) {
+                $auth->register(new User($data));
                 return $this->redirect('auth.login', ['email' => $data['email']]);
             } else {
                 unset($data['password'], $data['repeat_password']);
@@ -39,7 +42,8 @@ class AuthController extends AbstractController
             }
 
         } else {
-            return $this->render('auth/registration',
+            return $this->render(
+                'auth/registration',
                 $this->request->getParams(['username', 'email'])
             );
         }
@@ -50,7 +54,6 @@ class AuthController extends AbstractController
         View::set("Logowanie");
 
         if ($data = $this->request->isPost(['email', 'password'])) {
-
             $auth = new Auth();
 
             if ($auth->login($data)) {

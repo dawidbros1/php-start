@@ -6,26 +6,30 @@ namespace App\Model;
 
 use App\Repository\UserRepository;
 use Phantom\Helper\Session;
-use Phantom\Model\AbstractModel;
 use Phantom\Repository\DBFinder;
 
-class Auth extends AbstractModel
+class Auth
 {
-    private $id, $username, $email, $password;
+    public static $hashMethod;
     protected $table = "users";
-    public function create()
+
+    public static function setHashMethod(string $hashMethod)
     {
-        $this->password = $this->hash($this->password);
-        (new UserRepository())->create($this);
+        self::$hashMethod = $hashMethod;
+    }
+
+    public function register(User $user)
+    {
+        (new UserRepository())->create($user->hashPassword());
         Session::success('Konto zostało utworzone');
     }
 
     # Method sets session user:id if there is a user with matching data [e-mail, password]
     public function login(array $data)
     {
-        $data['password'] = $this->hash($data['password']);
+        $data['password'] = hash(self::$hashMethod, $data['password']);
 
-        if ($user = DBFinder::getInstance($this->table)->find(['email' => $data['email'], 'password' => $data['password']], User::class)) {
+        if ($user = DBFinder::getInstance($this->table)->find($data, User::class)) {
             Session::set('user:id', $user->getId());
         }
 
@@ -33,54 +37,14 @@ class Auth extends AbstractModel
     }
 
     # Method checks if email is unique and return status
-    public function isEmailUnique()
+    public function isEmailUnique($email)
     {
-        if ($this->existsEmail($this->email)) {
-            Session::set("error:email:unique", "Podany adres email jest zajęty");
-            return false;
-        }
-
-        return true;
+        return (!in_array($email, (new UserRepository())->getEmails()));
     }
 
-    # GETTERS * SETTERS
-    public function setId($id)
+    # Method checks if email is unique and return status
+    public function existsEmail($email)
     {
-        $this->id = $id;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function setPassword($password)
-    {
-        $this->password = $password;
-    }
-
-    public function getPassword()
-    {
-        return $this->password;
+        return (in_array($email, (new UserRepository())->getEmails()));
     }
 }
