@@ -50,7 +50,7 @@ class PasswordRecoveryController extends AbstractController
         if ($data = $this->request->isPost(['password', 'repeat_password', 'code'])) {
             $this->checkCodeToResetPassword($code = $data['code']); # Check if session code is correct and valid
 
-            if ($user = $this->model->resetPassword($data, $code)) { # Reset password
+            if ($user = $this->model->resetPassword($data, $code, self::$config->get('default.hash.method'))) { # Reset password
                 return $this->redirect('auth.login', ['email' => $user->getEmail()]);
             } else {
                 return $this->redirect('passwordRecovery.reset', ['code' => $code]);
