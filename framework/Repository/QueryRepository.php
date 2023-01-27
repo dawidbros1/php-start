@@ -1,10 +1,11 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
-namespace Phantom\Query;
+namespace Phantom\Repository;
 
 use PDO;
+use Phantom\Exception\AppException;
 use Phantom\Exception\StorageException;
 use Throwable;
 
@@ -31,6 +32,8 @@ abstract class QueryRepository
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
         } else if ($fetch == "all") {
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            throw new AppException("[QueryRepository:find()]: fetch: " . $fetch . " no exists");
         }
 
         return $data;

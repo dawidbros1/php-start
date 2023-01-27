@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Repository;
 
@@ -8,7 +8,6 @@ use PDO;
 use PDOException;
 use Phantom\Exception\ConfigurationException;
 use Phantom\Exception\StorageException;
-use Phantom\Query\QueryRepository;
 
 abstract class AbstractRepository extends QueryRepository
 {
@@ -34,7 +33,7 @@ abstract class AbstractRepository extends QueryRepository
     {
         $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
         self::$pdo = new PDO($dsn, $config['user'], $config['password'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         ]);
     }
 
