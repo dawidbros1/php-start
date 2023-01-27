@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Model;
 
@@ -150,6 +150,13 @@ class User extends AbstractModel
     public function getPassword()
     {
         return $this->password;
+    }
+
+    public function hashPassword()
+    {
+        $this->password = $this->hash($this->password);
+
+        return $this;
     }
 
     # Method returns avatar
