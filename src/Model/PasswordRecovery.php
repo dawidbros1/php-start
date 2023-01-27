@@ -14,13 +14,13 @@ class PasswordRecovery
     protected $table = "users";
 
     # Method sets new password for user
-    public function resetPassword($data, $code)
+    public function resetPassword($data, $code, $hashMethod)
     {
         $validator = new Validator($data, new UserRules());
 
         if ($validator->validate()) {
             $user = DBFinder::getInstance($this->table)->find(['email' => Session::get($code)], User::class);
-            $user->setPassword(hash('sha256', $data['password']));
+            $user->setPassword(hash($hashMethod, $data['password']));
             $user->update('password');
             Session::clearArray([$code, "created:" . $code]);
             Session::success('Hasło do konta zostało zmienione');
