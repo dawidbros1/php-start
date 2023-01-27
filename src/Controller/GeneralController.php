@@ -49,7 +49,7 @@ class GeneralController extends AbstractController
             );
 
             if ($response != null && $response->success) {
-                (new Mail)->contact($data);
+                (new Mail(self::$config->get('mail')))->contact($data);
             } else {
                 Session::set('error:reCAPTCHA:robot', "Robotów nie wpuszczamy");
             }
