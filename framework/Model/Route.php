@@ -10,6 +10,7 @@ use Phantom\Htaccess;
 class Route
 {
     private $routes, $htaccess, $location;
+    private $defaultType = "general";
 
     public function __construct(string $location)
     {
@@ -37,6 +38,8 @@ class Route
     # string $url: It is url which will be see on address bar. Example: user/profile | users/list
     public function register(string $type, string $prefix = "", string $action = "index", string $url = "")
     {
+        $type = (strlen($type)) == 0 ? $this->defaultType : $type;
+
         $url = $prefix . $url;
         $routeAction = $action;
         $url = substr($url, 1);
@@ -83,7 +86,7 @@ class Route
     # Special route for home page without setting $name and $action
     public function homepage(string $name)
     {
-        $this->routes[$name] = $this->location;
+        $this->routes[$this->defaultType][$name] = $this->location;
         $this->htaccess->write("RewriteRule DirectoryIndex .");
     }
 
@@ -93,9 +96,7 @@ class Route
         $output = $this->routes;
         $array = explode(".", $path);
 
-        if (count($array) == 1 && $path != "home") {
-            array_push($array, 'index');
-        }
+        count($array) == 1 ? array_unshift($array, $this->defaultType) : null;
 
         foreach ($array as $name) {
             if (array_key_exists($name, $output)) {
@@ -105,10 +106,7 @@ class Route
             }
         }
 
-        if (!is_array($params)) {
-            $params = [$params];
-        }
-
+        $params = (!is_array($params)) ? [$params] : $params;
         $array = explode("/", $output);
         $output = [];
 
