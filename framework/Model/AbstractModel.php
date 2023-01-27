@@ -128,12 +128,6 @@ abstract class AbstractModel
         return $output;
     }
 
-    # Method checks if email exists and return status
-    public function existsEmail($email)
-    {
-        return in_array($email, (new UserRepository())->getEmails());
-    }
-
     private function convertToSnakeCase($string)
     {
         $string = preg_replace('/([A-Z])/', '_$1', $string);
