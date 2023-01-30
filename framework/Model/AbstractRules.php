@@ -10,11 +10,15 @@ abstract class AbstractRules
 {
     protected $rules;
     protected $defaultType = null;
+	
     public function __construct()
     {
         $this->rules();
         $this->messages();
     }
+
+	public abstract function rules();
+    public abstract function messages();
 
     # Method to create rule
     # string $type: type of rule => username|password|email
