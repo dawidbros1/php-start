@@ -96,7 +96,13 @@ class Route
         $output = $this->routes;
         $array = explode(".", $path);
 
-        count($array) == 1 ? array_unshift($array, $this->defaultType) : null;
+        if (count($array) == 1) {
+            if ($array[0]['index'] == null) {
+                array_unshift($array, $this->defaultType);
+            } else {
+                array_push($array, 'index');
+            }
+        }
 
         foreach ($array as $name) {
             if (array_key_exists($name, $output)) {
