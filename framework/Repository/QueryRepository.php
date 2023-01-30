@@ -33,14 +33,14 @@ abstract class QueryRepository
         } else if ($fetch == "all") {
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
-            throw new AppException("[QueryRepository:find()]: fetch: " . $fetch . " no exists");
+            throw new AppException("[QueryRepository:find()]: fetch: " . $fetch . " not exists");
         }
 
         return $data;
     }
 
     # Method returns a lot of records from database
-    public function findALl(array $conditions, $options): ?array
+    public function findAll(array $conditions, $options): ?array
     {
         return $this->find($conditions, $options, "all");
     }
@@ -48,7 +48,6 @@ abstract class QueryRepository
     // # Method adds record to database
     public function create($object)
     {
-
         $object->escape();
         $data = $object->_getData();
 
