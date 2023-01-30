@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Phantom\Model;
 
-use App\Repository\UserRepository;
 use Phantom\Helper\Session;
-use Phantom\Query\Finder;
-use Phantom\Query\QueryModel;
 use Phantom\Repository\StdRepository;
 
-abstract class AbstractModel
+abstract class AbstractModel extends QueryModel
 {
     protected static $hashMethod = null;
     protected static $config;
@@ -139,44 +136,4 @@ abstract class AbstractModel
         $string = ucwords($string, '_');
         return str_replace('_', '', $string);
     }
-
-    # Method adds record to database
-    # if object was validated earlier we can skip validate in this method
-    public function create()
-    {
-        (new StdRepository($this->table))->create($this);
-    }
-
-    # Method updates current object | we can skip validate
-    # array $toValidate: which properties will be validate
-    public function update(string|array $update = [])
-    {
-        if (!is_array($update)) {
-            $copy = $update;
-            $update = [];
-            $update[0] = $copy;
-        }
-
-        $this->escape();
-        (new StdRepository($this->table))->update($this, $update);
-        Session::success('Dane zostały zaktualizowane'); // Default value
-        return true;
-    }
-
-    # Method delete record from database
-    # if property ID is sets this record will we deleted
-    # else current object will be deleted
-    public function delete(?int $id = null)
-    {
-        $repository = new StdRepository($this->table);
-
-        if ($id !== null) {
-            $repository->delete((int) $id);
-        } else {
-            $repository->delete((int) $this->getId());
-        }
-    }
-
-    // abstract method
-    public abstract function getId();
 }
