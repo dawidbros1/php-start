@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 ini_set("session.gc_maxlifetime", '31536000');
 ini_set('session.cookie_lifetime', '31536000');
@@ -47,14 +47,14 @@ try {
     }
 
     $controller->run();
-
 } catch (ConfigurationException $e) {
-    echo '<h1>Wystąpił błąd w aplikacji</h1>';
+    echo '<h1>Wystąpił błąd w aplikacji - 1</h1>';
     echo 'Problem z aplikacją, proszę spróbować za chwilę.';
+    dump($e);
 } catch (AppException $e) {
-    echo '<h1>Wystąpił błąd w aplikacji</h1>';
+    echo '<h1>Wystąpił błąd w aplikacji - 2</h1>';
     echo '<h3>' . $e->getMessage() . '</h3>';
-} catch (\Throwable$e) {
+} catch (\Throwable $e) {
     echo '<h1>Wystąpił błąd w aplikacji </h1>';
     dump($e);
 }

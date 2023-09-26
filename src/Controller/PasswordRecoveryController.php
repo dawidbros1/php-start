@@ -1,18 +1,17 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Model\PasswordRecovery;
 use App\Model\User;
-use Phantom\Controller\AbstractController;
+use App\Base\BaseController;
 use Phantom\Helper\Request;
 use Phantom\Helper\Session;
-use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class PasswordRecoveryController extends AbstractController
+class PasswordRecoveryController extends BaseController
 {
     public function __construct(Request $request)
     {
@@ -22,7 +21,7 @@ class PasswordRecoveryController extends AbstractController
     }
 
     # Method sends email to user mail with link to reset password
-    public function forgotAction(): View | RedirectToRoute
+    public function forgotAction()
     {
         View::set("Przypomnienie hasła");
 
@@ -40,7 +39,7 @@ class PasswordRecoveryController extends AbstractController
     }
 
     # Method updates user password
-    public function resetAction(): View | RedirectToRoute
+    public function resetAction()
     {
         View::set("Reset hasła");
 

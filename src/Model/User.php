@@ -1,14 +1,14 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Base\BaseModel;
 use Phantom\Helper\Session;
-use Phantom\Model\AbstractModel;
 use Phantom\Model\Config;
 
-class User extends AbstractModel
+class User extends BaseModel
 {
     public $id, $username, $email, $password, $avatar, $role, $created;
     public static $defaultAvatar;

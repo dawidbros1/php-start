@@ -1,15 +1,14 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
-use Phantom\Controller\AbstractController;
+use App\Base\BaseController;
 use Phantom\Helper\Session;
-use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class GeneralController extends AbstractController
+class GeneralController extends BaseController
 {
     public function index(): View
     {
@@ -30,7 +29,7 @@ class GeneralController extends AbstractController
     }
 
     # Method sends message to website admin by contact form
-    public function contactAction(): View | RedirectToRoute
+    public function contactAction()
     {
         View::set("Strona kontaktowa", "contact");
         $names = ['name', 'from', 'message', 'subject', 'g-recaptcha-response'];

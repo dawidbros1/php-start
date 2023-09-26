@@ -1,17 +1,16 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Model\Registration;
-use Phantom\Controller\AbstractController;
+use App\Base\BaseController;
 use Phantom\Helper\Checkbox;
 use Phantom\Helper\Request;
-use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class RegistrationController extends AbstractController
+class RegistrationController extends BaseController
 {
     public function __construct(Request $request)
     {
@@ -21,7 +20,7 @@ class RegistrationController extends AbstractController
     }
 
     # Method adds new user
-    public function index(): View | RedirectToRoute
+    public function index()
     {
         View::set("Rejestracja");
 
@@ -35,7 +34,8 @@ class RegistrationController extends AbstractController
                 return $this->redirect('registration', $data);
             }
         } else {
-            return $this->render('registration/registration',
+            return $this->render(
+                'registration/registration',
                 $this->request->getParams(['username', 'email'])
             );
         }

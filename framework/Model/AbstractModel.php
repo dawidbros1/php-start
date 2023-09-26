@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Model;
 
@@ -30,7 +30,7 @@ abstract class AbstractModel
     public function __construct(array $data = [], bool $rulesitory = true, ?string $model = null)
     {
         if ($rulesitory == true) {
-            $namaspace = explode("\\", $this::class);
+            $namaspace = explode("\\", get_class($this));
 
             $namaspace[2] = $model ?? $namaspace[2];
 
@@ -104,7 +104,7 @@ abstract class AbstractModel
     public function find(array $conditions, string $options = "", bool $rulesitory = true, $namaspace = null)
     {
         if ($namaspace == null) {
-            $namaspace = $this::class;
+            $namaspace = get_class($this);
         }
 
         if ($data = $this->repository->get($conditions, $options)) {
@@ -127,7 +127,7 @@ abstract class AbstractModel
         $data = $this->repository->getAll($conditions, $options);
 
         if ($namaspace == null) {
-            $namaspace = $this::class;
+            $namaspace = get_class($this);
         }
 
         if ($data) {
@@ -241,7 +241,7 @@ abstract class AbstractModel
         $diff = str_replace($location, "", $url);
 
         $array = explode("/", $diff);
-        $array = array_map(fn($element) => "/..", $array);
+        $array = array_map(fn ($element) => "/..", $array);
         array_pop($array); # We needs pop one element
         $output = implode("", $array);
         $output = ".$output/";

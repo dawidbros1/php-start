@@ -1,14 +1,14 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Model;
 
 use App\Model\User;
+use App\Base\BaseModel;
 use Phantom\Helper\Session;
-use Phantom\Model\AbstractModel;
 
-class Registration extends AbstractModel
+class Registration extends BaseModel
 {
     public function __construct()
     {
@@ -20,7 +20,7 @@ class Registration extends AbstractModel
     {
         $user = new User($data);
 
-        if ($status = ($user->validate($data)&($this->isEmailUnique($user)))) {
+        if ($status = ($user->validate($data) & ($this->isEmailUnique($user)))) {
             unset($data);
             $data['avatar'] = null;
             $data['role'] = "user";

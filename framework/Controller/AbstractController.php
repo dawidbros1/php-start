@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Controller;
 
@@ -21,8 +21,8 @@ use Phantom\View;
 
 abstract class AbstractController extends Validator
 {
-    protected static $config = [];
-    protected static $route = [];
+    protected static $config;
+    protected static $route;
     protected $request;
     protected $view;
     protected $user = null;
@@ -45,7 +45,7 @@ abstract class AbstractController extends Validator
         AbstractRepository::initConfiguration(self::$config->get('db'));
         User::initConfiguration(self::$config);
 
-        $this->mail = new Mail(self::$config->get('mail'));
+        $this->mail = new Mail();
 
         if (Session::get('user:id')) {
             $this->user = (new User())->findById(User::ID());
@@ -71,17 +71,16 @@ abstract class AbstractController extends Validator
                 throw new AppException("Invalid type returned [" . gettype($result) . "]! Controller must return object.");
             }
 
-            switch ($result::class) {
-                case "Phantom\View":{
+            switch (get_class($result)) {
+                case "Phantom\View": {
                         $result->render();
                         break;
                     }
-                case "Phantom\RedirectToRoute":{
+                case "Phantom\RedirectToRoute": {
                         $result->redirect();
                         break;
                     }
             }
-
         } catch (StorageException $e) {
             // TODO
             DUMP("ACTION ERROR in AbstractController->run()");

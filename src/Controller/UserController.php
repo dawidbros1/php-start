@@ -1,15 +1,15 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
-use Phantom\Controller\AbstractController;
+use App\Base\BaseController;
 use Phantom\Helper\Request;
 use Phantom\RedirectToRoute;
 use Phantom\View;
 
-class UserController extends AbstractController
+class UserController extends BaseController
 {
     public function __construct(Request $request)
     {

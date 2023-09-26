@@ -1,13 +1,13 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Base\BaseRepository;
 use PDO;
-use Phantom\Repository\AbstractRepository;
 
-class UserRepository extends AbstractRepository
+class UserRepository extends BaseRepository
 {
     public function __construct()
     {

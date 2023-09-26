@@ -1,13 +1,13 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Base\BaseModel;
 use Phantom\Helper\Session;
-use Phantom\Model\AbstractModel;
 
-class Authorization extends AbstractModel
+class Authorization extends BaseModel
 {
     public function __construct()
     {
