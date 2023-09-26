@@ -1,8 +1,8 @@
-# PHP Start [ Version 2.1 ]
+# PHP Start [ Version 3.1 ]
 The project is a complete file package to create applications in PHP technology.
 
 ## Build with
-1. PHP 8.1.6
+1. PHP 7.4
 
 ## Features
 1. Registration / Login
