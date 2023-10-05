@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom;
 
@@ -34,7 +34,7 @@ class RedirectToRoute
                 }
             }
 
-            $location .= ($queryParams = "?" . implode('&', $queryParams));
+            $location .= ($queryParams = "&" . implode('&', $queryParams));
         }
 
         if ($location == "") {

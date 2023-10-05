@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Phantom\Helper;
 
@@ -78,7 +78,9 @@ class Request
     # if (returnData == true) method returns value of parameter instead of status
     public function hasPostName(string $name, bool $returnData = true)
     {
-        if (!isset($this->post[$name])) {return false;}
+        if (!isset($this->post[$name])) {
+            return false;
+        }
         return $returnData ? $this->postParam($name) : true;
     }
 
@@ -124,7 +126,9 @@ class Request
 
     public function hasGetName(string $name, bool $returnData = true)
     {
-        if (!isset($this->get[$name])) {return false;}
+        if (!isset($this->get[$name])) {
+            return false;
+        }
         return $returnData ? $this->getParam($name) : true;
     }
 
