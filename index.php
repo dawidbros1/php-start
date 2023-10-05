@@ -18,6 +18,8 @@ $config = require_once 'config/config.php';
 $location = $config->get('project.location');
 $route = require_once 'routes/routes.php'; // variable $location is require
 
+require_once 'framework/Utils/test.php';
+
 use Phantom\Controller\AbstractController;
 use Phantom\Exception\AppException;
 use Phantom\Exception\ConfigurationException;
